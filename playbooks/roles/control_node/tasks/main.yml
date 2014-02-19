@@ -1,0 +1,21 @@
+
+- name: install mapr packages
+  yum: name='{{item}}' state=present
+  with_items:
+    - mapr-cldb
+    - mapr-zookeeper
+    - mapr-fileserver
+    - mapr-webserver
+    - mapr-jobtracker
+    - mapr-nfs
+    - mapr-tasktracker
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: configure env.sh with JAVA_HOME
+  lineinfile: dest=/opt/mapr/conf/env.sh insertafter="^#export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}" 
+
+- name: open port 8443 for the MCS
+  command: iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8443 -j ACCEPT
+
+- name: save iptables configuration
+  command: service iptables save

@@ -1,0 +1,5 @@
+- name: restart ntp
+  service: name=ntpd state=restarted
+
+- name: reload sysctl
+  command: sysctl -e -p

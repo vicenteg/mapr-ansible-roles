@@ -1,0 +1,11 @@
+
+--- 
+- hosts: all
+  sudo: yes
+  roles:
+    - common
+    - control_node
+
+  tasks:
+    - name: configure and bring up single-node cluster
+      command: /opt/mapr/server/configure.sh -C {{ansible_hostname}} -Z {{ansible_hostname}} -D /dev/sdb --isvm -genkeys -S -N vince -a

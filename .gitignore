@@ -1,0 +1,4 @@
+vagrant_ansible_inventory*
+.vagrant/
+tmp
+.DS_Store
