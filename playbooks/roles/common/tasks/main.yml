@@ -26,9 +26,23 @@
   notify: restart ntp
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
+- name: install MySQL for metrics
+  yum: name=mysql-server state=present
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: install useful tools
+  yum: name={{item}} state=latest
+  with_items:
+    - lsof
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+
 - name: ensure NFS is disabled
   service: name=nfs state=stopped enabled=false
 
 - name: disable memory overcommit
   lineinfile: dest=/etc/sysctl.conf regexp="^vm.overcommit_memory" line="vm.overcommit_memory=0"
   notify: reload sysctl
+
+- name: write out disk config
+  template: src=disks.txt.j2 dest=/tmp/disks.txt mode=0644 owner=root group=root
