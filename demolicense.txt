@@ -1,0 +1,119 @@
+-----BEGIN SIGNED MESSAGE-----
+version: "3.0"
+issuer: "MapR Technologies, Inc."
+licType: DemoBolt
+description: "MapR M7 Trial Edition"
+enforcement: HARD
+gracePeriod: 0
+issuedate: 1392955466
+expirationdate: 1395547466
+issuedateStr: "Fri Feb 21 04:04:26 UTC 2014"
+expdateStr: "Sun Mar 23 04:04:26 UTC 2014"
+capabilities {
+  feature: NFS
+  name: "NFS"
+  permission: ALLOW
+  featureData {
+    maxNfsNodes: "unlimited"
+  }
+}
+capabilities {
+  feature: NFS_MULTINODE
+  name: "NFS Multiple Nodes"
+  permission: ALLOW
+}
+capabilities {
+  feature: NFS_HA
+  name: "NFS HA"
+  permission: ALLOW
+}
+capabilities {
+  feature: MULTI_CLUSTER
+  name: "Multiple Clusters Support"
+  permission: ALLOW
+}
+capabilities {
+  feature: CLDB_HA
+  name: "CLDB HA"
+  permission: ALLOW
+}
+capabilities {
+  feature: JOBTRACKER_HA
+  name: "JobTracker HA"
+  permission: ALLOW
+}
+capabilities {
+  feature: SNAPSHOT
+  name: "Snapshots"
+  permission: ALLOW
+}
+capabilities {
+  feature: MIRRORING
+  name: "Mirroring"
+  permission: ALLOW
+}
+capabilities {
+  feature: DATA_PLACEMENT
+  name: "Data Placement"
+  permission: ALLOW
+}
+capabilities {
+  feature: MAXNODES
+  name: "Max Nodes in Cluster"
+  permission: ALLOW
+  featureData {
+    maxNodes: "unlimited"
+  }
+}
+capabilities {
+  feature: OPTIMIZED_SHUFFLE
+  name: "Optimized Shuffle"
+  permission: ALLOW
+}
+capabilities {
+  feature: JM_CHARTS
+  name: "Job Management Charts"
+  permission: ALLOW
+}
+capabilities {
+  feature: JM_HISTOGRAMS
+  name: "Job Management Histograms"
+  permission: ALLOW
+}
+capabilities {
+  feature: MAPR_TABLES
+  name: "MapR Tables"
+  permission: ALLOW
+}
+-----BEGIN DATA-----
+EgMzLjAqF01hcFIgVGVjaG5vbG9naWVzLCBJbmMuMAo6FU1hcFIgTTcgVHJpYWwgRWRpdGlvbkAC
+SABQyqCbmAVYyrq5mQViHEZyaSBGZWIgMjEgMDQ6MDQ6MjYgVVRDIDIwMTRqHFN1biBNYXIgMjMg
+MDQ6MDQ6MjYgVVRDIDIwMTSiARYIARIDTkZTGANSCwoJdW5saW1pdGVkogEYCAISEk5GUyBNdWx0
+aXBsZSBOb2RlcxgDogEMCAMSBk5GUyBIQRgDogEfCAQSGU11bHRpcGxlIENsdXN0ZXJzIFN1cHBv
+cnQYA6IBDQgFEgdDTERCIEhBGAOiARMIBhINSm9iVHJhY2tlciBIQRgDogEPCAcSCVNuYXBzaG90
+cxgDogEPCAgSCU1pcnJvcmluZxgDogEUCAkSDkRhdGEgUGxhY2VtZW50GAOiAScIChIUTWF4IE5v
+ZGVzIGluIENsdXN0ZXIYA1ILEgl1bmxpbWl0ZWSiARcICxIRT3B0aW1pemVkIFNodWZmbGUYA6IB
+GwgMEhVKb2IgTWFuYWdlbWVudCBDaGFydHMYA6IBHwgNEhlKb2IgTWFuYWdlbWVudCBIaXN0b2dy
+YW1zGAOiAREIDhILTWFwUiBUYWJsZXMYAw==
+-----BEGIN SIGNATURE-----
+ChllkduEYkJtmxCCYqgiFWLEsUIbYznJ5eI4sJ26EIO2eu6ANupYvsJevmnvxjolnQB6ph2iChIH
+jAcLBU60IGoDCtGYJSeK9lcZQpkNRqnbHHsRitLIuQ4Y2GLR9H7eEETZDgCqKPPTIhfJFl+VqqsR
+YHtaLQMDe53UI/kaDg6eQRkbeqm3d6XZT0NF0NArt+Ad2pPpytYLNicwBHBgll0+/ay+V+Kb1gIt
+SK/jYYVEP8gHygy+gk+clS/PzfZPmWZhabYJ1B79xIN1sOQYzOCVQC+dsQAd43sgiJRbOHNuFNnV
+IlQabLnxI3Lub4SD17XQ6qXUX/no3Z2Jl/R0i/hkrienY6BPh+yHewklUVhktYu1W4w+OGFYPmxS
+Ll2Tpjey4EAhC7LheHpQNYWAMiyjyHxV+gV9u/fEt4pVhIDfpOPyAQtkAhZchDOHxA0Yy8hU1vWc
+u7r+EHScyHcuIOIp71d+ynK3YrKWOOnQG6xqM7mbgrMD/eawJNx6xiu+g3FBUItnFh5oDmhdOpBe
+aCXNZRi6Wd1dvheHg3jqswkept6Fh4p50BEG+S2kf83A2hwIxPX3+nTbVKwWY05WfZyAgnFENVaO
+uKQ/AhEVQPZErrhtH0DTIifz868nq0hiPz3fm7AFxlYg7r8Br1Wixs+Jw0DNYt24+Ipkw9wCY5pW
+aiechPMGTF9F1gpv1Jq6M/NvUOIl54uiT0OqtsvN7fhAKx25pT1DjP1tLs+9ypXa8cUjjT6MqfGA
+1KgVhtoru+g6z/kwi4lladcR7Ewsh6miZPdecwbvurA76C62mGiHjd8qwnul3z5Q/dCoex//0mv+
+jwtKiwvhUgYBDA2jAEf6GfbuE2nm+V1tiZxINEtCQA3N5d2gNO73nda7H7ExuL7LmdYmllsutIGG
+q/X+Or0cFAHiTuqBnip4pQgwfBotjaD6Yh9Q+uguPRB9ENVzbRCQA8YwW8aq2snVkcNSHAtlDTVu
+UPyZEnNoDKB0GypF6ev6co5Al8FPtAM24YjDC1pJxiYq1xFdP7bsMSV1if4VLKCv32RaXRva8io6
+QK7bCLaWXfTRwW6i0ShmgNVt+PYjtyvCvu4AiJOe0bQ+DXQw/6LxfXcxY6uhe87b6/X0T5KYTPjc
+MMfLfbjoJkGs6JCkilRpKWisQxTIN8M00at1MySs4RvflqjK0X6zZvjya6MacDwnyzwOeX7uFt/6
+23NyoYYF6mWWxqn5fdmOzr3mPBspHt6R6JLYV54Y9bCHM6SXxJ5ONMqJV0OjqzlZIjw6+PM+Up5D
+n+1aDr14hHl1yh6WTERPinR4F9hkxNhaSJsBtVeGe+LgROczA+ixh2rckuQMVfuZF6OHGIUUeA==
+-----END SIGNATURE-----
+rmRpefSqCgRigtiy1sTd1HiYOrI=
+-----END MESSAGE HASH-----
