@@ -3,12 +3,15 @@
   yum: name='{{item}}' state=present
   with_items:
     - mapr-cldb
+    - mapr-hive
+    - mapr-hiveserver2
     - mapr-zookeeper
     - mapr-fileserver
     - mapr-webserver
     - mapr-jobtracker
     - mapr-nfs
     - mapr-tasktracker
+    - mapr-metrics
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
 - name: configure env.sh with JAVA_HOME

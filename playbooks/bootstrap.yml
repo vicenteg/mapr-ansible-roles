@@ -5,10 +5,11 @@
   roles:
     - common
     - control_node
+    - metrics_database
 
   tasks:
     - name: configure single-node cluster
-      command: /opt/mapr/server/configure.sh -C {{ansible_hostname}} -Z {{ansible_hostname}}  -N vagrant -a -d localhost:3306 -du root -dp "" -a 
+      command: /opt/mapr/server/configure.sh -C {{ansible_hostname}} -Z {{ansible_hostname}}  -N vagrant -a -du maprmetrics -dp mapr -d localhost:3306
 
     - name: add the disks
       command: /opt/mapr/server/disksetup /tmp/disks.txt
@@ -19,3 +20,5 @@
         - mapr-zookeeper
         - mapr-warden
 
+    - name: set a password for the mapr user
+      user: name=mapr password='$1$6rkjHhj1$VCrBrOAXCl04VfpSDYumQ/'

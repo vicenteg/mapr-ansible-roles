@@ -1,0 +1,30 @@
+
+
+- name: install MySQL for metrics
+  yum: name=mysql-server state=present
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: ensure MySQL starts on boot
+  service: name=mysqld enabled=yes state=started
+
+- name: install mysql python module
+  yum: name=MySQL-python state=installed
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: create the metrics database
+  mysql_db: name=metrics state=present
+  register: db_create
+
+- name: create the metrics schema
+  shell: mysql -u root < /opt/mapr/bin/setup.sql
+  when: db_create.changed == True
+
+- name: create mapr user@localhost
+  mysql_user: name=maprmetrics host=localhost password=mapr check_implicit_admin=yes priv=metrics.*:ALL
+
+- name: create mapr user@%
+  mysql_user: name=maprmetrics host=% password=mapr check_implicit_admin=yes priv=metrics.*:ALL
+
+- name: run ldconfig to avoid issues with mapr-metrics finding mysql client library
+  command: ldconfig
+
