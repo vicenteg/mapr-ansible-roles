@@ -3,22 +3,21 @@
 - hosts: all
   sudo: yes
   roles:
-    - common
-    - control_node
+    - prerequisites
+    - zookeeper
+    - cldb
+    - jobtracker
+    - tasktracker
+    - webserver
+    - nfs
+    - fileserver
+    - mysql
     - metrics_database
+    - hive
 
   tasks:
-    - name: configure single-node cluster
-      command: /opt/mapr/server/configure.sh -C {{ansible_hostname}} -Z {{ansible_hostname}}  -N vagrant -a -du maprmetrics -dp mapr -d localhost:3306
-
-    - name: add the disks
-      command: /opt/mapr/server/disksetup /tmp/disks.txt
-
     - name: start the cluster
       service: name={{item}} state=started
       with_items:
         - mapr-zookeeper
         - mapr-warden
-
-    - name: set a password for the mapr user
-      user: name=mapr password='$1$6rkjHhj1$VCrBrOAXCl04VfpSDYumQ/'

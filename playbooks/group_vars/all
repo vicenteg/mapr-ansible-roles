@@ -1,1 +1,2 @@
 java_home: /usr
+mysql_root_password: mapr

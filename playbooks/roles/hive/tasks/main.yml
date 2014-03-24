@@ -1,0 +1,27 @@
+
+- name: install hive and related packages
+  yum: name={{item}} state=present
+  with_items:
+    - mapr-hive
+    - mapr-hiveserver2
+    - mapr-hivemetastore
+
+- name: ensure the top level hive directory is owned by mapr so logs directory can be created
+  file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes
+
+- name: ensure hivemeta exists
+  mysql_db: name={{hive_db}} state=present login_user=root login_password={{mysql_root_password}}
+  register: db_changed
+
+- name: create the hive metastore database
+  mysql_db: name={{hive_db}} state=import target=/opt/mapr/hive/hive-0.12/scripts/metastore/upgrade/mysql/hive-schema-0.12.0.mysql.sql login_user=root login_password={{mysql_root_password}}
+  when: db_changed.changed
+
+- name: create mapr user@localhost
+  mysql_user: name={{hive_db_user}} host=localhost password={{hive_db_pass}} check_implicit_admin=yes priv={{hive_db}}.*:ALL check_implicit_admin=yes login_user=root login_password={{mysql_root_password}}
+
+- name: create mapr user@%
+  mysql_user: name={{hive_db_user}} host=% password={{hive_db_pass}} check_implicit_admin=yes priv={{hive_db}}.*:ALL check_implicit_admin=yes login_user=root login_password={{mysql_root_password}}
+
+- name: copy hive-site.xml into place
+  template: src=hive-site.xml.j2 dest=/opt/mapr/hive/hive-0.12/conf/hive-site.xml

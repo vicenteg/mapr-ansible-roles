@@ -1,0 +1,3 @@
+hive_db: metastore
+hive_db_user: hive
+hive_db_pass: mapr
