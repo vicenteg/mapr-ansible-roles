@@ -1,0 +1,5 @@
+
+- name: install mapr-zookeeper
+  yum: name='{{item}}' state=present
+  with_items:
+    - mapr-zookeeper
