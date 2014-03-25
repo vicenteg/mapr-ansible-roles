@@ -1,4 +1,3 @@
-
 - name: write /etc/hosts with cluster node names
   template: src=hosts.j2 dest=/etc/hosts mode=0644 
 
@@ -26,8 +25,20 @@
   notify: restart ntp
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
-- name: ensure NFS is disabled
-  service: name=nfs state=stopped enabled=false
+- name: install useful tools like lsof, wget and showmount
+  yum: name={{item}} state=latest
+  with_items:
+    - lsof
+    - wget
+    - nfs-utils
+    - clustershell
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: ensure NFS server is disabled
+  service: name=nfs state=stopped enabled=no
+
+- name: ensure rpcbind starts
+  service: name=rpcbind state=started enabled=yes
 
 - name: disable memory overcommit
   lineinfile: dest=/etc/sysctl.conf regexp="^vm.overcommit_memory" line="vm.overcommit_memory=0"

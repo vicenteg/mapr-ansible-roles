@@ -1,0 +1,17 @@
+- name: create the metrics database
+  mysql_db: name=metrics state=present target=/opt/mapr/bin/setup.sql login_user=root login_password={{mysql_root_password}}
+  register: db_create
+
+- name: create the metrics schema
+  mysql_db: name=metrics state=import target=/opt/mapr/bin/setup.sql login_user=root login_password={{mysql_root_password}}
+  when: db_create.changed
+
+- name: create mapr user@localhost
+  mysql_user: name=maprmetrics host=localhost password=mapr check_implicit_admin=yes priv=metrics.*:ALL login_user=root login_password={{mysql_root_password}}
+
+- name: create mapr user@%
+  mysql_user: name=maprmetrics host=% password=mapr check_implicit_admin=yes priv=metrics.*:ALL login_user=root login_password={{mysql_root_password}}
+
+- name: run ldconfig to avoid issues with mapr-metrics finding mysql client library
+  command: ldconfig
+
