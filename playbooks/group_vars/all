@@ -1,2 +1,4 @@
 java_home: /usr
 mysql_root_password: mapr
+
+mapr_user_pw: '$1$6rkjHhj1$VCrBrOAXCl04VfpSDYumQ/'

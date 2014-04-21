@@ -32,4 +32,4 @@
   when: disklist.stdout.find('MapR-FS') == -1
 
 - name: set a password for the mapr user
-  user: name=mapr password='$1$6rkjHhj1$VCrBrOAXCl04VfpSDYumQ/'
+  user: name=mapr password={{mapr_user_pw}}

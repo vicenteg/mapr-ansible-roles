@@ -13,11 +13,11 @@
   command: chdir=/tmp creates=/etc/yum.repos.d/epel.repo rpm -Uvh /tmp/epel-release-6-8.noarch.rpm 
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
-- name: install Java 1.6
+- name: install Java 1.7
   yum: name={{item}} state=present
   with_items:
-    - java-1.6.0-openjdk
-    - java-1.6.0-openjdk-devel
+    - java-1.7.0-openjdk
+    - java-1.7.0-openjdk-devel
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
 - name: install NTP
@@ -25,9 +25,11 @@
   notify: restart ntp
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
-- name: install useful tools like lsof, wget and showmount
+- name: install useful tools
   yum: name={{item}} state=latest
   with_items:
+    - git
+    - unzip
     - lsof
     - wget
     - nfs-utils

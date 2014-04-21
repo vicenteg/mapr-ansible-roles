@@ -8,6 +8,6 @@ protect=1
 [maprecosystem]
 name=MapR Technologies
 baseurl=http://package.mapr.com/releases/ecosystem/redhat
-enabled=1
+enabled=0
 gpgcheck=0
 protect=1
