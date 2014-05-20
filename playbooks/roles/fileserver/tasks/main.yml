@@ -17,19 +17,19 @@
 - name: save iptables configuration
   command: service iptables save
 
-- name: configure single-node cluster
-  command: /opt/mapr/server/configure.sh -M7 -C {{ansible_hostname}} -Z {{ansible_hostname}}  -N vagrant -a -du maprmetrics -dp mapr -d localhost:3306
+- name: write configure script
+  template: src=do_configure_sh.j2 dest=/tmp/do_configure.sh mode=0700 owner=root group=root 
+
+- name: configure the cluster
+  command: /tmp/do_configure.sh chdir=/tmp
 
 - name: check whether we have disks already
   shell: /opt/mapr/server/disklist.sh
   register: disklist
 
 - name: print the disklist
-  debug: msg={{disklist.stdout.find('MapR-FS')}}
+  debug: msg="{{disklist.stdout.find('MapR-FS')}}"
 
 - name: add the disks
-  command: /opt/mapr/server/disksetup /tmp/disks.txt
+  command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt
   when: disklist.stdout.find('MapR-FS') == -1
-
-- name: set a password for the mapr user
-  user: name=mapr password='$1$6rkjHhj1$VCrBrOAXCl04VfpSDYumQ/'

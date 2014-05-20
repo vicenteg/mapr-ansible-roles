@@ -1,5 +1,11 @@
 
 - name: install mapr-nfs packages
-  yum: name='{{item}}' state=present
+  yum: name={{item}} state=present
   with_items:
     - mapr-nfs
+
+- name: create mountpoint for loopback NFS mountpoint
+  file: path=/mapr state=directory
+
+- name: add loopback NFS mountpoint to fstab but do not mount
+  mount: name=/mapr src=127.0.0.1:/mapr fstype=nfs opts="rw,hard,intr,nolock" state=present

@@ -1,6 +1,6 @@
 [maprtech]
 name=MapR Technologies
-baseurl=http://package.mapr.com/releases/v3.0.2/redhat/
+baseurl=http://package.mapr.com/releases/v3.0.3/redhat/
 enabled=1
 gpgcheck=0
 protect=1
