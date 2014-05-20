@@ -1,3 +1,6 @@
+- name: install mapr-core
+  yum: name=mapr-core state=present
+
 - name: create the metrics database
   mysql_db: name=metrics state=present target=/opt/mapr/bin/setup.sql login_user=root login_password={{mysql_root_password}}
   register: db_create

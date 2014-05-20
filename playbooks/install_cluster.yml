@@ -1,0 +1,122 @@
+
+--- 
+
+- hosts: tag_Name_vgonzalez_cluster
+  sudo: yes
+  roles:
+    - prerequisites
+
+- hosts: tag_mysql_True
+  sudo: yes
+  roles:
+    - mysql
+    - metrics_database
+
+- hosts: tag_zookeeper_True
+  sudo: yes
+  roles:
+    - zookeeper
+
+- hosts: tag_cldb_True
+  sudo: yes
+  roles:
+    - cldb
+
+- hosts: tag_jobtracker_True
+  sudo: yes
+  roles:
+    - jobtracker
+
+- hosts: tag_tasktracker_True
+  sudo: yes
+  roles:
+    - tasktracker
+
+- hosts: tag_webserver_True
+  sudo: yes
+  roles:
+    - webserver
+
+- hosts: tag_nfs_True
+  sudo: yes
+  roles:
+    - nfs
+
+- hosts: tag_fileserver_True
+  sudo: yes
+  roles:
+    - fileserver
+
+- hosts: tag_edge_True
+  sudo: yes
+  roles:
+    - client
+    - hive
+
+- hosts: tag_Name_vgonzalez_cluster
+  sudo: yes
+  tasks:
+    - name: set a password for the mapr user
+      user: name=mapr password="{{mapr_user_pw}}"
+
+    - name: create .ssh for mapr user
+      file: path=/home/mapr/.ssh mode=0700 state=directory owner=mapr group=mapr
+
+    - name: create ssh keys for mapr user 
+      command: creates=/home/mapr/.ssh/id_dsa ssh-keygen -t dsa -P "" -f /home/mapr/.ssh/id_dsa
+
+    - name: make mapr user owner
+      file: path=/home/mapr/.ssh/id_dsa mode=0600 owner=mapr group=mapr 
+
+    - name: fetch ssh key 
+      fetch: src=/home/mapr/.ssh/id_dsa.pub dest="/tmp/{{ansible_hostname}}-id_dsa.pub" flat=yes
+
+    - name: add all hosts public keys to authorized_keys
+      authorized_key: key="{{ lookup('file', item) }}" user=mapr 
+      with_fileglob:
+        - "/tmp/*id_dsa.pub"
+
+- hosts: tag_zookeeper_True
+  sudo: yes
+  tasks:
+    - name: start zookeeper on ZK nodes
+      service: name=mapr-zookeeper state=started enabled=yes
+
+    - name: wait for zookeeper to be listening
+      wait_for: port=5181 delay=10 timeout=90
+
+    - name: wait for a few seconds to let zookeepers initialize
+      pause: seconds=15
+
+    - name: get zookeeper status
+      command: service mapr-zookeeper qstatus
+      register: zk_qstatus
+
+- hosts: tag_cldb_True
+  sudo: yes
+  tasks:
+    - name: start warden on CLDBs first per doc.mapr.com
+      service: name=mapr-warden state=started enabled=yes
+
+    - name: pause for a bit and wait for CLDBs to come up
+      pause: seconds=15
+
+- hosts: tag_Name_vgonzalez_cluster
+  sudo: yes
+  tasks:
+    - name: start the warden on all nodes
+      service: name={{item}} state=started
+      with_items:
+        - mapr-warden
+
+- hosts: tag_webserver_True
+  sudo: yes
+  gather_facts: no
+  tasks:
+    - name: get ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+    - name: print webserver URLs
+      debug: msg='webserver= https://{{ec2_facts["ansible_facts"]["ansible_ec2_public-hostname"]}}:8443'
+      when: '"ansible_ec2_public-hostname" in ec2_facts["ansible_facts"]'

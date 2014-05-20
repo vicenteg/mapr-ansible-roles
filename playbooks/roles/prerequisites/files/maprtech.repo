@@ -1,6 +1,6 @@
 [maprtech]
 name=MapR Technologies
-baseurl=http://package.mapr.com/releases/v3.0.2/redhat/
+baseurl=http://package.mapr.com/releases/v3.0.3/redhat/
 enabled=1
 gpgcheck=0
 protect=1
@@ -8,6 +8,6 @@ protect=1
 [maprecosystem]
 name=MapR Technologies
 baseurl=http://package.mapr.com/releases/ecosystem/redhat
-enabled=0
+enabled=1
 gpgcheck=0
 protect=1

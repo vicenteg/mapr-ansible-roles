@@ -1,0 +1,14 @@
+- name: install mapr-core
+  yum: name=mapr-core state=present
+
+- name: configure env.sh with JAVA_HOME
+  lineinfile: dest=/opt/mapr/conf/env.sh insertafter="^#export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}" 
+
+- name: write configure script
+  template: src=client_configure_sh.j2 dest=/tmp/client_configure.sh mode=0700 owner=root group=root 
+
+- name: configure this client
+  command: /tmp/client_configure.sh chdir=/tmp
+
+- name: remove configuration script
+  file: state=absent path=/tmp/client_configure.sh 
