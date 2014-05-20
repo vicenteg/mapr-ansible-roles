@@ -1,4 +1,32 @@
+user: root
 java_home: /usr
+
+mysql_root_user: root
 mysql_root_password: mapr
 
-mapr_user_pw: '$1$6rkjHhj1$VCrBrOAXCl04VfpSDYumQ/'
+# Password generated with openssl passwd -1
+mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.'
+
+# Name for your new cluster
+cluster_name: vgonzalez-aws
+
+# username, password and host:port for the metrics database
+metrics_user: maprmetrics
+metrics_password: mapr
+metrics_host: "{{ groups['tag_mysql_True'] | first }}"
+
+# specify keypair, security group, vpc subnet and an image you have, 
+# otherwise the play will fail midway through
+ec2_keypair: 'vgonzalez_keypair'
+
+# Security group - be sure to allow access to MCS!
+ec2_security_group: 'sg-d152d7b4'
+
+# The below image is CentOS 6.5
+ec2_image: 'ami-8997afe0'
+
+# The below image is Amazon Linux 64-bit
+#ec2_image: ami-fb8e9292
+
+# Choose a VPC subnet (this must have already been created)
+vpc_subnet: 'subnet-9bfae2ef'
