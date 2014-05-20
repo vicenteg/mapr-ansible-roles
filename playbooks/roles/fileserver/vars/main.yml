@@ -1,0 +1,1 @@
+mapr_disks: [ '/dev/sdb', '/dev/sdc', '/dev/sdd' ]
