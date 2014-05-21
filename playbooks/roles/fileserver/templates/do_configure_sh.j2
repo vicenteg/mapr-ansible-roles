@@ -2,6 +2,6 @@
 
 /opt/mapr/server/configure.sh -M7 \
 	-C {% for node in groups['tag_cldb_True'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %} \
-	-Z {% for node in groups['tag_zookeeper_True'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %}  \
+	-Z {% for node in groups['tag_zookeeper_True'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %} \
 	-N {{cluster_name}} {% if ansible_virtualization_role == "guest" %}--isvm{% endif %} \
 	-a -du {{metrics_user}} -dp {{metrics_password}} -d {{hostvars[metrics_host].ansible_default_ipv4.address}}

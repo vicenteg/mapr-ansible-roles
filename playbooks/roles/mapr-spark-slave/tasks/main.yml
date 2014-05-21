@@ -15,8 +15,8 @@
     - mapr-spark
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
-#- name: set spark work directory in spark configuration
-#  lineinfile: 
+- name: set spark work directory in spark configuration
+  lineinfile: dest=/opt/mapr/spark/spark-0.9.1/conf/spark-env.sh state=present regexp="^export SPARK_WORKER_DIR" line="export SPARK_WORKER_DIR={{spark_work_dir}}"
 
 - name: create a spark work directory
-  file: dest=/opt/mapr/spark/work owner=mapr group=mapr state=directory mode=0750
+  file: dest={{spark_work_dir}} owner=mapr group=mapr state=directory mode=0750

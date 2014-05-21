@@ -3,10 +3,22 @@
 
 # Assumes the MapR repos are already configured.
 
-- name: install mapr-spark for Redhat/CenOS
+- name: is scala installed?
+  command: /usr/bin/scala -version
+  register: scala
+  ignore_errors: true
+
+- name: install scala for Redhat/CentOS
+  yum: name=http://downloads.typesafe.com/scala/2.11.0/scala-2.11.0.rpm state=present
+  when: scala.rc != 1 and ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: install scala for Ubuntu/Debian
+  apt: name=http://downloads.typesafe.com/scala/2.11.0/scala-2.11.0.deb state=present
+  when: scala.rc != 1 and ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: install mapr-spark for Redhat/CentOS
   yum: name='{{item}}' state=present
   with_items:
-    - http://downloads.typesafe.com/scala/2.11.0/scala-2.11.0.rpm
     - mapr-spark-master
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
   notify:
