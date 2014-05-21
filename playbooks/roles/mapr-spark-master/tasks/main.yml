@@ -17,3 +17,5 @@
   with_items:
     - mapr-spark-master
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  notify:
+    - re-run configure.sh to enable spark-master

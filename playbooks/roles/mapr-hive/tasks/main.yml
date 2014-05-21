@@ -16,10 +16,6 @@
 - name: ensure the top level hive directory is owned by mapr so logs directory can be created
   file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes
 
-- name: debug database group_vars
-  debug: 
-    msg="login_user={{mysql_root_user}}, login_password={{mysql_root_password}}, login_host={{hive_metastore_host}}"
-
 - name: write .my.cnf for root
   template: src=dot-my.cnf.j2 dest=/root/.my.cnf mode=0600 owner=root group=root
 

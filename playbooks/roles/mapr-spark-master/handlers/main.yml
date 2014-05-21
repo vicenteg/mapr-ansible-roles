@@ -1,4 +1,4 @@
 ---
 # handlers file for mapr-spark
 - name: re-run configure.sh to enable spark-master
-  command: /opt/mapr/server/configure.sh -R
+  command: removes=/opt/mapr/conf/mapr-clusters.conf /opt/mapr/server/configure.sh -R 

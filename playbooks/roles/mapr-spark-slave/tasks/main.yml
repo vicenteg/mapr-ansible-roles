@@ -14,3 +14,9 @@
   with_items:
     - mapr-spark
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
+#- name: set spark work directory in spark configuration
+#  lineinfile: 
+
+- name: create a spark work directory
+  file: dest=/opt/mapr/spark/work owner=mapr group=mapr state=directory mode=0750
