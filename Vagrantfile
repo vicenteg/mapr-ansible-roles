@@ -6,7 +6,8 @@ Vagrant.configure("2") do |config|
   memory = (8 * 1024).round
   config.vm.define "node1" do |node1|
   
-    node1.vm.box = "centos65"
+    node1.vm.box = "ecnivny/centos-6.5"
+    
     node1.vm.hostname = "node1"
     node1.vm.network :forwarded_port, guest: 111, host: 111
     node1.vm.network :forwarded_port, guest: 2049, host: 2049

@@ -1,3 +1,5 @@
+---
+# tasks file for mapr-tasktracker
 - name: install mapr-tasktracker packages
   yum: name='{{item}}' state=present
   with_items:

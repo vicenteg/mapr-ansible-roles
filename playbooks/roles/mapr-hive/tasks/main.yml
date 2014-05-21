@@ -1,3 +1,5 @@
+---
+# tasks file for mapr-hive
 # mysql_root_password comes from top-level group_vars/all
 
 - name: install mysqldb which is required for ansible
@@ -66,3 +68,6 @@
 
 - name: copy hive-site.xml into place
   template: src=hive-site.xml.j2 dest=/opt/mapr/hive/hive-0.12/conf/hive-site.xml
+
+- name: copy some sample hive ql and an external table
+  file: src={{item}} dest=/opt/mapr/hive/hive-0.12/

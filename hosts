@@ -33,3 +33,9 @@ node1
 
 [tag_edge_True]
 node1
+
+[tag_spark_master_True]
+node1
+
+[tag_spark_slave_True]
+node1

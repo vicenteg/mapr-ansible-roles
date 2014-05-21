@@ -2,12 +2,20 @@
   yum: name=mysql-server state=present
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
+- name: install MySQL on Debian derived OSes
+  apt: name=mysql-server state=present
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
 - name: ensure MySQL starts on boot
   service: name=mysqld enabled=yes state=started
 
-- name: install mysql python module
+- name: install MySQL python module
   yum: name=MySQL-python state=installed
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+
+- name: install MySQL python module  on Debian derived OSes
+  apt: name=python-mysqldb state=installed
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - name: lock down root user
   mysql_user:

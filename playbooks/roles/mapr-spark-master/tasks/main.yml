@@ -1,0 +1,19 @@
+---
+# tasks file for mapr-spark
+
+# Assumes the MapR repos are already configured.
+
+- name: install mapr-spark for Redhat/CenOS
+  yum: name='{{item}}' state=present
+  with_items:
+    - http://downloads.typesafe.com/scala/2.11.0/scala-2.11.0.rpm
+    - mapr-spark-master
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+  notify:
+    - re-run configure.sh to enable spark-master
+
+- name: install mapr-spark for Debian/Ubuntu
+  apt: name='{{item}}' state=present
+  with_items:
+    - mapr-spark-master
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"

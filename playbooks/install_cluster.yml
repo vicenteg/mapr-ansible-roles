@@ -30,12 +30,22 @@
 - hosts: tag_tasktracker_True
   sudo: yes
   roles:
-    - tasktracker
+    - mapr-tasktracker
 
 - hosts: tag_webserver_True
   sudo: yes
   roles:
     - webserver
+
+- hosts: tag_spark_master_True
+  sudo: yes
+  roles:
+    - mapr-spark-master
+
+- hosts: tag_spark_slave_True
+  sudo: yes
+  roles:
+    - mapr-spark-slave
 
 - hosts: tag_nfs_True
   sudo: yes
@@ -51,7 +61,7 @@
   sudo: yes
   roles:
     - client
-    - hive
+    - mapr-hive
 
 - hosts: tag_Name_vgonzalez_cluster
   sudo: yes

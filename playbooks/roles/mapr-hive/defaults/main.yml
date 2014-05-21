@@ -1,3 +1,9 @@
+---
+# defaults file for mapr-hive
+
+mysql_root_user: root
+mysql_root_password: mapr
+
 hive_db: metastore
 hive_db_user: hive
 hive_db_pass: mapr
