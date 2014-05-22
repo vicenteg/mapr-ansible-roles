@@ -43,7 +43,8 @@ sudo chown vagrant:vagrant /mapr/<clustername>/user/vagrant
 To test, try running a teragen:
 
 ```
-hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100000 /user/vagrant/teragen
+hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar \
+	teragen 100000 /user/vagrant/teragen
 ```
 
 If you don't see a java traceback, things are probably mostly OK.
