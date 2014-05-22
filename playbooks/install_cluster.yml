@@ -81,12 +81,14 @@
   tasks:
     - name: start zookeeper on ZK nodes
       service: name=mapr-zookeeper state=started enabled=yes
+      register: zk_started
 
     - name: wait for zookeeper to be listening
       wait_for: port=5181 delay=10 timeout=90
 
     - name: wait for a few seconds to let zookeepers initialize
       pause: seconds=15
+      when: zk_started.changed
 
     - name: get zookeeper status
       command: service mapr-zookeeper qstatus
@@ -97,9 +99,11 @@
   tasks:
     - name: start warden on CLDBs first per doc.mapr.com
       service: name=mapr-warden state=started enabled=yes
+      register: cldb_started
 
     - name: pause for a bit and wait for CLDBs to come up
       pause: seconds=15
+      when: cldb_started.changed
 
 - hosts: tag_Name_vgonzalez_cluster
   sudo: yes
@@ -108,8 +112,11 @@
       service: name={{item}} state=started
       with_items:
         - mapr-warden
+      register: warden_started
+
     - name: wait a bit before proceeding
       pause: seconds=10
+      when: warden_started.changed
 
 - hosts: tag_spark_master_True
   sudo: yes

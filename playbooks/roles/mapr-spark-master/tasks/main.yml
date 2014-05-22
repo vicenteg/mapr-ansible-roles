@@ -31,3 +31,7 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
   notify:
     - re-run configure.sh to enable spark-master
+
+- name: create slaves file
+  template: src=slaves.j2 dest={{spark_home}}/conf/slaves mode=0644 owner=root group=root
+
