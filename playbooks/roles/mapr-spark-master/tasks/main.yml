@@ -14,7 +14,7 @@
 
 - name: install scala for Ubuntu/Debian
   apt: name=http://downloads.typesafe.com/scala/2.11.0/scala-2.11.0.deb state=present
-  when: scala.rc != 1 and ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+  when: scala.rc != 1 and ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - name: install mapr-spark for Redhat/CentOS
   yum: name='{{item}}' state=present

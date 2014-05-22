@@ -1,3 +1,5 @@
+---
+# tasks file for mysql-server
 - name: install MySQL 
   yum: name=mysql-server state=present
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"

@@ -9,8 +9,8 @@
 - hosts: tag_mysql_True
   sudo: yes
   roles:
-    - mysql
-    - metrics_database
+    - mysql-server
+    - metrics-database
 
 - hosts: tag_zookeeper_True
   sudo: yes
@@ -45,7 +45,7 @@
 - hosts: tag_fileserver_True
   sudo: yes
   roles:
-    - fileserver
+    - mapr-fileserver
 
 - hosts: tag_edge_True
   sudo: yes

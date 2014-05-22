@@ -1,0 +1,9 @@
+---
+# defaults file for mapr-fileserver
+mapr_disks: [ ]
+cluster_name: mapr
+
+# username, password and host:port for the metrics database for use with configure.sh
+metrics_user: maprmetrics
+metrics_password: mapr
+metrics_host: "{{ groups['tag_mysql_True'] | first }}"

@@ -7,4 +7,5 @@ mysql_root_password: mapr
 hive_db: metastore
 hive_db_user: hive
 hive_db_pass: mapr
-hive_metastore_host: "{{hostvars[metrics_host].ansible_default_ipv4.address}}"
+#hive_metastore_host: "{{hostvars[metrics_host].ansible_default_ipv4.address}}"
+hive_metastore_host: localhost

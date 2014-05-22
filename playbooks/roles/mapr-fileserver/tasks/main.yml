@@ -1,3 +1,5 @@
+---
+# tasks file for mapr-fileserver
 
 - name: install mapr packages
   yum: name='{{item}}' state=present
@@ -26,9 +28,6 @@
 - name: check whether we have disks already
   shell: /opt/mapr/server/disklist.sh
   register: disklist
-
-- name: print the disklist
-  debug: msg="{{disklist.stdout.find('MapR-FS')}}"
 
 - name: add the disks
   command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt

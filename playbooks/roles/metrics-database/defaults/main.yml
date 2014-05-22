@@ -1,0 +1,4 @@
+---
+# defaults file for metrics-database
+mysql_root_user: root
+mysql_root_password: mapr
