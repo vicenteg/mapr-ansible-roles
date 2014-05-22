@@ -11,15 +11,15 @@ Prerequisites
 
 You will want VirtualBox and Vagrant installed.
 
-`
+```
 $ VirtualBox --help
 Oracle VM VirtualBox Manager 4.3.8
-`
+```
 
-`
+```
 $ vagrant --version
 Vagrant 1.5.1
-`
+```
 
 Post-Install
 ============
@@ -32,13 +32,13 @@ And you should be dropped into a shell in your VM.
 
 If your license key is called demolicense.txt, the steps following will add the key, loopback mount MapR NFS, and create a volume for the vagrant user:
 
-`
+```
 sudo maprcli license add -license /vagrant/demolicense.txt -is_file true
 sudo maprcli node services -nodes node1 -nfs start
 sudo mount -a -t nfs
 sudo maprcli volume create -path /user/vagrant -name vagrant 
 sudo chown vagrant:vagrant /mapr/<clustername>/user/vagrant
-`
+```
 
 To test, try running a teragen:
 
