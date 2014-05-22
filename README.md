@@ -42,7 +42,7 @@ After issuing `vagrant up`, the VM should be provisioned. Place your license key
 
 And you should be dropped into a shell in your VM.
 
-If your license key is called demolicense.txt, the steps following will add the key, loopback mount MapR NFS, and create a volume for the vagrant user:
+If your license key is called demolicense.txt, the steps following will add the key, loopback mount MapR NFS, and create a volume for the vagrant user. I suggest you examine each line, especially the last, which contains backticks:
 
 ```
 sudo maprcli license add -license /vagrant/demolicense.txt -is_file true
