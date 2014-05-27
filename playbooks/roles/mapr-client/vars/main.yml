@@ -1,0 +1,3 @@
+---
+# vars file for mapr-client
+metrics_host: "{{groups['tag_mysql_True']}}"

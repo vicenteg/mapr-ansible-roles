@@ -1,4 +1,5 @@
 vagrant_ansible_inventory*
+aws/credentials.sh
 .vagrant/
 tmp
 .DS_Store

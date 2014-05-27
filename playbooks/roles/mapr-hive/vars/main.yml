@@ -3,4 +3,5 @@
 hive_db: metastore
 hive_db_user: hive
 hive_db_pass: mapr
-hive_metastore_host: "{{hostvars[metrics_host].ansible_default_ipv4.address}}"
+metrics_host: "{{groups['tag_mysql_True'] | first}}"
+hive_metastore_host: "{{ hostvars[metrics_host].ansible_default_ipv4.address }}"

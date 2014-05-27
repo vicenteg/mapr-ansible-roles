@@ -21,6 +21,7 @@ Vagrant.configure("2") do |config|
       disk_path = "/Users/%s/Virtualbox VMs/%s" % [ username, provider.name ]
       disk_filenames = (1..6).map{|n| "mapr_disk%s.vdi" % n }
 
+      provider.cpus = 3
       provider.customize ["modifyvm", :id, "--memory", memory]
       disk_filenames.each_with_index do |disk_file, index|
         port = index+1

@@ -50,7 +50,7 @@
 - hosts: tag_edge_True
   sudo: yes
   roles:
-    - client
+    - mapr-client
     - mapr-hive
 
 - hosts: tag_Name_vgonzalez_cluster
@@ -121,11 +121,13 @@
 - hosts: tag_spark_master_True
   sudo: yes
   roles:
+    - scala
     - mapr-spark-master
 
 - hosts: tag_spark_slave_True
   sudo: yes
   roles:
+    - scala
     - mapr-spark-slave
 
 

@@ -1,7 +1,7 @@
-mapr-fileserver
+Role Name
 ========
 
-Installs mapr-fileserver and configures server nodes.
+A brief description of the role goes here.
 
 Requirements
 ------------
