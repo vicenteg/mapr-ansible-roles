@@ -4,7 +4,8 @@
   - name: create an edge node
     local_action:
       module: ec2
-      region: us-east-1
+      region: '{{ec2_region}}'
+      zone: '{{ec2_zone}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -20,14 +21,15 @@
         delete_on_termination: true
       monitoring: yes
       instance_tags:
-        Name: vgonzalez_cluster
+        Name: mapr_aws_cluster
         edge: true
     register: edge
 
   - name: create a mysql node
     local_action:
       module: ec2
-      region: us-east-1
+      region: '{{ec2_region}}'
+      zone: '{{ec2_zone}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -43,14 +45,15 @@
         delete_on_termination: true
       monitoring: yes
       instance_tags:
-        Name: vgonzalez_cluster
+        Name: mapr_aws_cluster
         mysql: true
     register: mysql
 
   - name: create some cluster nodes
     local_action:
       module: ec2
-      region: us-east-1
+      region: '{{ec2_region}}'
+      zone: '{{ec2_zone}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -69,88 +72,88 @@
         delete_on_termination: true
       monitoring: yes
       instance_tags:
-        Name: vgonzalez_cluster
+        Name: mapr_aws_cluster
     register: ec2_cluster
 
   - name: tag three instances as zookeepers
-    local_action: ec2_tag resource={{ item.id }} region=us-east-1 state=present
+    local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[0:3]
     args:
       tags:
         zookeeper: true
 
   - name: tag two instances as CLDBs
-    local_action: ec2_tag resource={{ item.id }} region=us-east-1 state=present
+    local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[0:2]
     args:
       tags:
         cldb: true
 
   - name: tag all instances as NFS servers
-    local_action: ec2_tag resource={{ item.id }} region=us-east-1 state=present
+    local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
         nfs: true
 
   - name: tag two instances as webservers
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[1:3]
     args:
       tags:
         webserver: true
 
   - name: tag four instances with metrics
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[1:5]
     args:
       tags:
         metrics: true
 
   - name: tag all as fileservers
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
         fileserver: true
 
   - name: tag jobtrackers
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[3:5]
     args:
       tags:
         jobtracker: true
 
   - name: tag tasktrackers
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
         tasktracker: true
 
   - name: tag hbase-masters
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[3:5]
     args:
       tags:
         hbasemaster: true
 
   - name: tag hbase-regionservers
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
         hbaseregionserver: true
 
   - name: tag spark master
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[0:1]
     args:
       tags:
         spark_master: true
 
   - name: tag spark slaves
-    local_action: ec2_tag resource={{item.id}} region=us-east-1 state=present
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[1:5]
     args:
       tags:
@@ -162,6 +165,6 @@
   # - name: remove instances 
   #   local_action:
   #     module: ec2
-  #     region: us-east-1
+  #     region: '{{ec2_region}}'
   #     state: absent
   #     instance_ids: '{{ec2.instance_ids}}'

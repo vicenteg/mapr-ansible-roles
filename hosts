@@ -4,7 +4,7 @@ node1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222
 # Do not edit below this line unless you're pretty sure.
 
 local ansible_connection=local
-[tag_Name_vgonzalez_cluster]
+[tag_Name_mapr_aws_cluster]
 node1
 
 [tag_jobtracker_True]

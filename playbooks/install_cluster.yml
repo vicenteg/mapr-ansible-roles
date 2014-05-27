@@ -1,7 +1,7 @@
 
 --- 
 
-- hosts: tag_Name_vgonzalez_cluster
+- hosts: tag_Name_mapr_aws_cluster
   sudo: yes
   roles:
     - prerequisites
@@ -53,7 +53,7 @@
     - mapr-client
     - mapr-hive
 
-- hosts: tag_Name_vgonzalez_cluster
+- hosts: tag_Name_mapr_aws_cluster
   sudo: yes
   tasks:
     - name: set a password for the mapr user
@@ -105,7 +105,7 @@
       pause: seconds=15
       when: cldb_started.changed
 
-- hosts: tag_Name_vgonzalez_cluster
+- hosts: tag_Name_mapr_aws_cluster
   sudo: yes
   tasks:
     - name: start the warden on all nodes

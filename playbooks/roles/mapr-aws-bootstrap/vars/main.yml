@@ -1,2 +1,20 @@
 ---
 # vars file for mapr-aws-bootstrap
+# specify keypair, security group, vpc subnet and an image you have, 
+# otherwise the play will fail midway through
+ec2_keypair: 'vgonzalez_keypair'
+
+# Security group - be sure to allow access to MCS!
+ec2_security_group: 'sg-d152d7b4'
+
+# The below image is CentOS 6.5
+ec2_image: 'ami-8997afe0'
+
+# The EC2 region to use
+ec2_region: 'us-east-1'
+
+# The below image is Amazon Linux 64-bit
+#ec2_image: ami-fb8e9292
+
+# Choose a VPC subnet (this must have already been created)
+vpc_subnet: 'subnet-9bfae2ef'
