@@ -3,6 +3,8 @@ mapr-aws-bootstrap
 
 This role uses the ec2 module via a local action to set up a 5-node MapR cluster, 1 edge node and 1 MySQL server. The service layout attempts to mostly follow the 5-node HA M5 cluster described here: http://doc.mapr.com/display/MapR/Planning+the+Cluster#PlanningtheCluster-ExampleClusterDesigns
 
+This role will only create the nodes - it will not apply any configuration or install any packages.
+
 Requirements
 ------------
 
