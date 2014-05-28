@@ -6,7 +6,7 @@ This role uses the ec2 module via a local action to set up a 5-node MapR cluster
 Requirements
 ------------
 
-1. AWS credentials (account ID and secret key)
+1. AWS credentials (account ID and secret key). If you don't know what this means, read this: http://docs.aws.amazon.com/general/latest/gr/getting-aws-sec-creds.html
 2. As we will provision nodes in a VPC, one will have to exist, and you'll need the subnet ID.
 3. You will need a base image. This has been tested with the CentOS 6.5 AMI in us-east-1 - ami-8997afe0
 4. You will need your SSH keypair already generated and available in AWS. 
