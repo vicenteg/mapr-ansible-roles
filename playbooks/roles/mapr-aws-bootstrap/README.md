@@ -16,11 +16,16 @@ When run, the play will expect to obtain AWS credentials from environment variab
 
 Copy the contents to your own file, edit the variables, and run `source credentials.sh` prior to running the play.
 
+Once your credentials are sourced into the environment, you can run the playbook:
+
+```
+ansible-playbook playbooks/aws_bootstrap.yml
+```
 
 Role Variables
 --------------
 
-The following need to be modified from these defaults:
+The following need to be modified from these (personal) defaults. Odds are excellent these will not work at all for you, so you need to supply your own.
 
 ec2_keypair: 'vgonzalez_keypair'
 
