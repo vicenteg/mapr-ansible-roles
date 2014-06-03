@@ -1,0 +1,65 @@
+[cluster]
+{% for instance in ec2_cluster.instances %}
+{{instance.public_dns_name}}
+{% endfor %}
+
+[metrics]
+{% for result in metrics['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[jobtracker]
+{% for result in jobtrackers['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[tasktracker]
+{% for result in tasktrackers['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[webserver]
+{% for result in webservers['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[zookeepers]
+{% for result in zookeepers['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[cldb]
+{% for result in cldbs['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[nfs]
+{% for result in nfs['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[fileserver]
+{% for result in fileservers['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[mysql]
+{% for instance in mysql.instances %}
+{{instance.public_dns_name}}
+{% endfor %}
+
+[edge]
+{% for instance in edge.instances %}
+{{instance.public_dns_name}}
+{% endfor %}
+
+[spark_master]
+{% for result in sparkmaster['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
+[spark_slave]
+{% for result in sparkslaves['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+

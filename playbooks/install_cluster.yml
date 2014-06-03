@@ -1,59 +1,59 @@
 
 --- 
 
-- hosts: tag_Name_mapr_aws_cluster
+- hosts: all
   sudo: yes
   roles:
     - prerequisites
 
-- hosts: tag_mysql_True
+- hosts: mysql
   sudo: yes
   roles:
     - mysql-server
     - metrics-database
 
-- hosts: tag_zookeeper_True
+- hosts: zookeepers
   sudo: yes
   roles:
     - zookeeper
 
-- hosts: tag_cldb_True
+- hosts: cldb
   sudo: yes
   roles:
     - cldb
 
-- hosts: tag_jobtracker_True
+- hosts: jobtracker
   sudo: yes
   roles:
     - jobtracker
 
-- hosts: tag_tasktracker_True
+- hosts: tasktracker
   sudo: yes
   roles:
     - mapr-tasktracker
 
-- hosts: tag_webserver_True
+- hosts: webserver
   sudo: yes
   roles:
     - webserver
 
-- hosts: tag_nfs_True
+- hosts: nfs
   sudo: yes
   roles:
     - nfs
 
-- hosts: tag_fileserver_True
+- hosts: fileserver
   sudo: yes
   roles:
     - mapr-fileserver
 
-- hosts: tag_edge_True
+- hosts: edge
   sudo: yes
   roles:
     - mapr-client
     - mapr-hive
 
-- hosts: tag_Name_mapr_aws_cluster
+- hosts: cluster
   sudo: yes
   tasks:
     - name: set a password for the mapr user
@@ -76,7 +76,7 @@
       with_fileglob:
         - "/tmp/*id_dsa.pub"
 
-- hosts: tag_zookeeper_True
+- hosts: zookeeper
   sudo: yes
   tasks:
     - name: start zookeeper on ZK nodes
@@ -94,7 +94,7 @@
       command: service mapr-zookeeper qstatus
       register: zk_qstatus
 
-- hosts: tag_cldb_True
+- hosts: cldb
   sudo: yes
   tasks:
     - name: start warden on CLDBs first per doc.mapr.com
@@ -105,7 +105,7 @@
       pause: seconds=15
       when: cldb_started.changed
 
-- hosts: tag_Name_mapr_aws_cluster
+- hosts: cluster
   sudo: yes
   tasks:
     - name: start the warden on all nodes
@@ -118,20 +118,20 @@
       pause: seconds=10
       when: warden_started.changed
 
-- hosts: tag_spark_master_True
+- hosts: spark_master
   sudo: yes
   roles:
     - scala
     - mapr-spark-master
 
-- hosts: tag_spark_slave_True
+- hosts: spark_slave
   sudo: yes
   roles:
     - scala
     - mapr-spark-slave
 
 
-- hosts: tag_webserver_True
+- hosts: webserver
   sudo: yes
   gather_facts: no
   tasks:

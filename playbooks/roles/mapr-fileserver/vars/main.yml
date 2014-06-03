@@ -1,4 +1,4 @@
 ---
 # vars file for mapr-fileserver
 cluster_name: mapr
-mapr_disks: [ '/dev/xvdf' ]
+mapr_disks: [ '/dev/sdb', '/dev/sdc', '/dev/sdd', '/dev/sde', '/dev/sdf' ]

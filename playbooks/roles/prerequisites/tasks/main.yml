@@ -44,6 +44,9 @@
 - name: ensure NFS server is disabled
   service: name=nfs state=stopped enabled=no
 
+- name: disable selinux
+  selinux: state=disabled
+
 - name: disable iptables
   service: name=iptables state=stopped enabled=no
 

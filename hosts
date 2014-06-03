@@ -1,41 +1,43 @@
+# This is the hosts file for Vagrant.
 # Edit the IP addresses, but do not edit the names.
 node1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222
 
 # Do not edit below this line unless you're pretty sure.
 
 local ansible_connection=local
-[tag_Name_mapr_aws_cluster]
+
+[cluster]
 node1
 
-[tag_jobtracker_True]
+[jobtracker]
 node1
 
-[tag_tasktracker_True]
+[tasktracker]
 node1
 
-[tag_webserver_True]
+[webserver]
 node1
 
-[tag_zookeeper_True]
+[zookeepers]
 node1
 
-[tag_cldb_True]
+[cldb]
 node1
 
-[tag_nfs_True]
+[nfs]
 node1
 
-[tag_fileserver_True]
+[fileserver]
 node1
 
-[tag_mysql_True]
+[mysql]
 node1
 
-[tag_edge_True]
+[edge]
 node1
 
-[tag_spark_master_True]
+[spark_master]
 node1
 
-[tag_spark_slave_True]
+[spark_slave]
 node1

@@ -1,6 +1,6 @@
 ---
 # tasks file for metrics-database
-- name: install mapr-core
+- name: install mapr-core (for /opt/mapr/bin/setup.sql)
   yum: name=mapr-core state=present
 
 - name: create the metrics database

@@ -20,3 +20,6 @@ ec2_image: 'ami-8997afe0'
 
 # Choose a VPC subnet (this must have already been created)
 vpc_subnet: 'subnet-9bfae2ef'
+
+# pick a name for the cluster. This will be the RHS of the "Name" tag.
+ec2_name_tag: 'vgonzalez_cluster'

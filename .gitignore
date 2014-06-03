@@ -3,3 +3,5 @@ aws/credentials.sh
 .vagrant/
 tmp
 .DS_Store
+playbooks/*.hosts
+demolicense.txt

@@ -21,7 +21,7 @@
         delete_on_termination: true
       monitoring: yes
       instance_tags:
-        Name: mapr_aws_cluster
+        Name: '{{ec2_name_tag}}'
         edge: true
     register: edge
 
@@ -45,7 +45,7 @@
         delete_on_termination: true
       monitoring: yes
       instance_tags:
-        Name: mapr_aws_cluster
+        Name: '{{ec2_name_tag}}'
         mysql: true
     register: mysql
 
@@ -72,7 +72,7 @@
         delete_on_termination: true
       monitoring: yes
       instance_tags:
-        Name: mapr_aws_cluster
+        Name: '{{ec2_name_tag}}'
     register: ec2_cluster
 
   - name: tag three instances as zookeepers
@@ -81,6 +81,7 @@
     args:
       tags:
         zookeeper: true
+    register: zookeepers
 
   - name: tag two instances as CLDBs
     local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
@@ -88,6 +89,7 @@
     args:
       tags:
         cldb: true
+    register: cldbs
 
   - name: tag all instances as NFS servers
     local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
@@ -95,6 +97,7 @@
     args:
       tags:
         nfs: true
+    register: nfs
 
   - name: tag two instances as webservers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -102,6 +105,7 @@
     args:
       tags:
         webserver: true
+    register: webservers
 
   - name: tag four instances with metrics
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -109,6 +113,10 @@
     args:
       tags:
         metrics: true
+    register: metrics
+
+  # - name: debug metrics
+  #   debug: var=metrics
 
   - name: tag all as fileservers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -116,6 +124,7 @@
     args:
       tags:
         fileserver: true
+    register: fileservers
 
   - name: tag jobtrackers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -123,6 +132,7 @@
     args:
       tags:
         jobtracker: true
+    register: jobtrackers
 
   - name: tag tasktrackers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -130,6 +140,7 @@
     args:
       tags:
         tasktracker: true
+    register: tasktrackers
 
   - name: tag hbase-masters
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -137,6 +148,7 @@
     args:
       tags:
         hbasemaster: true
+    register: hbasemasters
 
   - name: tag hbase-regionservers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -144,6 +156,7 @@
     args:
       tags:
         hbaseregionserver: true
+    register: hbaseregionservers
 
   - name: tag spark master
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -151,6 +164,7 @@
     args:
       tags:
         spark_master: true
+    register: sparkmaster
 
   - name: tag spark slaves
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -158,6 +172,10 @@
     args:
       tags:
         spark_slave: true
+    register: sparkslaves
+
+  - name: write an inventory file containing the just-created cluster
+    template: src=cluster.hosts.j2 dest='./{{ec2_name_tag}}.hosts' mode=0644 
 
   - name: debug result
     debug: msg="cluster nodes; {{ec2_cluster.instance_ids}}, edge node; {{edge.instance_ids}}, mysql node; {{mysql.instance_ids}}"
@@ -167,4 +185,4 @@
   #     module: ec2
   #     region: '{{ec2_region}}'
   #     state: absent
-  #     instance_ids: '{{ec2.instance_ids}}'
+  #     instance_ids: '{{ec2_cluster.instance_ids}}'
