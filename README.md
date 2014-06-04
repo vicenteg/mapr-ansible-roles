@@ -1,6 +1,15 @@
 mapr-singlenode-vagrant
 =======================
 
+Read This
+=========
+
+First off, you need to change stuff in order to log in to the cluster that results here. Please skim through this README and look at what needs to change before you run `vagrant up`.
+
+
+Intro
+======
+
 A single node MapR cluster using Vagrant.
 
 This project includes a Vagrant file that specifies a single VM suitable to run MapR, 
