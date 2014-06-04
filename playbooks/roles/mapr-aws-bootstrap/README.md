@@ -12,9 +12,9 @@ Requirements
 ------------
 
 1. AWS credentials (account ID and secret key). If you don't know what this means, read this: http://docs.aws.amazon.com/general/latest/gr/getting-aws-sec-creds.html
-2. As we will provision nodes in a VPC, one will have to exist, and you'll need the subnet ID.
-3. You will need a base image. This has been tested with the CentOS 6.5 AMI in us-east-1 - ami-8997afe0
-4. You will need your SSH keypair already generated and available in AWS. 
+2. We will provision nodes in a VPC. A VPC must exist, with at least one subnet. You'll need the subnet ID.
+3. You will need a base image. This has been tested with the CentOS 6.5 AMI in us-east-1 having ID `ami-8997afe0`.
+4. You will need your SSH keypair already generated and available in AWS.
 5. You will need a security group. The cluster that results from the install_cluster play uses a security group that allows ports 22 and 8443 as well as all traffic originating from the VPC subnet.
 
 When run, the play will expect to obtain AWS credentials from environment variables. A sample file is provided here: https://github.com/vicenteg/mapr-singlenode-vagrant/blob/master/aws/credentials.sh.sample
@@ -67,3 +67,4 @@ WTFPL
 Author Information
 ------------------
 
+Vince Gonzalez - vgonzalez@
