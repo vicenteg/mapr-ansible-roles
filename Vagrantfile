@@ -2,7 +2,7 @@ require 'etc'
 username = Etc.getlogin
 
 Vagrant.configure("2") do |config|
-  disk_size = 16 * 1024
+  disk_size = 24 * 1024
   memory = (8 * 1024).round
   config.vm.define "node1" do |node1|
   
