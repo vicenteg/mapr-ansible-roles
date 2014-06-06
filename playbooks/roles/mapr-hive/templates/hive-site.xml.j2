@@ -19,6 +19,12 @@
 
 <configuration>
   <property>
+    <name>hive.optimize.insert.dest.volume</name>
+    <value>true</value>
+    <description>For CREATE TABLE AS and INSERT queries create the scratch directory under the destination directory. This avoids the data move across volumes and improves performance.</description>
+  </property>
+
+  <property>
     <name>hive.exec.scratchdir</name>
     <value>/user/${user.name}/tmp/hive</value>
     <description>Scratch space for Hive jobs</description>

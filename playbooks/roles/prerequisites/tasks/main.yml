@@ -1,3 +1,16 @@
+- name: install libselinux-python tools
+  yum: name="{{item}}" state=present
+  with_items:
+    - libselinux-python
+
+- name: set selinux config to permissive
+  selinux: state=permissive policy=targeted
+
+- name: selinux to permissive now
+  command: setenforce permissive
+
+- name: disable iptables
+  service: name=iptables state=stopped enabled=no
 
 - name: install fastestmirror for yum
   yum: name=yum-plugin-fastestmirror state=present
@@ -8,9 +21,19 @@
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
 - name: install useful tools
+  apt: name="{{item}}" state=present
+  with_items:
+    - git
+    - unzip
+    - lsof
+    - wget
+    - nfs-utils
+    - clustershell
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+- name: install useful tools
   yum: name="{{item}}" state=present
   with_items:
-    - libselinux-python
     - git
     - unzip
     - lsof
@@ -43,12 +66,6 @@
 
 - name: ensure NFS server is disabled
   service: name=nfs state=stopped enabled=no
-
-- name: disable selinux
-  selinux: state=disabled
-
-- name: disable iptables
-  service: name=iptables state=stopped enabled=no
 
 - name: ensure rpcbind starts
   service: name=rpcbind state=started enabled=yes

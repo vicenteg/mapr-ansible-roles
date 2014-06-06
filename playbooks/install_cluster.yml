@@ -47,6 +47,11 @@
   roles:
     - mapr-fileserver
 
+- hosts: hiveserver
+  sudo: yes
+  roles:
+    - mapr-hive
+
 - hosts: edge
   sudo: yes
   roles:
@@ -76,7 +81,7 @@
       with_fileglob:
         - "/tmp/*id_dsa.pub"
 
-- hosts: zookeeper
+- hosts: zookeepers
   sudo: yes
   tasks:
     - name: start zookeeper on ZK nodes
@@ -142,3 +147,11 @@
     - name: print webserver URLs
       debug: msg='webserver= https://{{ec2_facts["ansible_facts"]["ansible_ec2_public-hostname"]}}:8443'
       when: '"ansible_ec2_public-hostname" in ec2_facts["ansible_facts"]'
+
+
+- hosts: localhost
+  tasks:
+    - name: clean up the public keys on the local machine
+      file: state=absent path={{item}}
+      with_fileglob:
+          - "/tmp/*id_dsa.pub"

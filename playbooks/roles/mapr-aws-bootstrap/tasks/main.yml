@@ -6,6 +6,7 @@
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
+      spot_price: 0.008
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -30,6 +31,7 @@
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
+      spot_price: 0.008
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -49,11 +51,36 @@
         mysql: true
     register: mysql
 
+  - name: create a hive metastore/hiveserver node
+    local_action:
+      module: ec2
+      region: '{{ec2_region}}'
+      zone: '{{ec2_zone}}'
+      spot_price: 0.008
+      key_name: '{{ec2_keypair}}'
+      group: '{{ec2_security_group}}'
+      image: '{{ec2_image}}' # This is a CentOS 6 image
+      vpc_subnet_id: '{{vpc_subnet}}'
+      assign_public_ip: true
+      instance_type: m1.small
+      count: 1
+      wait: yes
+      wait_timeout: 500
+      volumes:
+      - device_name: /dev/sda
+        volume_size: 16
+        delete_on_termination: true
+      monitoring: yes
+      instance_tags:
+        Name: '{{ec2_name_tag}}'
+    register: hiveserver
+
   - name: create some cluster nodes
     local_action:
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
+      spot_price: 0.0179
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -117,6 +144,14 @@
 
   # - name: debug metrics
   #   debug: var=metrics
+
+  - name: tag one node as hiveserver
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    with_items: hiveserver.instances
+    args:
+      tags:
+        hiveserver: true
+    register: hiveservers
 
   - name: tag all as fileservers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present

@@ -5,3 +5,5 @@ java_home: /usr
 
 # Password generated with openssl passwd -1
 mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.'
+
+cluster_name: mapr

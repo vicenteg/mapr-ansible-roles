@@ -1,6 +1,8 @@
 ---
 # defaults file for mapr-fileserver
 mapr_disks: [ ]
+
+# observe the cluster_name in top-level group_vars/all
 cluster_name: mapr
 
 # username, password and host:port for the metrics database for use with configure.sh

@@ -3,6 +3,11 @@
 {{instance.public_dns_name}}
 {% endfor %}
 
+[hiveserver]
+{% for result in hiveservers['results'] %}
+{{result.item.public_dns_name}}
+{% endfor %}
+
 [metrics]
 {% for result in metrics['results'] %}
 {{result.item.public_dns_name}}
