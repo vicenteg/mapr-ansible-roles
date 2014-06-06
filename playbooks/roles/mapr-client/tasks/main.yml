@@ -14,3 +14,12 @@
 
 - name: remove configuration script
   file: state=absent path=/tmp/client_configure.sh 
+
+- name: check roles to see whether this is an NFS server
+  stat: path=/opt/mapr/roles/nfs 
+  ignore_errors: true
+  register: nfs_role
+
+- name: add NFS mountpoint to fstab but do not mount
+  mount: name=/mapr src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr" fstype=nfs opts="rw,hard,intr,nolock" state=present
+  when: nfs_role.stat.exists == false

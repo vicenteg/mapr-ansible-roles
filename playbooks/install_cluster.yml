@@ -1,6 +1,8 @@
 
 --- 
 
+# First, install the cluster - all nodes running Hadoop services.
+
 - hosts: all
   max_fail_percentage: 0
   sudo: yes
@@ -23,7 +25,7 @@
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - cldb
+    - mapr-cldb
 
 - hosts: jobtracker
   max_fail_percentage: 0
@@ -67,10 +69,10 @@
     - name: make mapr user owner
       file: path=/home/mapr/.ssh/id_dsa mode=0600 owner=mapr group=mapr 
 
-    - name: fetch ssh key 
+    - name: fetch ssh key from each node
       fetch: src=/home/mapr/.ssh/id_dsa.pub dest="/tmp/{{ansible_hostname}}-id_dsa.pub" flat=yes
 
-    - name: add all hosts public keys to authorized_keys
+    - name: add all hosts public keys to authorized_keys on all nodes
       authorized_key: key="{{ lookup('file', item) }}" user=mapr 
       with_fileglob:
         - "/tmp/*id_dsa.pub"
@@ -118,6 +120,8 @@
       when: warden_started.changed
 
 
+# Having installed and started the cluster, install edge and client services.
+
 - hosts: hiveserver
   sudo: yes
   roles:
@@ -142,6 +146,7 @@
     - scala
     - mapr-spark-slave
 
+# For convenience, print the URL for the MCS.
 
 - hosts: webserver
   sudo: yes
