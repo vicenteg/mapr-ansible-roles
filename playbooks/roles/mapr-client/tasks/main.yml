@@ -1,6 +1,6 @@
 ---
 # tasks file for mapr-client
-- name: install mapr-core
+- name: install mapr-core (for conf/env.sh)
   yum: name=mapr-core state=present
 
 - name: configure env.sh with JAVA_HOME
