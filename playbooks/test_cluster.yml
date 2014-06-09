@@ -1,0 +1,27 @@
+
+--- 
+
+- hosts: webserver
+  tasks:
+    - name: check that webserver role exists
+      stat: path=/opt/mapr/roles/webserver 
+      register: webserver_role
+
+    - fail: msg="Webserver role not installed on node in webserver group."
+      when: webserver_role.stat.exists != true
+
+    - name: check that MCS is listening on port 8443
+      wait_for: port=8443 timeout=5
+
+
+- hosts: cldb
+  tasks:
+     - name: check that CLDB role exists
+       stat: path=/opt/mapr/roles/cldb
+       register: cldb_role
+
+     - fail: msg="CLDB role not installed on node in CLDB group."
+       when: cldb_role.stat.exists != true
+
+     - name: check that CLDB is listening on 7222
+       wait_for: port=7222 timeout=5

@@ -9,12 +9,6 @@
   roles:
     - prerequisites
 
-- hosts: mysql
-  sudo: yes
-  roles:
-    - mysql-server
-    - metrics-database
-
 - hosts: zookeepers
   max_fail_percentage: 0
   sudo: yes
@@ -120,7 +114,13 @@
       when: warden_started.changed
 
 
-# Having installed and started the cluster, install edge and client services.
+# Having installed and started the cluster, install optional ecosystem and client services.
+
+- hosts: mysql
+  sudo: yes
+  roles:
+    - mysql-server
+    - metrics-database
 
 - hosts: hiveserver
   sudo: yes
@@ -170,3 +170,4 @@
       file: state=absent path={{item}}
       with_fileglob:
           - "/tmp/*id_dsa.pub"
+

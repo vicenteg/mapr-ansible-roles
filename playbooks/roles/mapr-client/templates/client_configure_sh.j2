@@ -1,7 +1,7 @@
 #!/bin/sh
 
 /opt/mapr/server/configure.sh -M7 \
-	-C {% for node in groups['cldb'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %} \
+	-c -C {% for node in groups['cldb'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %} \
 	-Z {% for node in groups['zookeepers'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %}  \
 	-N {{cluster_name}} \
 	--create-user

@@ -46,7 +46,7 @@
   template: src=hosts.j2 dest=/etc/hosts mode=0644 
 
 - name: install repo for Redhat-based Linux
-  copy: src=maprtech.repo dest=/etc/yum.repos.d/maprtech.repo mode=0644 owner=root group=root
+  template: src=maprtech.repo.j2 dest=/etc/yum.repos.d/maprtech.repo mode=0644 owner=root group=root
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
 - name: install Java 1.7

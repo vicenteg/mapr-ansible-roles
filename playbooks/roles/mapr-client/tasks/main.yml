@@ -6,11 +6,21 @@
 - name: configure env.sh with JAVA_HOME
   lineinfile: dest=/opt/mapr/conf/env.sh insertafter="^#export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}" 
 
+- name: see if this node is already configured
+  stat: path=/opt/mapr/conf/mapr-clusters.conf
+  register: mapr_clusters
+
 - name: write configure script
   template: src=client_configure_sh.j2 dest=/tmp/client_configure.sh mode=0700 owner=root group=root 
+  when: mapr_clusters.stat.exists == false
 
 - name: configure this client
   command: /tmp/client_configure.sh chdir=/tmp
+  when: mapr_clusters.stat.exists == false
+
+- name: configure -R
+  command: /opt/mapr/server/configure.sh -R
+  when: mapr_clusters.stat.exists == true
 
 - name: remove configuration script
   file: state=absent path=/tmp/client_configure.sh 
