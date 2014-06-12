@@ -23,7 +23,7 @@
   template: src=do_configure_sh.j2 dest=/tmp/do_configure.sh mode=0700 owner=root group=root 
 
 - name: configure the cluster
-  command: /tmp/do_configure.sh chdir=/tmp
+  command: /tmp/do_configure.sh chdir=/tmp creates=/opt/mapr/conf/mapr-clusters.conf
 
 - name: check whether we have disks already
   shell: /opt/mapr/server/disklist.sh
