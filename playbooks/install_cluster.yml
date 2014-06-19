@@ -1,7 +1,10 @@
 
 --- 
-
 # First, install the cluster - all nodes running Hadoop services.
+
+- hosts: all
+  tasks:
+    - group_by: key={{ansible_virtualization_type}}
 
 - hosts: all
   max_fail_percentage: 0
@@ -71,6 +74,13 @@
       with_fileglob:
         - "/tmp/*id_dsa.pub"
 
+- hosts: localhost
+  tasks:
+    - name: clean up the public keys we copied to the local machine in the last play
+      file: state=absent path={{item}}
+      with_fileglob:
+          - "/tmp/*id_dsa.pub"
+
 - hosts: zookeepers
   sudo: yes
   tasks:
@@ -116,35 +126,11 @@
 
 # Having installed and started the cluster, install optional ecosystem and client services.
 
-- hosts: mysql
-  sudo: yes
-  roles:
-    - mysql-server
-    - metrics-database
+- include: install_mysql.yml
+- include: install_spark.yml
+- include: install_hive.yml
+- include: install_metrics.yml
 
-- hosts: hiveserver
-  sudo: yes
-  roles:
-    - mapr-client
-    - mapr-hive
-
-- hosts: edge
-  sudo: yes
-  roles:
-    - mapr-client
-    - mapr-hive
-
-- hosts: spark_master
-  sudo: yes
-  roles:
-    - scala
-    - mapr-spark-master
-
-- hosts: spark_slave
-  sudo: yes
-  roles:
-    - scala
-    - mapr-spark-slave
 
 # For convenience, print the URL for the MCS.
 
@@ -163,11 +149,11 @@
       debug: msg='webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443'
       when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
 
-
-- hosts: localhost
+# if this is a virtualbox node, print out the IP for eth1, which is a host interface.
+- hosts: virtualbox
   tasks:
-    - name: clean up the public keys on the local machine
-      file: state=absent path={{item}}
-      with_fileglob:
-          - "/tmp/*id_dsa.pub"
+    - name: print webserver URLs
+      debug: msg='webserver=https://{{ansible_eth1.ipv4.address}}:8443'
+      when: '"ec2_facts is not defined"'
+
 

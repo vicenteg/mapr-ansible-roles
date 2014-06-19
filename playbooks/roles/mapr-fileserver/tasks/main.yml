@@ -31,4 +31,4 @@
 
 - name: add the disks
   command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt
-  when: disklist.stdout.find('MapR-FS') == -1
+  when: "disklist is defined and disklist.stdout.find('MapR-FS') == -1"

@@ -5,13 +5,13 @@
 - name: install mysqldb which is required for ansible
   yum: name=MySQL-python state=present
 
-- name: install hive and related packages
+- name: install hive $hive_version and related packages
   yum: name={{item}} state=present
   with_items:
     - mysql
-    - mapr-hive
-    - mapr-hiveserver2
-    - mapr-hivemetastore
+    - 'mapr-hive-{{hive_version}}'
+    - 'mapr-hiveserver2-{{hive_version}}'
+    - 'mapr-hivemetastore-{{hive_version}}'
 
 - name: ensure the top level hive directory is owned by mapr so logs directory can be created
   file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes

@@ -1,6 +1,6 @@
 # This is the hosts file for Vagrant.
 # Edit the IP addresses, but do not edit the names.
-node1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222
+node1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
 
 # Do not edit below this line unless you're pretty sure.
 
@@ -34,6 +34,9 @@ node1
 node1
 
 [edge]
+node1
+
+[hiveserver]
 node1
 
 [spark_master]

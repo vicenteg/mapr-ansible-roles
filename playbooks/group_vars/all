@@ -9,4 +9,5 @@ mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.'
 cluster_name: mapr
 
 #mapr_version: "v3.0.3"
-mapr_version: "v3.1.0"
+#mapr_version: "v3.1.0"
+mapr_version: "v3.1.1"

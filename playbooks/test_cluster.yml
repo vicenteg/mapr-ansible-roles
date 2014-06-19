@@ -1,7 +1,21 @@
 
 --- 
 
+- hosts: zookeepers
+  max_fail_percentage: 0
+  tasks:
+    - name: check that zookeeper role exists
+      stat: path=/opt/mapr/roles/zookeeper
+      register: zookeeper_role
+
+    - fail: msg="Zookeeper role not installed on node in zookeeper group."
+      when: zookeeper_role.stat.exists != true
+
+    - name: check that zookeeper is listening on port 5181
+      wait_for: port=5181 timeout=5 state=started
+
 - hosts: webserver
+  max_fail_percentage: 0
   tasks:
     - name: check that webserver role exists
       stat: path=/opt/mapr/roles/webserver 
@@ -11,10 +25,11 @@
       when: webserver_role.stat.exists != true
 
     - name: check that MCS is listening on port 8443
-      wait_for: port=8443 timeout=5
+      wait_for: port=8443 timeout=5 state=started
 
 
 - hosts: cldb
+  max_fail_percentage: 0
   tasks:
      - name: check that CLDB role exists
        stat: path=/opt/mapr/roles/cldb
@@ -24,4 +39,42 @@
        when: cldb_role.stat.exists != true
 
      - name: check that CLDB is listening on 7222
-       wait_for: port=7222 timeout=5
+       wait_for: port=7222 timeout=5 state=started
+
+- hosts: fileserver
+  max_fail_percentage: 0
+  tasks:
+     - name: check that fileserver role exists
+       stat: path=/opt/mapr/roles/fileserver
+       register: fileserver_role
+
+     - fail: msg="fileserver role not installed on node in fileserver group."
+       when: fileserver_role.stat.exists != true
+
+     - name: check that fileserver is listening on 5660
+       wait_for: port=5660 timeout=5 state=started
+
+- hosts: jobtracker
+  max_fail_percentage: 50
+  tasks:
+     - name: check that jobtracker role exists
+       stat: path=/opt/mapr/roles/jobtracker
+       register: jobtracker
+
+     - fail: msg="jobtracker role not installed on node in jobtracker group."
+       when: jobtracker.stat.exists != true
+
+     - name: check that jobtracker is listening on 9001
+       wait_for: port=9001 timeout=5 state=started
+
+- hosts: edge
+  sudo: yes
+  sudo_user: mapr
+  tasks:
+    - name: try to submit a small job (teragen)
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100 /user/teragen
+      register: teragen
+
+    - name: clean up the teragen
+      command: hadoop fs -rmr /user/teragen
+      when: teragen.rc == 0

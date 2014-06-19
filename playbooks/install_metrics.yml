@@ -1,0 +1,5 @@
+---
+- hosts: webserver:jobtracker
+  sudo: yes
+  roles:
+    - mapr-metrics

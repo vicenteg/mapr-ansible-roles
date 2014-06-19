@@ -22,13 +22,12 @@
   file: dest={{spark_work_dir}} owner=mapr group=mapr state=directory mode=0750
 
 - name: check whether a local spark volume exists
-  command:
-    maprcli volume list -columns volumename -noheader
+  command: maprcli volume list -columns volumename -noheader
   ignore_errors: true
   register: maprcli_volume
 
+# - debug: msg="{{maprcli_volume.stdout_lines|map('trim')|list}}"
+
 - name: create a local volume for spark work directory
-  command:
-    creates=/mapr/{{cluster_name}}/var/mapr/local/{{ansible_hostname}}/spark/
-    maprcli volume create -path /var/mapr/local/{{ansible_hostname}}/spark -replication 1 -minreplication 1 -name mapr.{{ansible_hostname}}.local.spark -createparent true
-  when: "'mapr.{{ansible_hostname}}.local.spark' in maprcli_volume.stdout_lines" 
+  command: maprcli volume create -path /var/mapr/local/{{ansible_hostname}}/spark -replication 1 -minreplication 1 -name mapr.{{ansible_hostname}}.local.spark -createparent true
+  when: "maprcli_volume is defined and maprcli_volume.stdout.find('mapr.{{ansible_hostname}}.local.spark') == -1"

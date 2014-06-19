@@ -1,0 +1,6 @@
+---
+- hosts: hiveserver
+  sudo: yes
+  roles:
+    - mapr-client
+    - mapr-hive

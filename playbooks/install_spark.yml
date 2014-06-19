@@ -1,0 +1,13 @@
+---
+- hosts: spark_master
+  sudo: yes
+  roles:
+    - scala
+    - mapr-spark-master
+
+- hosts: spark_slave
+  sudo: yes
+  sudo_user: root
+  roles:
+    - scala
+    - mapr-spark-slave

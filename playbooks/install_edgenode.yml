@@ -1,0 +1,5 @@
+---
+- hosts: edge
+  sudo: yes
+  roles:
+    - mapr-client

@@ -1,0 +1,7 @@
+---
+
+- hosts: mysql
+  sudo: yes
+  roles:
+    - mysql-server
+    - metrics-database

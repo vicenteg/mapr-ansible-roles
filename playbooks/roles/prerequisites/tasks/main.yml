@@ -16,31 +16,31 @@
   yum: name=yum-plugin-fastestmirror state=present
   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
-- name: install EPEL repo
-  yum: state=present name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+# - name: install EPEL repo
+#   yum: state=present name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+#   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
-- name: install useful tools
-  apt: name="{{item}}" state=present
-  with_items:
-    - git
-    - unzip
-    - lsof
-    - wget
-    - nfs-utils
-    - clustershell
-  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+# - name: install useful tools
+#   apt: name="{{item}}" state=present
+#   with_items:
+#     - git
+#     - unzip
+#     - lsof
+#     - wget
+#     - nfs-utils
+#     - clustershell
+#   when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
-- name: install useful tools
-  yum: name="{{item}}" state=present
-  with_items:
-    - git
-    - unzip
-    - lsof
-    - wget
-    - nfs-utils
-    - clustershell
-  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+# - name: install useful tools
+#   yum: name="{{item}}" state=present
+#   with_items:
+#     - git
+#     - unzip
+#     - lsof
+#     - wget
+#     - nfs-utils
+#     - clustershell
+#   when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
 - name: write /etc/hosts with cluster node names
   template: src=hosts.j2 dest=/etc/hosts mode=0644 
@@ -63,6 +63,10 @@
 
 - name: ensure NTP is enabled
   service: name=ntpd enabled=yes state=started
+
+- name: install nfs-utils to get rpcbind
+  yum: name=nfs-utils state=installed
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
 
 - name: ensure NFS server is disabled
   service: name=nfs state=stopped enabled=no

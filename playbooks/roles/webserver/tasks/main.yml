@@ -3,4 +3,3 @@
   yum: name='{{item}}' state=present
   with_items:
     - mapr-webserver
-    - mapr-metrics
