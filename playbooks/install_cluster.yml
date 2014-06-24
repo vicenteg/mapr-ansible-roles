@@ -50,36 +50,7 @@
   roles:
     - mapr-fileserver
 
-
-- hosts: cluster
-  sudo: yes
-  tasks:
-    - name: set a password for the mapr user
-      user: name=mapr password="{{mapr_user_pw}}"
-
-    - name: create .ssh for mapr user
-      file: path=/home/mapr/.ssh mode=0700 state=directory owner=mapr group=mapr
-
-    - name: create ssh keys for mapr user 
-      command: creates=/home/mapr/.ssh/id_dsa ssh-keygen -t dsa -P "" -f /home/mapr/.ssh/id_dsa
-
-    - name: make mapr user owner
-      file: path=/home/mapr/.ssh/id_dsa mode=0600 owner=mapr group=mapr 
-
-    - name: fetch ssh key from each node
-      fetch: src=/home/mapr/.ssh/id_dsa.pub dest="/tmp/{{ansible_hostname}}-id_dsa.pub" flat=yes
-
-    - name: add all hosts public keys to authorized_keys on all nodes
-      authorized_key: key="{{ lookup('file', item) }}" user=mapr 
-      with_fileglob:
-        - "/tmp/*id_dsa.pub"
-
-- hosts: localhost
-  tasks:
-    - name: clean up the public keys we copied to the local machine in the last play
-      file: state=absent path={{item}}
-      with_fileglob:
-          - "/tmp/*id_dsa.pub"
+- include: authorized_keys.yml
 
 - hosts: zookeepers
   sudo: yes
@@ -146,14 +117,28 @@
       debug: var=ec2_facts
 
     - name: print webserver URLs
-      debug: msg='webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443'
+      debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
+      when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
+
+    - name: tell slack
+      local_action:
+        module: slack
+        domain: "{{slack_domain}}"
+        token: "{{slack_token}}"
+        msg: "cluster webserver: https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
       when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
 
 # if this is a virtualbox node, print out the IP for eth1, which is a host interface.
 - hosts: virtualbox
   tasks:
     - name: print webserver URLs
-      debug: msg='webserver=https://{{ansible_eth1.ipv4.address}}:8443'
+      debug: msg="webserver=https://{{ansible_eth1.ipv4.address}}:8443"
+      when: "ec2_facts is not defined"
+
+    - name: tell slack
+      local_action:
+        module: slack
+        domain: "{{slack_domain}}"
+        token: "{{slack_token}}"
+        msg: "cluster webserver: https://{{ansible_eth1.ipv4.address}}:8443"
       when: '"ec2_facts is not defined"'
-
-

@@ -1,0 +1,9 @@
+---
+- hosts: local
+  tasks:
+    - name: tell slack
+      local_action:
+        module: slack
+        domain: {{slack_domain}}
+        token: {{slack_token}}
+        msg: "We did it!"

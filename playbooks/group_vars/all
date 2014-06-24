@@ -11,3 +11,6 @@ cluster_name: mapr
 #mapr_version: "v3.0.3"
 #mapr_version: "v3.1.0"
 mapr_version: "v3.1.1"
+
+slack_token: rpboHjfICR0H7lmXPBp107zD
+slack_domain: mapr-dev.slack.com
