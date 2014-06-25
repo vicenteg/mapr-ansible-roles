@@ -77,3 +77,9 @@
 - name: disable memory overcommit
   lineinfile: dest=/etc/sysctl.conf regexp="^vm.overcommit_memory" line="vm.overcommit_memory=0"
   notify: reload sysctl
+
+- name: create a mapr group
+  group: name=mapr gid="{{mapr_gid}}"
+
+- name: set a password for the mapr user and ensure ssh keys exist
+  user: name=mapr uid="{{mapr_uid}}" group="mapr" password="{{mapr_user_pw}}" home="{{mapr_home}}" generate_ssh_key=yes state=present createhome=yes

@@ -43,14 +43,12 @@
 - hosts: nfs
   sudo: yes
   roles:
-    - nfs
+    - mapr-nfs
 
 - hosts: fileserver
   sudo: yes
   roles:
     - mapr-fileserver
-
-- include: authorized_keys.yml
 
 - hosts: zookeepers
   sudo: yes
@@ -94,9 +92,11 @@
       pause: seconds=10
       when: warden_started.changed
 
+# Configure all cluster nodes with public key access
+# This allows passwordless SSH between cluster nodes for root and mapr users.
+- include: authorized_keys.yml
 
 # Having installed and started the cluster, install optional ecosystem and client services.
-
 - include: install_mysql.yml
 - include: install_spark.yml
 - include: install_hive.yml
@@ -120,14 +120,6 @@
       debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
       when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
 
-    - name: tell slack
-      local_action:
-        module: slack
-        domain: "{{slack_domain}}"
-        token: "{{slack_token}}"
-        msg: "cluster webserver: https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
-      when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
-
 # if this is a virtualbox node, print out the IP for eth1, which is a host interface.
 - hosts: virtualbox
   tasks:
@@ -135,10 +127,3 @@
       debug: msg="webserver=https://{{ansible_eth1.ipv4.address}}:8443"
       when: "ec2_facts is not defined"
 
-    - name: tell slack
-      local_action:
-        module: slack
-        domain: "{{slack_domain}}"
-        token: "{{slack_token}}"
-        msg: "cluster webserver: https://{{ansible_eth1.ipv4.address}}:8443"
-      when: '"ec2_facts is not defined"'

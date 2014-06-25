@@ -1,7 +1,7 @@
 ---
 # tasks file for mapr-aws-bootstrap
 
-  - name: create an edge node
+  - name: create edge node(s)
     local_action:
       module: ec2
       region: '{{ec2_region}}'
@@ -13,7 +13,7 @@
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
       instance_type: m1.medium
-      count: 1
+      count: "{{edge_node_count}}"
       wait: yes
       wait_timeout: 500
       volumes:
@@ -26,7 +26,7 @@
         edge: true
     register: edge
 
-  - name: create a mysql node
+  - name: create mysql node(s)
     local_action:
       module: ec2
       region: '{{ec2_region}}'
@@ -38,7 +38,7 @@
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
       instance_type: m1.medium
-      count: 1
+      count: "{{mysql_node_count}}"
       wait: yes
       wait_timeout: 500
       volumes:
@@ -51,7 +51,7 @@
         mysql: true
     register: mysql
 
-  - name: create a hive metastore/hiveserver node
+  - name: create hive metastore/hiveserver node(s)
     local_action:
       module: ec2
       region: '{{ec2_region}}'
@@ -63,7 +63,7 @@
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
       instance_type: m1.medium
-      count: 1
+      count: "{{hivemeta_node_count}}"
       wait: yes
       wait_timeout: 500
       volumes:
@@ -87,7 +87,7 @@
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
       instance_type: m1.large
-      count: 5
+      count: "{{cluster_node_count}}"
       wait: yes
       wait_timeout: 500
       volumes:
@@ -142,10 +142,7 @@
         metrics: true
     register: metrics
 
-  # - name: debug metrics
-  #   debug: var=metrics
-
-  - name: tag one node as hiveserver
+  - name: tag hiveserver(s)
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: hiveserver.instances
     args:
@@ -153,7 +150,7 @@
         hiveserver: true
     register: hiveservers
 
-  - name: tag all as fileservers
+  - name: tag all cluster nodes as fileservers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
@@ -210,7 +207,7 @@
     register: sparkslaves
 
   - name: write an inventory file containing the just-created cluster
-    template: src=cluster.hosts.j2 dest='./{{ec2_name_tag}}.hosts' mode=0644 
+    template: src=cluster.hosts.j2 dest='./{{ec2_name_tag}}.hosts' mode=0644 backup=yes
 
   - name: debug result
     debug: msg="cluster nodes; {{ec2_cluster.instance_ids}}, edge node; {{edge.instance_ids}}, mysql node; {{mysql.instance_ids}}"
