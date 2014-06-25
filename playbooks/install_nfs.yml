@@ -1,0 +1,5 @@
+---
+- hosts: nfs
+  sudo: yes
+  roles:
+    - mapr-nfs

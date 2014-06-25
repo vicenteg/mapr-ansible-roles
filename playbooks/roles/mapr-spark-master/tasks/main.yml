@@ -22,3 +22,5 @@
 - name: create slaves file
   template: src=slaves.j2 dest={{spark_home}}/conf/slaves mode=0644 owner=root group=root
 
+- name: install spark-env.sh
+  template: src=spark-env.sh.j2 dest={{spark_home}}/conf/spark-env.sh.j2 mode=0644 owner=root group=root
