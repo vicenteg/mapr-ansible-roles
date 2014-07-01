@@ -1,0 +1,26 @@
+---
+# tasks file for log-synth
+
+- name: ensure java 7 and git are installed
+  yum: name="{{item}}" state=present
+  with_items:
+    - java-1.7.0-openjdk
+    - java-1.7.0-openjdk-devel
+    - git
+
+- name: ensure /opt exists
+  file: state=directory path=/opt 
+
+- name: check out log-synth
+  git: repo=https://github.com/tdunning/log-synth.git dest=/opt/log-synth update=no
+
+- name: download maven
+  get_url: url=http://mirror.cogentco.com/pub/apache/maven/maven-3/3.2.2/binaries/apache-maven-3.2.2-bin.tar.gz
+    dest="/tmp/"
+    sha256sum="cce5914cf8797671fc6e10c4e034b453d854edf711cbc664b478d0f04934cb76"
+
+- name: unpack maven to /opt
+  command: creates=/opt/apache-maven-3.2.2 chdir=/opt tar -xzf /tmp/apache-maven-3.2.2-bin.tar.gz
+
+- name: build log-synth
+  command: chdir=/opt/log-synth /opt/apache-maven-3.2.2/bin/mvn package

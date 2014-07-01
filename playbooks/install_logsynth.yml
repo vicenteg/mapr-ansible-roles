@@ -1,0 +1,6 @@
+---
+- hosts: edge
+  sudo: yes
+  roles:
+    - prerequisites
+    - log-synth
