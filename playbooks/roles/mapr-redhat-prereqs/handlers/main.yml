@@ -1,3 +1,6 @@
+---
+# handlers file for mapr-rh-prereqs
+
 - name: restart ntp
   service: name=ntpd state=restarted
 

@@ -1,14 +1,20 @@
 ---
 # tasks file for mapr-client
-- name: install mapr-core (for conf/env.sh)
-  yum: name=mapr-core state=present
+# - name: install mapr-core (for conf/env.sh)
+#   yum: name=mapr-core state=present
 
-- name: configure env.sh with JAVA_HOME
-  lineinfile: dest=/opt/mapr/conf/env.sh insertafter="^#export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}" 
+# - name: configure env.sh with JAVA_HOME
+#   lineinfile: dest=/opt/mapr/conf/env.sh insertafter="^#export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}" 
+
+- name: install mapr-client
+  yum: name=mapr-client state=present
 
 - name: see if this node is already configured
   stat: path=/opt/mapr/conf/mapr-clusters.conf
   register: mapr_clusters
+
+- name: debug it
+  debug: var=mapr_clusters
 
 - name: write configure script
   template: src=client_configure_sh.j2 dest=/tmp/client_configure.sh mode=0700 owner=root group=root 
@@ -18,9 +24,13 @@
   command: /tmp/client_configure.sh chdir=/tmp
   when: mapr_clusters.stat.exists == false
 
-- name: configure -R
+- name: refresh node roles
   command: /opt/mapr/server/configure.sh -R -on-prompt-cont y
-  when: mapr_clusters.stat.exists == true
+  when: mapr_clusters.stat.exists == true and mapr_version in ("v3.1.0", "v3.1.1")
+
+- name: refresh node roles
+  command: /opt/mapr/server/configure.sh -R 
+  when: mapr_clusters.stat.exists == true and mapr_version in ("v3.0.2", "v3.0.3")
 
 - name: remove configuration script
   file: state=absent path=/tmp/client_configure.sh 

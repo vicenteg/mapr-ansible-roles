@@ -1,4 +1,7 @@
 ---
+- hosts: cldb;mysql;zookeeper
+# just collecting facts so that we can locate the CLDB and mysql
+
 - hosts: hiveserver
   sudo: yes
   roles:

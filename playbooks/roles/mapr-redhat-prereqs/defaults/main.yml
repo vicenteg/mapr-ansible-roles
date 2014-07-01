@@ -1,3 +1,5 @@
+---
+# defaults file for mapr-rh-prereqs
 
 # Password generated with openssl passwd -1
 mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.'

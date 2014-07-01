@@ -5,12 +5,21 @@
 - hosts: all
   tasks:
     - group_by: key={{ansible_virtualization_type}}
+    - group_by: key={{ansible_distribution}}
 
-- hosts: all
+# Redhat derived distro specific prereqs
+- hosts: CentOS;Redhat
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - prerequisites
+    - mapr-redhat-prereqs
+
+# Debian derived distro specific prereqs
+- hosts: Debian;Ubuntu
+  max_fail_percentage: 0
+  sudo: yes
+  roles:
+    - mapr-debian-prereqs
 
 - hosts: zookeepers
   max_fail_percentage: 0
@@ -97,9 +106,17 @@
 - include: authorized_keys.yml
 
 # Having installed and started the cluster, install optional ecosystem and client services.
+
+# uncomment the following line to install mysql (hive metastore and metrics)
 - include: install_mysql.yml
-- include: install_spark.yml
-- include: install_hive.yml
+
+# uncomment the following line to install spark
+#- include: install_spark.yml
+
+# uncomment the following line to install hive
+#- include: install_hive.yml
+
+# uncomment the following line to install metrics
 - include: install_metrics.yml
 
 
