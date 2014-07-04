@@ -1,4 +1,3 @@
 ---
 # defaults file for mapr-client
-cluster_name: mapr
 metrics_host: localhost

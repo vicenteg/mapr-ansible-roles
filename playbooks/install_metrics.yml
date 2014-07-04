@@ -1,4 +1,6 @@
 ---
+- hosts: mysql:cldb:zookeeper
+
 - hosts: webserver:jobtracker
   sudo: yes
   roles:

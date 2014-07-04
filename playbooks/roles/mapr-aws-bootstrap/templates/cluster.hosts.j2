@@ -49,13 +49,13 @@
 {% endfor %}
 
 [mysql]
-{% for instance in mysql.instances %}
-{{instance.public_dns_name}}
+{% for result in mysql['results'] %}
+{{result.item.public_dns_name}}
 {% endfor %}
 
 [edge]
-{% for instance in edge.instances %}
-{{instance.public_dns_name}}
+{% for result in edge['results'] %}
+{{result.item.public_dns_name}}
 {% endfor %}
 
 [spark_master]

@@ -1,7 +1,7 @@
 ---
 # tasks file for mapr-aws-bootstrap
 
-  - name: create edge node(s)
+  - name: create nodes for edge/hivemeta/mysql roles
     local_action:
       module: ec2
       region: '{{ec2_region}}'
@@ -13,7 +13,7 @@
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
       instance_type: m1.medium
-      count: "{{edge_node_count}}"
+      count: 3
       wait: yes
       wait_timeout: 500
       volumes:
@@ -23,57 +23,7 @@
       monitoring: yes
       instance_tags:
         Name: '{{ec2_name_tag}}'
-        edge: true
-    register: edge
-
-  - name: create mysql node(s)
-    local_action:
-      module: ec2
-      region: '{{ec2_region}}'
-      zone: '{{ec2_zone}}'
-      spot_price: 0.01
-      key_name: '{{ec2_keypair}}'
-      group: '{{ec2_security_group}}'
-      image: '{{ec2_image}}' # This is a CentOS 6 image
-      vpc_subnet_id: '{{vpc_subnet}}'
-      assign_public_ip: true
-      instance_type: m1.medium
-      count: "{{mysql_node_count}}"
-      wait: yes
-      wait_timeout: 500
-      volumes:
-      - device_name: /dev/sda
-        volume_size: 16
-        delete_on_termination: true
-      monitoring: yes
-      instance_tags:
-        Name: '{{ec2_name_tag}}'
-        mysql: true
-    register: mysql
-
-  - name: create hive metastore/hiveserver node(s)
-    local_action:
-      module: ec2
-      region: '{{ec2_region}}'
-      zone: '{{ec2_zone}}'
-      spot_price: 0.01
-      key_name: '{{ec2_keypair}}'
-      group: '{{ec2_security_group}}'
-      image: '{{ec2_image}}' # This is a CentOS 6 image
-      vpc_subnet_id: '{{vpc_subnet}}'
-      assign_public_ip: true
-      instance_type: m1.medium
-      count: "{{hivemeta_node_count}}"
-      wait: yes
-      wait_timeout: 500
-      volumes:
-      - device_name: /dev/sda
-        volume_size: 16
-        delete_on_termination: true
-      monitoring: yes
-      instance_tags:
-        Name: '{{ec2_name_tag}}'
-    register: hiveserver
+    register: external
 
   - name: create some cluster nodes
     local_action:
@@ -95,12 +45,45 @@
         volume_size: 16
         delete_on_termination: true
       - device_name: /dev/sdb
-        volume_size: 18
+        volume_size: 64
+        delete_on_termination: true
+      - device_name: /dev/sdc
+        volume_size: 64
+        delete_on_termination: true
+      - device_name: /dev/sdd
+        volume_size: 64
+        delete_on_termination: true
+      - device_name: /dev/sde
+        volume_size: 64
         delete_on_termination: true
       monitoring: yes
       instance_tags:
         Name: '{{ec2_name_tag}}'
     register: ec2_cluster
+
+  - name: tag an edge node
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    with_items: external.instances[0:1]
+    args:
+      tags:
+        edge: true
+    register: edge
+
+  - name: tag a mysql node
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    with_items: external.instances[1:2]
+    args:
+      tags:
+        mysql: true
+    register: mysql
+
+  - name: tag a hivemeta node
+    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    with_items: external.instances[2:3]
+    args:
+      tags:
+        hiveserver: true
+    register: hiveservers
 
   - name: tag three instances as zookeepers
     local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
@@ -141,14 +124,6 @@
       tags:
         metrics: true
     register: metrics
-
-  - name: tag hiveserver(s)
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
-    with_items: hiveserver.instances
-    args:
-      tags:
-        hiveserver: true
-    register: hiveservers
 
   - name: tag all cluster nodes as fileservers
     local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
@@ -209,8 +184,8 @@
   - name: write an inventory file containing the just-created cluster
     template: src=cluster.hosts.j2 dest='./{{ec2_name_tag}}.hosts' mode=0644 backup=yes
 
-  - name: debug result
-    debug: msg="cluster nodes; {{ec2_cluster.instance_ids}}, edge node; {{edge.instance_ids}}, mysql node; {{mysql.instance_ids}}"
+  # - name: debug result
+  #   debug: msg="cluster nodes; {{ec2_cluster.instance_ids}}, edge node; {{edge.instance_ids}}, mysql node; {{mysql.instance_ids}}"
 
   # - name: remove instances 
   #   local_action:

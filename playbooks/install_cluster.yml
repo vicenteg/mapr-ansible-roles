@@ -105,12 +105,14 @@
 # This allows passwordless SSH between cluster nodes for root and mapr users.
 - include: authorized_keys.yml
 
+#
 # Having installed and started the cluster, install optional ecosystem and client services.
+#
 
 # uncomment the following line to install mysql (hive metastore and metrics)
 - include: install_mysql.yml
 
-# uncomment the following line to install spark
+# uncomment the following line to install spark (spark, shark, spark-master)
 #- include: install_spark.yml
 
 # uncomment the following line to install hive

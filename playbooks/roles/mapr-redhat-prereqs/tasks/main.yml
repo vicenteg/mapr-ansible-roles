@@ -1,5 +1,8 @@
 ---
 # tasks file for mapr-rh-prereqs
+- name: save the current list of installed packages
+  shell: rpm -qa --queryformat '%{NAME}\t%{VERSION}\n' > /root/packages_before_mapr_install
+
 - name: install libselinux-python tools
   yum: name="{{item}}" state=present
   with_items:
