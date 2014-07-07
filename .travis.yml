@@ -20,7 +20,7 @@ before_script:
   # - "chmod 400 travis.ssh && ssh-add travis.ssh"
   # - sleep 300 # DigitalOcean can be damn slow creating/booting droplets
 script:
-  - ansible-playbook playbooks/aws_bootstrap.yml
+  - ansible-playbook -i hosts playbooks/aws_bootstrap.yml
   # - sleep 120
   # - ansible-playbook -i hosts site.yml
 after_success:

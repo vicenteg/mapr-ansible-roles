@@ -5,6 +5,7 @@ node1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=vagrant 
 # Do not edit below this line unless you're pretty sure.
 
 local ansible_connection=local
+localhost ansible_connection=local
 
 [cluster]
 node1
