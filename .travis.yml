@@ -16,8 +16,8 @@ before_script:
   # - "unzip slimerjs-0.9.1.zip && mv slimerjs-0.9.1 ./slimerjs"
   # - "gem install --version 0.8.9 faraday"
   # - "gem install travis-artifacts"
-  - eval `ssh-agent`
-  - "chmod 400 travis.ssh && ssh-add travis.ssh"
+  # - eval `ssh-agent`
+  # - "chmod 400 travis.ssh && ssh-add travis.ssh"
   # - sleep 300 # DigitalOcean can be damn slow creating/booting droplets
 script:
   - ansible-playbook -i playbooks/msg_poc_cluster.hosts --extra-vars "authorized_rsa_key='$(cat travis.ssh.pub)'" playbooks/aws_bootstrap.yml
