@@ -4,7 +4,7 @@
     command: pip install boto
 
   - name: create nodes for edge/hivemeta/mysql roles
-    local_action:
+    action:
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
@@ -28,7 +28,7 @@
     register: external
 
   - name: create some cluster nodes
-    local_action:
+    action:
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
@@ -64,7 +64,7 @@
     register: ec2_cluster
 
   - name: tag an edge node
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: external.instances[0:1]
     args:
       tags:
@@ -72,7 +72,7 @@
     register: edge
 
   - name: tag a mysql node
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: external.instances[1:2]
     args:
       tags:
@@ -80,7 +80,7 @@
     register: mysql
 
   - name: tag a hivemeta node
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: external.instances[2:3]
     args:
       tags:
@@ -88,7 +88,7 @@
     register: hiveservers
 
   - name: tag three instances as zookeepers
-    local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[0:3]
     args:
       tags:
@@ -96,7 +96,7 @@
     register: zookeepers
 
   - name: tag two instances as CLDBs
-    local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[0:2]
     args:
       tags:
@@ -104,7 +104,7 @@
     register: cldbs
 
   - name: tag all instances as NFS servers
-    local_action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{ item.id }} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
@@ -112,7 +112,7 @@
     register: nfs
 
   - name: tag two instances as webservers
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[1:3]
     args:
       tags:
@@ -120,7 +120,7 @@
     register: webservers
 
   - name: tag four instances with metrics
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[1:5]
     args:
       tags:
@@ -128,7 +128,7 @@
     register: metrics
 
   - name: tag all cluster nodes as fileservers
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
@@ -136,7 +136,7 @@
     register: fileservers
 
   - name: tag jobtrackers
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[3:5]
     args:
       tags:
@@ -144,7 +144,7 @@
     register: jobtrackers
 
   - name: tag tasktrackers
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
@@ -152,7 +152,7 @@
     register: tasktrackers
 
   - name: tag hbase-masters
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[3:5]
     args:
       tags:
@@ -160,7 +160,7 @@
     register: hbasemasters
 
   - name: tag hbase-regionservers
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances
     args:
       tags:
@@ -168,7 +168,7 @@
     register: hbaseregionservers
 
   - name: tag spark master
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[0:1]
     args:
       tags:
@@ -176,7 +176,7 @@
     register: sparkmaster
 
   - name: tag spark slaves
-    local_action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
     with_items: ec2_cluster.instances[1:5]
     args:
       tags:
@@ -190,7 +190,7 @@
   #   debug: msg="cluster nodes; {{ec2_cluster.instance_ids}}, edge node; {{edge.instance_ids}}, mysql node; {{mysql.instance_ids}}"
 
   # - name: remove instances 
-  #   local_action:
+  #   action:
   #     module: ec2
   #     region: '{{ec2_region}}'
   #     state: absent
