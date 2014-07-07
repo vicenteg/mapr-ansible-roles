@@ -1,5 +1,7 @@
 ---
 # tasks file for mapr-aws-bootstrap
+  - name: install boto
+    command: pip install boto
 
   - name: create nodes for edge/hivemeta/mysql roles
     local_action:
