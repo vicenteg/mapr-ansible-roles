@@ -1,0 +1,37 @@
+language: python
+python: '2.6'
+# addons:
+#   firefox: "25.0.1"
+cache:
+  directories:
+    - $HOME/.pip-cache/
+install:
+  - pip install ansible --download-cache $HOME/.pip-cache
+  # - pip install dopy --download-cache $HOME/.pip-cache
+before_script:
+  # - ansible-playbook -i hosts --extra-vars "api_key_password=$DO_API_KEY client_id=$DO_CLIENT_ID" do_cluster.yml
+  # - "export DISPLAY=:99.0"
+  # - "sh -e /etc/init.d/xvfb start"
+  # - "wget http://download.slimerjs.org/v0.9/0.9.1/slimerjs-0.9.1.zip"
+  # - "unzip slimerjs-0.9.1.zip && mv slimerjs-0.9.1 ./slimerjs"
+  # - "gem install --version 0.8.9 faraday"
+  # - "gem install travis-artifacts"
+  - eval `ssh-agent`
+  - "chmod 400 travis.ssh && ssh-add travis.ssh"
+  # - sleep 300 # DigitalOcean can be damn slow creating/booting droplets
+script:
+  - ansible-playbook -i playbooks/msg_poc_cluster.hosts --extra-vars "authorized_rsa_key='$(cat travis.ssh.pub)'" playbooks/aws_bootstrap.yml
+  - sleep 120
+  # - ansible-playbook -i hosts site.yml
+after_success:
+  # - sudo /etc/rc6.d/K10do_destroy.sh
+after_failure:
+  # - sudo /etc/rc6.d/K10do_destroy.sh
+env:
+  global:
+    - ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
+    # - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
+    - ARTIFACTS_AWS_REGION=us-east-1 ARTIFACTS_S3_BUCKET=hadoop-ansible
+    - secure: "kCErPj0w4fOVeXjZf6NDLGQ9m9AHYQfQt9cPuAM7ff4qQyRBS+GYQ4Q1gTDZFo7KSyCXCIui+Aq6DMAsIzkLK/pmXsC56GDFod2UXM1+U09P2Vsa4XcUEKF2ydswItl5vJBIeza5LGYRLdNeyCxxOW3eI9AYzcAp/+Kpeb6Of7I="
+    - secure: "e+EGZplUxu4H+5rG56IOO+vktyQSeTJFsFOuO7usp3Sb8Ef+kj6Xfs6w/ig1seFzkgqF/3xuwIpcaN+Rqv0dqauvoG508vtlJJk5gclhdPSilQ0Zf6aoqCbwjwfRnc9gof4JPjexPsDiXsmSM0dawR4XUZ61j09d9/Ju1ss3llY="
+    - secure: "kIzs4vi5qt8OCuobtgx3pvfTCe/LOilDKCae/IyPfjA9JceXOxnOn2GSUrn1o4HuBu+6RHNPMt8UiZJk8yXsXX+28Tw/kQVvYLlyGSd5bjNYvt0uEn9qZLpVCvxG3S4HDf8tOvNJbeYg2lMXniI/zJrjuTjoyKhMPcDCVkN6Jo4="
