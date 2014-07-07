@@ -6,8 +6,8 @@ cache:
   directories:
     - $HOME/.pip-cache/
 install:
-  - pip install ansible --download-cache $HOME/.pip-cache
-  - pip install boto --download-cache $HOME/.pip-cache
+  - pip install boto ansible --download-cache $HOME/.pip-cache
+  # - pip install boto --download-cache $HOME/.pip-cache
   # - pip install dopy --download-cache $HOME/.pip-cache
 before_script:
   # - ansible-playbook -i hosts --extra-vars "api_key_password=$DO_API_KEY client_id=$DO_CLIENT_ID" do_cluster.yml
