@@ -20,8 +20,8 @@ before_script:
   # - "chmod 400 travis.ssh && ssh-add travis.ssh"
   # - sleep 300 # DigitalOcean can be damn slow creating/booting droplets
 script:
-  - ansible-playbook -i playbooks/msg_poc_cluster.hosts --extra-vars "authorized_rsa_key='$(cat travis.ssh.pub)'" playbooks/aws_bootstrap.yml
-  - sleep 120
+  - ansible-playbook playbooks/aws_bootstrap.yml
+  # - sleep 120
   # - ansible-playbook -i hosts site.yml
 after_success:
   # - sudo /etc/rc6.d/K10do_destroy.sh
