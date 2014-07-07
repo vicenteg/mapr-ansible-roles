@@ -75,11 +75,12 @@ After issuing `vagrant up`, the VM should be provisioned. Place your license key
 
 And you should be dropped into a shell in your VM.
 
-If your license key is called demolicense.txt, the steps following will add the key, loopback mount MapR NFS, and create a volume for the vagrant user. I suggest you carefully examine each line, especially the last, which contains backticks:
+If your license key is called demolicense.txt, the steps following will add the key, start the NFS gateway and (additional) CLDB service, loopback mount MapR NFS, and create a volume for the vagrant user. I suggest you carefully examine each line, especially the last, which contains backticks:
 
 ```
 sudo maprcli license add -license /vagrant/demolicense.txt -is_file true
-sudo maprcli node services -nodes node1 -nfs start
+sudo maprcli node services -filter "[csvc==nfs]" -nfs start
+sudo maprcli node services -filter "[csvc==cldb]" -cldb start
 sudo mount -a -t nfs
 sudo maprcli volume create -path /user/vagrant -name vagrant 
 sudo chown vagrant:vagrant /mapr/`head /opt/mapr/conf/mapr-clusters.conf | awk -F " " '{print $1}'`/user/vagrant

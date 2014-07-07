@@ -107,6 +107,7 @@
 
 #
 # Having installed and started the cluster, install optional ecosystem and client services.
+# Some of the below will need to be uncommented, or be run manually.
 #
 
 # uncomment the following line to install mysql (hive metastore and metrics)

@@ -6,8 +6,8 @@
   with_items:
     - mapr-nfs
 
-# - name: create mountpoint for loopback NFS mountpoint
-#   file: path=/mapr state=directory
+- name: create mountpoint for loopback NFS mountpoint
+  file: path=/mapr state=directory
 
 # For each NFS server, add a local mount. Clients (such as edge nodes) will mount via system fstab.
 - name: add a warden-managed local NFS mount

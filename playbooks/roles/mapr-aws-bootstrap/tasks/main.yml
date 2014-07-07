@@ -18,7 +18,7 @@
       wait_timeout: 500
       volumes:
       - device_name: /dev/sda
-        volume_size: 16
+        volume_size: 24
         delete_on_termination: true
       monitoring: yes
       instance_tags:
@@ -42,7 +42,7 @@
       wait_timeout: 500
       volumes:
       - device_name: /dev/sda
-        volume_size: 16
+        volume_size: 24
         delete_on_termination: true
       - device_name: /dev/sdb
         volume_size: 64
