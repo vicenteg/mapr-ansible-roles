@@ -8,14 +8,14 @@
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
-      spot_price: 0.01
+      spot_price: '{{edge_node_price}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
-      instance_type: m1.medium
-      count: 3
+      instance_type: '{{edge_node_type}}'
+      count: '{{edge_node_count}}'
       wait: yes
       wait_timeout: 500
       volumes:
@@ -32,14 +32,15 @@
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
-      spot_price: 0.0179
+      # spot_price: 0.0179
+      spot_price: '{{cluster_node_price}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
-      instance_type: m1.large
-      count: "{{cluster_node_count}}"
+      instance_type: '{{cluster_node_type}}'
+      count: '{{cluster_node_count}}'
       wait: yes
       wait_timeout: 500
       volumes:
