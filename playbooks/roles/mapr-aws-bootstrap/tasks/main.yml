@@ -8,7 +8,7 @@
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
-      spot_price: '{{edge_node_price}}'
+      # spot_price: '{{edge_node_price}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -32,8 +32,7 @@
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
-      # spot_price: 0.0179
-      spot_price: '{{cluster_node_price}}'
+      # spot_price: '{{cluster_node_price}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
