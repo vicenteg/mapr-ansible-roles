@@ -187,12 +187,18 @@
   - name: write an inventory file containing the just-created cluster
     template: src=cluster.hosts.j2 dest='./{{ec2_name_tag}}.hosts' mode=0644 backup=yes
 
-  # - name: debug result
-  #   debug: msg="cluster nodes; {{ec2_cluster.instance_ids}}, edge node; {{edge.instance_ids}}, mysql node; {{mysql.instance_ids}}"
+  - name: remove cluster instances 
+    action:
+      module: ec2
+      region: '{{ec2_region}}'
+      state: absent
+      instance_ids: '{{ec2_cluster.instance_ids}}'
+    when: delete_immediately is defined
 
-  # - name: remove instances 
-  #   action:
-  #     module: ec2
-  #     region: '{{ec2_region}}'
-  #     state: absent
-  #     instance_ids: '{{ec2_cluster.instance_ids}}'
+  - name: remove external instances 
+    action:
+      module: ec2
+      region: '{{ec2_region}}'
+      state: absent
+      instance_ids: '{{external.instance_ids}}'
+    when: delete_immediately is defined
