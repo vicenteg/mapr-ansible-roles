@@ -1,5 +1,5 @@
 ---
-- hosts: cldb;mysql;zookeeper
+- hosts: cldb:mysql:zookeepers
 # just collecting facts so that we can locate the CLDB and mysql
 
 - hosts: hiveserver
