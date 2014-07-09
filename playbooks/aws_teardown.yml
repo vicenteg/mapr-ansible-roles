@@ -1,0 +1,26 @@
+
+--- 
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: are you sure?
+      fail: msg='If you run this playbook, all instances referred to by the inventory file will be terminated. Set i_am_sure=True to continue.'
+      when: i_am_sure is not defined
+
+    - name: terminate all instances referred to by inventory file
+      local_action:
+        module: ec2
+        region: '{{ec2_region}}'
+        state: 'absent'
+        instance_ids: [ "{{instance_id}}" ]
+      when: instance_id is defined 
+
+# - hosts: tag_Name_TravisCI
+#   gather_facts: no
+#   tasks:
+#     - name: terminate TravisCI instances
+#       local_action:
+#         module: ec2
+#         region: '{{ec2_region}}'
+#         state: 'absent'
+#         instance_ids:

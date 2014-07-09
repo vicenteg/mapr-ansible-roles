@@ -1,6 +1,12 @@
 
 --- 
 # First, install the cluster - all nodes running Hadoop services.
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: get ec2 facts
+      ec2_facts:
+      register: ec2_facts
 
 - hosts: all
   tasks:
@@ -146,4 +152,3 @@
     - name: print webserver URLs
       debug: msg="webserver=https://{{ansible_eth1.ipv4.address}}:8443"
       when: "ec2_facts is not defined"
-

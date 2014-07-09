@@ -8,11 +8,14 @@ install:
   - pip install boto --download-cache $HOME/.pip-cache
 before_script:
 script:
-  - ansible-playbook -vv --extra-vars "delete_immediately=True" --extra-vars "ec2_name_tag=TravisCI" --extra-vars "cluster_node_type=m1.large" -i hosts playbooks/aws_bootstrap.yml
-  # - sleep 120
-  # - ansible-playbook -i hosts site.yml
+  - ansible-playbook --extra-vars "delete_immediately=True" --extra-vars "ec2_name_tag=TravisCI" --extra-vars "cluster_node_type=m1.large" -i hosts playbooks/aws_bootstrap.yml
+  - sleep 60
+
 after_success:
+  - ansible-playbook -i playbooks/TravisCI.hosts --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
+
 after_failure:
+  - 
 env:
   global:
     - ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
