@@ -13,14 +13,4 @@
         region: '{{ec2_region}}'
         state: 'absent'
         instance_ids: [ "{{instance_id}}" ]
-      when: instance_id is defined 
-
-# - hosts: tag_Name_TravisCI
-#   gather_facts: no
-#   tasks:
-#     - name: terminate TravisCI instances
-#       local_action:
-#         module: ec2
-#         region: '{{ec2_region}}'
-#         state: 'absent'
-#         instance_ids:
+      when: instance_id is defined
