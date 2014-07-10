@@ -14,7 +14,7 @@ before_script:
 script:
   - ansible-playbook --extra-vars "ec2_keypair=travis_temp ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large" -i hosts playbooks/aws_bootstrap.yml
   - sleep 300
-  - ansible-playbook -i playbooks/TravisCI.hosts --private-key $HOME/travis_temp.pem --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large" playbooks/install_cluster.yml
+  - ansible-playbook -vvvv -i playbooks/TravisCI.hosts --private-key $HOME/travis_temp.pem --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large" playbooks/install_cluster.yml
 
 after_success:
   - ansible-playbook -i playbooks/TravisCI.hosts --extra-vars "ec2_region=us-east-1" --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
