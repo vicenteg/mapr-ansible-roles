@@ -9,6 +9,7 @@ install:
   - wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
   - unzip -d $HOME ec2-api-tools.zip
   - $EC2_HOME/bin/ec2-create-keypair travis_temp | grep -A 50 BEGIN > $HOME/travis_temp.pem
+  - chmod 0400 $HOME/travis_temp.pem
 before_script:
   - 
 script:
