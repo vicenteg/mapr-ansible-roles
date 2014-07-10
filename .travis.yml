@@ -6,7 +6,11 @@ cache:
 install:
   - pip install boto ansible --download-cache $HOME/.pip-cache
   - pip install boto --download-cache $HOME/.pip-cache
+  - wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+  - unzip -d /usr/local ec2-api-tools.zip
+  - javac -version
 before_script:
+  - 
 script:
   - ansible-playbook --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large" -i hosts playbooks/aws_bootstrap.yml
   - sleep 300
@@ -16,7 +20,8 @@ after_success:
   - ansible-playbook -i playbooks/TravisCI.hosts --extra-vars "ec2_region=us-east-1" --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
 
 after_failure:
-  - 
+  - ansible-playbook -i playbooks/TravisCI.hosts --extra-vars "ec2_region=us-east-1" --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
+
 env:
   global:
     - ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
