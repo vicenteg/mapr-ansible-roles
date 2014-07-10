@@ -7,7 +7,7 @@ install:
   - pip install boto ansible --download-cache $HOME/.pip-cache
   - pip install boto --download-cache $HOME/.pip-cache
   - wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
-  - unzip -d /usr/local ec2-api-tools.zip
+  - unzip -d $HOME ec2-api-tools.zip
   - javac -version
 before_script:
   - 
