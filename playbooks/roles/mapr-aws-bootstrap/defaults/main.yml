@@ -24,16 +24,22 @@ vpc_subnet: 'subnet-9bfae2ef'
 # pick a name for the cluster. This will be the RHS of the "Name" tag.
 ec2_name_tag: 'mapr_aws_cluster'
 
-# recommend 1 edge node
-edge_node_count: 1
+# recommend 3 edge node
+edge_node_count: 3
+
+# m1.medium seems to be sufficient
+edge_node_type: "m1.medium"
+
+# review current spot pricing before setting this.
+edge_node_price: 0.015
 
 # recommend 5+ cluster nodes; fewer than 5 will require modification to 
 # the variables related to tagging the instances. You probably don't want
 # to be doing that.
 cluster_node_count: 8
 
-# recommend 1 mysql node
-mysql_node_count: 1
+# use this node type for cluster nodes.
+cluster_node_type: "hi1.4xlarge"
 
-# recommend 1 hivemetastore node
-hivemeta_node_count: 1
+# review current spot prices before setting this.
+cluster_node_price: 0.25

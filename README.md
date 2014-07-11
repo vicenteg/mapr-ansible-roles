@@ -56,7 +56,7 @@ Pre-Install - AWS & Vagrant
 
 1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in `playbooks/group_vars/all` in the variable `mapr_user_pw`.
 2. Take a look at the rest of the variables in group_vars/all and override them as needed.
-3. For each subdirectory of `roles`, there is a file `defaults/main.yml` which contains (you guessed it!) defaults for each role. It's worth a look at these to provide better, stronger passwords if you desire.  
+3. For each subdirectory of `roles`, there is a file `defaults/main.yml` which contains (you guessed it!) defaults for each role. It's worth a look at these to see if there's anything you want to override. In particular, look at `playbooks/roles/mapr-fileserver/defaults/main.yml` and add the disks to 
 
 Installation - Vagrant
 =======================
