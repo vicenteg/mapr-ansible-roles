@@ -28,7 +28,8 @@ ec2_name_tag: 'mapr_aws_cluster'
 edge_node_count: 1
 
 # recommend 5+ cluster nodes; fewer than 5 will require modification to 
-# the variables related to tagging the instances.
+# the variables related to tagging the instances. You probably don't want
+# to be doing that.
 cluster_node_count: 8
 
 # recommend 1 mysql node

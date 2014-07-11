@@ -44,11 +44,17 @@ Prerequisites - AWS
 
 Please see https://github.com/vicenteg/mapr-singlenode-vagrant/tree/master/playbooks/roles/mapr-aws-bootstrap
 
+Before starting the installation, you'll need to edit the following variables. Note that if the variables do not exist in the file, you can add them. You can also add these variables to your playbook invocation using something like `--extra-vars "mykey=myvalue"` where mykey is the variable name below, and the myvalue is what you set.
+
+Copy `playbooks/roles/mapr-aws-bootstrap/defaults/main.yml` to `playbooks/roles/mapr-aws-bootstrap/vars/main.yml`. Variables set in `vars/main.yml` override variable set in `defaults/main.yml`.
+
+Review `vars/main.yml` - it has comments that will explain what each variable is for.
+
 
 Pre-Install - AWS & Vagrant
 ===========================
 
-1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in `playbooks/group_vars/all`.
+1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in `playbooks/group_vars/all` in the variable `mapr_user_pw`.
 2. Take a look at the rest of the variables in group_vars/all and override them as needed.
 3. For each subdirectory of `roles`, there is a file `defaults/main.yml` which contains (you guessed it!) defaults for each role. It's worth a look at these to provide better, stronger passwords if you desire.  
 
@@ -68,7 +74,7 @@ ansible-playbook -i playbooks/<your_cluster_name>.hosts --private-key <path/to/y
 ```
 
 
-Post-Install - Vagrant
+Post-Install - Vagrant - license key
 =======================
 
 After issuing `vagrant up`, the VM should be provisioned. Place your license key file in the directory along side the Vagrantfile. In your Vagrant directory, say:
@@ -77,16 +83,31 @@ After issuing `vagrant up`, the VM should be provisioned. Place your license key
 
 And you should be dropped into a shell in your VM.
 
-If your license key is called demolicense.txt, the steps following will add the key, start the NFS gateway and (additional) CLDB service, loopback mount MapR NFS, and create a volume for the vagrant user. I suggest you carefully examine each line, especially the last, which contains backticks:
+If your license key is called demolicense.txt, the steps following will add the key, start the NFS gateway and (additional) CLDB service. 
 
 ```
 sudo maprcli license add -license /vagrant/demolicense.txt -is_file true
 sudo maprcli node services -filter "[csvc==nfs]" -nfs start
-sudo maprcli node services -filter "[csvc==cldb]" -cldb start
-sudo mount -a -t nfs
-sudo maprcli volume create -path /user/vagrant -name vagrant 
-sudo chown vagrant:vagrant /mapr/`head /opt/mapr/conf/mapr-clusters.conf | awk -F " " '{print $1}'`/user/vagrant
 ```
+
+No need to manually mount the loopback NFS - warden will take care of that for you.
+
+Post-Install - AWS - license key
+=======================
+
+After the installation is complete, the ansible plays will print the webserver URLs for you. Copy and paste the URL into your browser, log in with user `mapr` and the password you set earlier. Then add the license key via upload to MCS, using the upper right hand "Manage Licenses" link. You could, of course, upload the file using scp and then add it as above (with maprcli) if you choose.
+
+Once done, start up NFS and the additional CLDB instance(s):
+
+```
+sudo maprcli node services -filter "[csvc==nfs]" -nfs start
+sudo maprcli node services -filter "[csvc==cldb]" -cldb start
+```
+
+No need to manually mount the loopback NFS - warden will take care of that for you.
+
+Post-Install Validation - Vagrant and AWS
+========================
 
 To test, try running a teragen:
 
