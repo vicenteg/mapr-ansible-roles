@@ -3,6 +3,8 @@ mapr-aws-bootstrap
 
 This role uses the ec2 module via a local action to set up a multi-node MapR cluster with 3 non-cluster nodes. The service layout attempts to mostly follow the 5-node HA M5 cluster described here: http://doc.mapr.com/display/MapR/Planning+the+Cluster#PlanningtheCluster-ExampleClusterDesigns
 
+It does not yet automatically set up service layout to match larger clusters.
+
 This role will only create the nodes - it will not apply any configuration or install any packages. Once you've bootstrapped your cluster, you can follow the instructions at the below link to do the installation:
 
 https://github.com/vicenteg/mapr-singlenode-vagrant#installation---aws
