@@ -1,7 +1,7 @@
 mapr-aws-bootstrap
 ========
 
-This role uses the ec2 module via a local action to set up a 5-node MapR cluster, 1 edge node and 1 MySQL server. The service layout attempts to mostly follow the 5-node HA M5 cluster described here: http://doc.mapr.com/display/MapR/Planning+the+Cluster#PlanningtheCluster-ExampleClusterDesigns
+This role uses the ec2 module via a local action to set up a multi-node MapR cluster with 3 non-cluster nodes. The service layout attempts to mostly follow the 5-node HA M5 cluster described here: http://doc.mapr.com/display/MapR/Planning+the+Cluster#PlanningtheCluster-ExampleClusterDesigns
 
 This role will only create the nodes - it will not apply any configuration or install any packages. Once you've bootstrapped your cluster, you can follow the instructions at the below link to do the installation:
 
@@ -19,18 +19,20 @@ Requirements
 
 When run, the play will expect to obtain AWS credentials from environment variables. A sample file is provided here: https://github.com/vicenteg/mapr-singlenode-vagrant/blob/master/aws/credentials.sh.sample
 
-Copy the contents to your own file, edit the variables, and run `source credentials.sh` prior to running the play.
+Copy the contents to your own `credentials.sh`, edit the variables, and run `source credentials.sh` prior to running the play.
 
 Once your credentials are sourced into the environment, you can run the playbook:
 
 ```
-ansible-playbook playbooks/aws_bootstrap.yml
+ansible-playbook -i hosts playbooks/aws_bootstrap.yml
 ```
+
+The `-i hosts` tells ansible to use the inventory file called hosts, which is useful only to the play because it defines localhost. The AWS tasks that run are all initiated from your local machine; your machine uses your credentials to connect to AWS and create the new instances.
 
 Role Variables
 --------------
 
-The following need to be modified from these (personal) defaults. Odds are excellent these will not work at all for you, so you need to supply your own.
+The following need to be modified from these (personal) defaults. Odds are excellent these will not work at all for you, so you need to supply your own. Others may creep in over time, so be sure to check all the variables.
 
 ec2_keypair: 'vgonzalez_keypair'
 
@@ -48,7 +50,7 @@ vpc_subnet: 'subnet-9bfae2ef'
 Dependencies
 ------------
 
-None
+python module boto (python AWS library)
 
 Example Playbook
 -------------------------
@@ -67,4 +69,4 @@ WTFPL
 Author Information
 ------------------
 
-Vince Gonzalez - vgonzalez@
+Vince Gonzalez - vgonzalez@mapr.com
