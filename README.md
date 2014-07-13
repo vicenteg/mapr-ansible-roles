@@ -42,13 +42,15 @@ Vagrant 1.5.1
 Prerequisites - AWS
 ====================
 
-Please see https://github.com/vicenteg/mapr-singlenode-vagrant/tree/master/playbooks/roles/mapr-aws-bootstrap
+Please review [the README for mapr-aws-bootstrap](https://github.com/vicenteg/mapr-singlenode-vagrant/tree/master/playbooks/roles/mapr-aws-bootstrap).
 
 Before starting the installation, you'll need to edit the following variables. Note that if the variables do not exist in the file, you can add them. You can also add these variables to your playbook invocation using something like `--extra-vars "mykey=myvalue"` where mykey is the variable name below, and the myvalue is what you set.
 
 Copy `playbooks/roles/mapr-aws-bootstrap/defaults/main.yml` to `playbooks/roles/mapr-aws-bootstrap/vars/main.yml`. Variables set in `vars/main.yml` override variable set in `defaults/main.yml`.
 
 Review `vars/main.yml` - it has comments that will explain what each variable is for.
+
+For mapr-metrics, review [its README file](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/roles/mapr-metrics/README.md).
 
 
 Pre-Install - AWS & Vagrant
