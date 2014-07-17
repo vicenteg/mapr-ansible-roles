@@ -1,14 +1,15 @@
 
 --- 
-# First, install the cluster - all nodes running Hadoop services.
-- hosts: all
+# First, install the cluster - all nodes running core Hadoop services.
+- hosts: cluster
   gather_facts: no
+  max_fail_percentage: 0
   tasks:
     - name: get ec2 facts
       ec2_facts:
       register: ec2_facts
 
-- hosts: all
+- hosts: cluster
   tasks:
     - group_by: key={{ansible_virtualization_type}}
     - group_by: key={{ansible_distribution}}
