@@ -47,17 +47,17 @@
         volume_size: 24
         delete_on_termination: true
       - device_name: /dev/sdb
-        volume_size: 64
+        volume_size: 128
         delete_on_termination: true
       - device_name: /dev/sdc
-        volume_size: 64
+        volume_size: 128
         delete_on_termination: true
-      - device_name: /dev/sdd
-        volume_size: 64
-        delete_on_termination: true
-      - device_name: /dev/sde
-        volume_size: 64
-        delete_on_termination: true
+      # - device_name: /dev/sdd
+      #   volume_size: 64
+      #   delete_on_termination: true
+      # - device_name: /dev/sde
+      #   volume_size: 64
+      #   delete_on_termination: true
       monitoring: yes
       instance_tags:
         Name: '{{ec2_name_tag}}'

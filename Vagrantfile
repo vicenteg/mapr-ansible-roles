@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
     node1.vm.network :forwarded_port, guest: 2049, host: 2049
     node1.vm.network :forwarded_port, guest: 8443, host: 8443
     node1.vm.network :forwarded_port, guest: 8000, host: 8000
+    node1.vm.network :forwarded_port, guest: 10000, host: 10000
     #node1.vm.network :private_network, type: "dhcp"
     node1.vm.network :private_network, :ip =>'192.168.59.0', :auto_network => true, :type => "dhcp" 
 
