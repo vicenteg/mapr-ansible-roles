@@ -3,12 +3,12 @@
   - name: install boto for ec2 module
     pip: name=boto state=present
 
-  - name: create nodes for edge/hivemeta/mysql roles
+  - name: create nodes for non-cluster roles
     action:
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
-      # spot_price: '{{edge_node_price}}'
+      spot_price: '{{edge_node_price}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -17,7 +17,7 @@
       instance_type: '{{edge_node_type}}'
       count: '{{edge_node_count}}'
       wait: yes
-      wait_timeout: 500
+      wait_timeout: '{{ec2_wait_timeout}}'
       volumes:
       - device_name: /dev/sda
         volume_size: 24
@@ -32,7 +32,7 @@
       module: ec2
       region: '{{ec2_region}}'
       zone: '{{ec2_zone}}'
-      # spot_price: '{{cluster_node_price}}'
+      spot_price: '{{cluster_node_price}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
       image: '{{ec2_image}}' # This is a CentOS 6 image
@@ -41,7 +41,7 @@
       instance_type: '{{cluster_node_type}}'
       count: '{{cluster_node_count}}'
       wait: yes
-      wait_timeout: 500
+      wait_timeout: '{{ec2_wait_timeout}}'
       volumes:
       - device_name: /dev/sda
         volume_size: 24
@@ -81,7 +81,7 @@
 
   - name: tag a hivemeta node
     action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
-    with_items: external.instances[2:3]
+    with_items: ec2_cluster.instances[1:2]
     args:
       tags:
         hiveserver: true
@@ -151,21 +151,21 @@
         tasktracker: true
     register: tasktrackers
 
-  - name: tag hbase-masters
-    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
-    with_items: ec2_cluster.instances[3:5]
-    args:
-      tags:
-        hbasemaster: true
-    register: hbasemasters
+  # - name: tag hbase-masters
+  #   action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+  #   with_items: ec2_cluster.instances[3:5]
+  #   args:
+  #     tags:
+  #       hbasemaster: true
+  #   register: hbasemasters
 
-  - name: tag hbase-regionservers
-    action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
-    with_items: ec2_cluster.instances
-    args:
-      tags:
-        hbaseregionserver: true
-    register: hbaseregionservers
+  # - name: tag hbase-regionservers
+  #   action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present
+  #   with_items: ec2_cluster.instances
+  #   args:
+  #     tags:
+  #       hbaseregionserver: true
+  #   register: hbaseregionservers
 
   - name: tag spark master
     action: ec2_tag resource={{item.id}} region='{{ec2_region}}' state=present

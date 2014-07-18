@@ -21,11 +21,14 @@ ec2_image: 'ami-8997afe0'
 # Choose a VPC subnet (this must have already been created)
 vpc_subnet: 'subnet-9bfae2ef'
 
+# How long to wait for instances to come up
+ec2_wait_timeout: 1200
+
 # pick a name for the cluster. This will be the RHS of the "Name" tag.
 ec2_name_tag: 'mapr_aws_cluster'
 
 # recommend 3 edge node
-edge_node_count: 3
+edge_node_count: 2
 
 # m1.medium seems to be sufficient
 edge_node_type: "m1.medium"
@@ -36,10 +39,10 @@ edge_node_price: 0.015
 # recommend 5+ cluster nodes; fewer than 5 will require modification to 
 # the variables related to tagging the instances. You probably don't want
 # to be doing that.
-cluster_node_count: 8
+cluster_node_count: 5
 
 # use this node type for cluster nodes.
-cluster_node_type: "hi1.4xlarge"
+cluster_node_type: "m1.large"
 
 # review current spot prices before setting this.
-cluster_node_price: 0.25
+cluster_node_price: 0.20
