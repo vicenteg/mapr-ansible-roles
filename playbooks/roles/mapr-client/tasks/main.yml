@@ -13,9 +13,6 @@
   stat: path=/opt/mapr/conf/mapr-clusters.conf
   register: mapr_clusters
 
-- name: debug it
-  debug: var=mapr_clusters
-
 - name: write configure script
   template: src=client_configure_sh.j2 dest=/tmp/client_configure.sh mode=0700 owner=root group=root 
   when: mapr_clusters.stat.exists == false
@@ -41,5 +38,5 @@
   register: nfs_role
 
 - name: add NFS mountpoint to fstab but do not mount
-  mount: name=/mapr src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr" fstype=nfs opts="rw,hard,intr,nolock" state=present
+  mount: name=/mapr src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr" fstype=nfs opts="rw,hard" state=present
   when: nfs_role.stat.exists == false and hostvars[groups['nfs'][0]].ansible_default_ipv4.address is defined
