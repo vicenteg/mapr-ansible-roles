@@ -4,4 +4,4 @@
 #mapr_disks: [ '/dev/sdb', '/dev/sdc', '/dev/sdd', '/dev/sde' ]
 
 # example disk list for AWS EC2 nodes
-mapr_disks: [ '/dev/xvdf', '/dev/xvdg', '/dev/xvdh', '/dev/xvdi' ]
+mapr_disks: [ '/dev/xvdf', '/dev/xvdg' ]
