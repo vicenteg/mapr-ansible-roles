@@ -72,7 +72,7 @@ Installation - AWS
 After modifying configuration files as needed, run the playbook as follows, substituting your keypair for mine:
 
 ```
-ansible-playbook -i playbooks/<your_cluster_name>.hosts --private-key <path/to/your/private_key> -u root playbooks/install_cluster.yml
+ansible-playbook -i playbooks/cluster.hosts --private-key <path/to/your/private_key> -u root playbooks/install_cluster.yml
 ```
 
 
