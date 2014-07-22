@@ -15,16 +15,16 @@ before_script:
 script:
   - ansible-playbook --extra-vars "ec2_keypair=travis_temp ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large" -i hosts playbooks/aws_bootstrap.yml
   - sleep 300
-  - ansible all -i playbooks/TravisCI.hosts --private-key $HOME/travis_temp.pem -u root -m ping
-  - ansible-playbook -u root -i playbooks/TravisCI.hosts --private-key $HOME/travis_temp.pem --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large mapr_disks=['/dev/xvdf','/dev/xvdg']" playbooks/install_cluster.yml
-  - ansible-playbook -u root -i playbooks/TravisCI.hosts --private-key $HOME/travis_temp.pem --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large" playbooks/install_hive.yml
+  - ansible all -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem -u root -m ping
+  - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large mapr_disks=['/dev/xvdf','/dev/xvdg']" playbooks/install_cluster.yml
+  - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large" playbooks/install_hive.yml
 
 after_success:
-  - ansible-playbook -i playbooks/TravisCI.hosts --extra-vars "ec2_region=us-east-1" --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
+  - ansible-playbook -i playbooks/cluster.hosts --extra-vars "ec2_region=us-east-1" --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
   - $EC2_HOME/bin/ec2-delete-keypair travis_temp
 
 after_failure:
-  - ansible-playbook -i playbooks/TravisCI.hosts --extra-vars "ec2_region=us-east-1" --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
+  - ansible-playbook -i playbooks/cluster.hosts --extra-vars "ec2_region=us-east-1" --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
   - $EC2_HOME/bin/ec2-delete-keypair travis_temp
 env:
   global:
