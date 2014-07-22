@@ -71,7 +71,7 @@ Teardown
 
 When you're finished with the cluster and wish to destroy it, the `aws-teardown.yml` playbook should be used.
 
-This book will fail unless the `i_am_sure` variable is set to `True` this playbook will fail and not destroy the cluster. It's also necessary to specify the ec2_region in this command.
+This playbook will fail unless the `i_am_sure` variable is set to `True`. It's also necessary to specify the ec2_region in this command:
 
 ```
 $ ansible-playbook --extra-vars "i_am_sure=True" --extra-vars="ec2_region=us-east-1" -i playbooks/cluster.hosts playbooks/aws_teardown.yml
