@@ -43,21 +43,15 @@
       wait: yes
       wait_timeout: '{{ec2_wait_timeout}}'
       volumes:
-      - device_name: /dev/sda
+      - device_name: /dev/xvde
         volume_size: 24
         delete_on_termination: true
-      - device_name: /dev/sdb
+      - device_name: /dev/xvdf
         volume_size: 128
         delete_on_termination: true
-      - device_name: /dev/sdc
+      - device_name: /dev/xvdg
         volume_size: 128
         delete_on_termination: true
-      # - device_name: /dev/sdd
-      #   volume_size: 64
-      #   delete_on_termination: true
-      # - device_name: /dev/sde
-      #   volume_size: 64
-      #   delete_on_termination: true
       monitoring: yes
       instance_tags:
         Name: '{{ec2_name_tag}}'
