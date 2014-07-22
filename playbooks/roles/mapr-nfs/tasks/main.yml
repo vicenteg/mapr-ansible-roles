@@ -6,8 +6,24 @@
   with_items:
     - mapr-nfs
 
+- name: is warden running?
+  command: service mapr-warden status
+  register: warden_status
+  ignore_errors: true
+
+- name: is NFS started?
+  command: maprcli node list -filter svc==nfs -columns hn
+  register: maprcli_nfs
+  ignore_errors: true
+
+- name: check whether NFS is running
+  command: showmount -e localhost
+  register: nfs_running
+  ignore_errors: true
+
 - name: create mountpoint for loopback NFS mountpoint
   file: path=/mapr state=directory
+  when: warden_status.rc != 0 or nfs_running
 
 # For each NFS server, add a local mount. Clients (such as edge nodes) will mount via system fstab.
 - name: add a warden-managed local NFS mount

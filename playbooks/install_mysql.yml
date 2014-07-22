@@ -1,7 +1,6 @@
 ---
 
-- hosts: mysql
+- hosts: hiveserver
   sudo: yes
   roles:
     - mysql-server
-    - metrics-database

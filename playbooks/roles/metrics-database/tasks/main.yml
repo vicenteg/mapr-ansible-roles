@@ -1,5 +1,8 @@
 ---
 # tasks file for metrics-database
+- name: install python-mysqldb
+  yum: name=MySQL-python state=installed
+
 - name: install mapr-core (for /opt/mapr/bin/setup.sql)
   yum: name=mapr-core state=present
 

@@ -4,67 +4,62 @@
 {% endfor %}
 
 [hiveserver]
-{% for result in hiveservers['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[1:2] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [metrics]
-{% for result in metrics['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[1:5] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [jobtracker]
-{% for result in jobtrackers['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[3:5] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [tasktracker]
-{% for result in tasktrackers['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [webserver]
-{% for result in webservers['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[1:3] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [zookeepers]
-{% for result in zookeepers['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[0:3] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [cldb]
-{% for result in cldbs['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[0:2] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [nfs]
-{% for result in nfs['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [fileserver]
-{% for result in fileservers['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
-{% endfor %}
-
-[mysql]
-{% for result in mysql['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [edge]
-{% for result in edge['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in external.instances[0:1] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [spark_master]
-{% for result in sparkmaster['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[0:1] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 
 [spark_slave]
-{% for result in sparkslaves['results'] %}
-{{result.item.public_dns_name}} instance_id={{result.item.id}}
+{% for instance in ec2_cluster.instances[1:5] %}
+{{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 

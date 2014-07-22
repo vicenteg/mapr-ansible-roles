@@ -1,6 +1,11 @@
 ---
 - hosts: mysql:cldb:zookeeper
 
+- hosts: hiveserver
+  sudo: yes
+  roles:
+    - metrics-database
+
 - hosts: webserver:jobtracker
   sudo: yes
   roles:
