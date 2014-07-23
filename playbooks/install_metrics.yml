@@ -1,5 +1,5 @@
 ---
-- hosts: mysql:cldb:zookeeper
+- hosts: mysql:cldb:zookeeper:cluster
 
 - hosts: hiveserver
   sudo: yes
