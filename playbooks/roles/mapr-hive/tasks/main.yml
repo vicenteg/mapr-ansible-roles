@@ -47,7 +47,6 @@
     password="{{hive_db_pass}}"
     check_implicit_admin=yes
     priv={{hive_db}}.*:ALL
-    check_implicit_admin=yes
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
     login_host="{{hive_metastore_host}}"
@@ -59,7 +58,6 @@
     password={{hive_db_pass}}
     check_implicit_admin=yes
     priv={{hive_db}}.*:ALL
-    check_implicit_admin=yes
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
     login_host="{{hive_metastore_host}}"
