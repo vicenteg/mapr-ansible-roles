@@ -30,4 +30,15 @@
     priv="*.*:ALL,GRANT"
   with_items:
     - localhost
-    - "%"
+
+- name: lock down root user to cluster nodes
+  mysql_user:
+    check_implicit_admin=yes
+    login_user="{{mysql_root_user}}"
+    login_password="{{mysql_root_password}}"
+    name="{{mysql_root_user}}"
+    password="{{mysql_root_password}}"
+    host="{{hostvars[item].ansible_default_ipv4.address}}"
+    priv="*.*:ALL,GRANT"
+  with_items:
+    - '{{groups["cluster"]}}'

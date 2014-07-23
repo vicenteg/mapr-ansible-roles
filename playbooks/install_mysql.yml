@@ -1,4 +1,5 @@
 ---
+- hosts: cluster
 
 - hosts: hiveserver
   sudo: yes
