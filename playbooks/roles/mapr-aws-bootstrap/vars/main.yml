@@ -25,7 +25,7 @@ vpc_subnet: 'subnet-9bfae2ef'
 # pick a name for the cluster. This will be the RHS of the "Name" tag.
 ec2_name_tag: 'msg_poc_cluster'
 
-edge_node_count: 2
+edge_node_count: 1
 edge_node_type: "m1.medium"
 edge_node_price: 0.015
 
