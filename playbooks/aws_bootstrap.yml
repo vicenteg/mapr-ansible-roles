@@ -2,3 +2,10 @@
 - hosts: localhost
   roles:
     - mapr-aws-bootstrap
+
+# NB: instances is dynamically created in the bootstrap play above.
+# don't look for it in the inventory file.
+- hosts: instances
+  tasks:
+    - name: extend root FS to fill volume
+      command: resize2fs /dev/xvde
