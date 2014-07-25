@@ -1,4 +1,4 @@
-mapr-singlenode-vagrant
+mapr-ansible-roles
 =======================
 
 [![Build Status](https://magnum.travis-ci.com/vicenteg/mapr-ansible-roles.svg?token=JzqxKHfcdq9e6TfMmyz7&branch=master)](https://magnum.travis-ci.com/vicenteg/mapr-ansible-roles)
