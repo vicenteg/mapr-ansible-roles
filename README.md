@@ -6,23 +6,33 @@ mapr-ansible-roles
 Read This
 =========
 
-First off, you need to change stuff in order to log in to the cluster that results here. Please skim through this README and look at what needs to change before you run `vagrant up`. If you don't do this, you might end up with a
-working cluster. Or not.
+First off, you need to change stuff in order to log in to the cluster that results from running these playbooks. 
+
+Please skim through this README and look at what needs to change before you build.
 
 
 Intro
 ======
 
-This repo contains stuff to make a single node MapR cluster using Vagrant, and also a multi-node cluster in AWS.
+This repo contains Ansible playbooks that do the following:
 
-This project includes a Vagrant file that specifies a single VM suitable to run MapR, and ansible playbooks to perform the installation and initial configuration.
+* Launch EC2 instances for MapR
+* Install a basic cluster
+* Install some ecosystem packages (Hive, Spark)
 
-This will install MapR release 3.1.1. There are playbooks included for spark, hive and edge nodes, but these are not run automatically. This does not include a license, so to enable NFS and other licensed features, you'll need to obtain a license here: http://www.mapr.com/user/addcluster
+This project also includes a Vagrantfile that creates a single VM instance suitable to run MapR. The playbooks here can be used either for vagrant instances or EC2 instances.
+
+This will install MapR release 3.1.1 by default. 3.0.2, 3.0.3 should also work. 
+
+This does not include a license, so to enable licensed features, you'll need to obtain a license here: http://www.mapr.com/user/addcluster
 
 AWS Instances
 ==============
 
-I've also included a playbook that deploys a number of nodes to EC2, and tags them for use with these playbooks. If you want to spin up the AWS nodes your own way, you'll want to make sure that you're applying tags similarly to how my playbook does it. The nodes will be spot instances by default. If you prefer on-demand instances (so that you're not at risk of automatic termination), edit `playbooks/roles/mapr-aws-bootstrap/tasks/main.yml` and command out the lines with `spot_price`.
+
+AWS instances you create will be spot instances by default. Be sure to check the latest spot prices for the instances you're looking to create. Also keep in mind that not all instances are available as spot instances. Importantly, remember that spot instances can be terminated by Amazon at any time if the bid price goes above the maximum price you set. So don't use spot instances if you absolutely must keep the instances running!
+
+If you prefer on-demand instances (so that you're not at risk of automatic termination), edit `playbooks/roles/mapr-aws-bootstrap/tasks/main.yml` and command out the lines with `spot_price`.
 
 Prerequisites - Vagrant
 =======================
