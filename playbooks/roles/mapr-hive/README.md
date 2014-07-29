@@ -35,7 +35,7 @@ There is a MySQL playbook that installs and configures a mysql server: [](https:
 Example Playbook
 -------------------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+The example below assumes that an inventory file has been created with certain groups that can be used to identify the nodes in the cluster having certain roles.
 
 ```
 ---
