@@ -11,21 +11,43 @@ This role configures MySQL databases, so it's assumed that there is a running in
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The defaults will look something like this:
+
+```
+mysql_root_user: root
+mysql_root_password: mapr
+
+hive_db: metastore
+hive_db_user: hive
+hive_db_pass: mapr
+hive_metastore_host: localhost
+
+hive_version: "0.12*"
+```
+
+Modify as you see fit. By default, we'll use localhost for the database. Change the metastore host as needed to point to the correct MySQL server. The mysql_root_user and mysql_root_password variables will be used to authenticate to MySQL to create the metastore database.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+There is a MySQL playbook that installs and configures a mysql server: [](https://github.com/vicenteg/mapr-ansible-roles/tree/master/playbooks/roles/mysql-server)
 
 Example Playbook
 -------------------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+---
+- hosts: cldb:mysql:zookeepers
+# just collecting facts so that we can locate the CLDB and mysql
+
+- hosts: hiveserver
+  sudo: yes
+  roles:
+    - mapr-client
+    - mapr-hive
+```
 
 License
 -------
@@ -35,4 +57,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Vince Gonzalez - vgonzalez@mapr.com
