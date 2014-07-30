@@ -51,6 +51,10 @@
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
     login_host="{{hive_metastore_host}}"
+  with_items:
+    - "{{ansible_default_ipv4.address}}"
+    - "{{ansible_hostname}}"
+    - "%"
 
 - name: create mapr user@%
   mysql_user:
@@ -64,6 +68,7 @@
     login_host="{{hive_metastore_host}}"
   with_items:
     - "{{ansible_default_ipv4.address}}"
+    - "{{ansible_hostname}}"
     - "%"
 
 - name: copy hive-site.xml into place
