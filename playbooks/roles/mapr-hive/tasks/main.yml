@@ -12,6 +12,7 @@
     - 'mapr-hive-{{hive_version}}'
     - 'mapr-hiveserver2-{{hive_version}}'
     - 'mapr-hivemetastore-{{hive_version}}'
+  notify: reconfigure roles
 
 - name: ensure the top level hive directory is owned by mapr so logs directory can be created
   file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes
@@ -54,13 +55,16 @@
 - name: create mapr user@%
   mysql_user:
     name={{hive_db_user}}
-    host="%"
+    host={{item}}
     password={{hive_db_pass}}
     check_implicit_admin=yes
     priv={{hive_db}}.*:ALL
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
     login_host="{{hive_metastore_host}}"
+  with_items:
+    - "{{ansible_default_ipv4.address}}"
+    - "%"
 
 - name: copy hive-site.xml into place
   template: src=hive-site.xml.j2 dest=/opt/mapr/hive/hive-0.12/conf/hive-site.xml

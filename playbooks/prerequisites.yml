@@ -1,5 +1,5 @@
 ---
-- hosts: cluster
+- hosts: all
   tasks:
     - group_by: key={{ansible_virtualization_type}}
     - group_by: key={{ansible_distribution}}
@@ -14,4 +14,4 @@
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - mapr-ubuntu-prereqs
+    - mapr-debian-prereqs

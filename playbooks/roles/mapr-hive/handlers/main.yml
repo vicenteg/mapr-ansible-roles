@@ -1,2 +1,5 @@
 ---
 # handlers file for mapr-hive
+
+- name: reconfigure roles
+  command: /opt/mapr/server/configure.sh -R
