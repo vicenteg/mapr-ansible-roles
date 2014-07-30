@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import argparse
+import re
+import os
+import requests
+import json
+from pretty import pprint
+
+filename = os.environ['NODE_LIST_FILENAME']
+
+parser = argparse.ArgumentParser(
+	description='Obtain the ansible inventory from a running MapR cluster.')
+parser.add_argument('file', type=str,
+	help='file containing "maprcli node list -columns hn,svc,csvc" output.')
+
+if not filename:
+	args = parser.parse_args()
+	filename = args.file
+
+hosts = [ ]
+with file(filename) as f:
+    for line in f.readlines():
+        if line.startswith('service'):
+            continue
+        else:
+            (svc,hostname,configured,ip) = re.split('\s+', line.strip())
+            hosts.append((hostname, ip, configured))
+
+inventory = {}
+for (hostname, ip, configured_services) in hosts:
+	for service in configured_services.split(','):
+		inventory.setdefault(service, dict())
+		inventory[service].setdefault('hosts', list())
+		inventory[service].setdefault('vars', dict())
+		inventory[service]['hosts'].append(hostname)
+
+print json.dumps(inventory)

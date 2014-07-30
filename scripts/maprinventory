@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import requests
+import json
+
+webserver_url = os.environ['MCS_NODE_LIST_URL']
+username = os.environ['MCS_USERNAME']
+password = os.environ['MCS_PASSWORD']
+
+parser = argparse.ArgumentParser(
+	description='Obtain the ansible inventory from a running MapR cluster.')
+parser.add_argument('webserver', type=str,
+	help='the hostname or IP of a node running mapr-webserver.')
+parser.add_argument('--no-ssl', default=False, action='store_true',
+	help='do not use SSL to connect.')
+parser.add_argument('--port', default=8443, type=int,
+	help='set the port number to connect to.')
+parser.add_argument('--username', default='mapr', type=str,
+	help='MCS username')
+parser.add_argument('--password', default='mapr', type=str,
+	help='MCS password')
+
+
+if not webserver_url and username and password:
+	args = parser.parse_args()
+	username = args.username
+	password = args.password
+
+	if args.no_ssl:
+		protocol = "http"
+	else: 
+		protocol = "https"
+	webserver_url = "%s://%s:%d/rest/node/list" % (protocol, args.webserver, args.port)
+
+params = { 'columns': 'hn,svc,csvc' }
+r = requests.get(webserver_url, auth=(username,password), verify=False, params=params)
+response = r.json()
+data = response['data']
+
+inventory = { }
+for node in data:
+	for service in node['configuredservice'].split(','):
+		inventory.setdefault(service, dict())
+		inventory[service].setdefault('hosts', list())
+		inventory[service].setdefault('vars', dict())
+		inventory[service]['hosts'].append(node['ip'])	
+
+print json.dumps(inventory)
