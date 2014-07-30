@@ -64,3 +64,6 @@
 
 - name: set a password for the mapr user and ensure ssh keys exist
   user: name=mapr uid="{{mapr_uid}}" group="mapr" password="{{mapr_user_pw}}" home="{{mapr_home}}" generate_ssh_key=yes state=present createhome=yes
+
+- name: install EPEL 6 x86_64
+  yum: name=http://mirrors.einstein.yu.edu/epel/6/x86_64/epel-release-6-8.noarch.rpm state=installed

@@ -34,7 +34,7 @@
 {% endfor %}
 
 [cldb]
-{% for instance in ec2_cluster.instances[0:2] %}
+{% for instance in ec2_cluster.instances[0:3] %}
 {{instance.public_dns_name}} instance_id={{instance.id}}
 {% endfor %}
 

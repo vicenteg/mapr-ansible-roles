@@ -1,0 +1,17 @@
+---
+- hosts: cluster
+  tasks:
+    - group_by: key={{ansible_virtualization_type}}
+    - group_by: key={{ansible_distribution}}
+
+- hosts: CentOS;Redhat
+  max_fail_percentage: 0
+  sudo: yes
+  roles:
+    - mapr-redhat-prereqs
+
+- hosts: Ubuntu;Debian
+  max_fail_percentage: 0
+  sudo: yes
+  roles:
+    - mapr-ubuntu-prereqs
