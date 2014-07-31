@@ -1,7 +1,7 @@
 mapr-aws-bootstrap
 ========
 
-This role uses the ec2 module via a local action to set up a multi-node MapR cluster with 3 non-cluster nodes. The service layout attempts to mostly follow the 5-node HA M5 cluster described here: http://doc.mapr.com/display/MapR/Planning+the+Cluster#PlanningtheCluster-ExampleClusterDesigns
+This role uses the ec2 module via a local action to set up a multi-node MapR cluster with one or more non-cluster nodes. The service layout attempts to mostly follow the 5-node HA M5 cluster described here: http://doc.mapr.com/display/MapR/Planning+the+Cluster#PlanningtheCluster-ExampleClusterDesigns
 
 It does not yet automatically set up service layout to match larger clusters.
 
@@ -18,15 +18,21 @@ Requirements
 3. You will need a base image. This has been tested with the CentOS 6.5 AMI in us-east-1 having ID `ami-8997afe0`.
 4. You will need your SSH keypair already generated and available in AWS.
 5. You will need a security group. The cluster that results from the install_cluster play uses a security group that allows ports 22 and 8443 as well as all traffic originating from the VPC subnet.
+6. It might be a good idea to configure your SSH client (assuming you use a *nix like system) so that it automatically uses your AWS private key when connecting to AWS servers. Try something like the below, substituting paths as necessary.
+```
+    Host *.amazonaws.com
+    User root
+    IdentityFile "~/.ssh/my_keypair.pem"
+```
 
 When run, the play will expect to obtain AWS credentials from environment variables. A sample file is provided here: https://github.com/vicenteg/mapr-singlenode-vagrant/blob/master/aws/credentials.sh.sample
 
-Copy the contents to your own `credentials.sh`, edit the variables, and run `source credentials.sh` prior to running the play.
+Copy the contents to your own `credentials.sh`, and edit the variables as needed.
 
-Once your credentials are sourced into the environment, you can run the playbook:
+Putting it all together, and assuming you've placed your credentials along side the sample in the `aws` subdirectory:
 
 ```
-ansible-playbook -i hosts playbooks/aws_bootstrap.yml
+source aws/credentials.sh && ansible-playbook -i hosts playbooks/aws_bootstrap.yml
 ```
 
 The `-i hosts` tells ansible to use the inventory file called hosts, which is useful only to the play because it defines localhost. The AWS tasks that run are all initiated from your local machine; your machine uses your credentials to connect to AWS and create the new instances.
@@ -48,7 +54,7 @@ ec2_image: 'ami-8997afe0'
 
 vpc_subnet: 'subnet-9bfae2ef'
 
-Turn Off
+Turn Off - (on-demand instances only)
 ------------
 
 To set the cluster into a `stopped` state:
@@ -56,6 +62,8 @@ To set the cluster into a `stopped` state:
 ```
 $ ansible-playbook --extra-vars="ec2_region=<region>" -i playbooks/cluster.hosts playbooks/aws_turnoff.yml
 ```
+
+Note that you cannot stop spot instances.
 
 Turn On 
 ------------
