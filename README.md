@@ -17,8 +17,9 @@ Intro
 This repo contains Ansible playbooks that do the following:
 
 * Launch EC2 instances for MapR
-* Install a basic cluster
-* Install some ecosystem packages (Hive, Spark)
+* Apply MapR OS prerequisites per http://doc.mapr.com/display/MapR/Preparing+Each+Node
+* Install a basic cluster 
+* Optionally install some ecosystem packages (Hive, Spark)
 
 This project also includes a Vagrantfile that creates a single VM instance suitable to run MapR. The playbooks here can be used either for vagrant instances or EC2 instances.
 
