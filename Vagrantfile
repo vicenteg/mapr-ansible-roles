@@ -39,6 +39,9 @@ Vagrant.configure("2") do |config|
     ansible.inventory_path = 'hosts'
     ansible.host_key_checking = false
     #ansible.verbose = "vvvv" 
+    ansible.extra_vars = {
+      mapr_disks: [ "/dev/sdb","/dev/sdc","/dev/sdd","/dev/sde" ]
+    }
     ansible.playbook = "playbooks/install_cluster.yml"
   end
 end
