@@ -3,11 +3,11 @@
 
 # Assumes the MapR repos are already configured.
 
-- name: install mapr-spark for Redhat/CentOS
+- name: install mapr-spark for RedHat/CentOS
   yum: name='{{item}}' state=present
   with_items:
     - mapr-spark-master
-  when: ansible_distribution == "CentOS" or ansible_distribution == "Redhat"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
   notify:
     - re-run configure.sh to enable spark-master
 
