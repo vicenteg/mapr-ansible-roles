@@ -44,7 +44,7 @@
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - jobtracker
+    - mapr-jobtracker
 
 - hosts: tasktracker
   sudo: yes

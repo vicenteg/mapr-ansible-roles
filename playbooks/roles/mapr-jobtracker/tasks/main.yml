@@ -1,2 +1,4 @@
----
-# tasks file for mapr-jobtracker
+- name: install mapr-jobtracker packages
+  yum: name='{{item}}' state=present
+  with_items:
+    - mapr-jobtracker
