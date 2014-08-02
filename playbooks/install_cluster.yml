@@ -14,8 +14,8 @@
     - group_by: key={{ansible_virtualization_type}}
     - group_by: key={{ansible_distribution}}
 
-# Redhat derived distro specific prereqs
-- hosts: CentOS;Redhat
+# RedHat derived distro specific prereqs
+- hosts: CentOS;RedHat
   max_fail_percentage: 0
   sudo: yes
   roles:
