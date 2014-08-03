@@ -19,7 +19,7 @@ script:
 - ansible all -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem -u root
   -m ping
 - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem
-  --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large mapr_cluster_name=TravisCI"
+  --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large mapr_version=v3.1.1 mapr_cluster_name=TravisCI"
   playbooks/install_cluster.yml
 # - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem
 #   --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large"
