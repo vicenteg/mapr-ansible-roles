@@ -17,6 +17,8 @@
 - name: ensure the top level hive directory is owned by mapr so logs directory can be created
   file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes
 
+- name: debug
+  debug: var=hostvars[metrics_host]
 # Note that this template may rely on variables in other groups, and as a result, 
 # my not always work when this playbook is run individually.
 - name: write .my.cnf for root

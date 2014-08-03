@@ -1,7 +1,7 @@
 ---
 # vars file for mapr-hive
-hive_db: metastore
-hive_db_user: hive
-hive_db_pass: mapr
-hive_db_host: "{{groups['hiveserver'] | first}}"
-hive_metastore_host: "{{ hostvars[hive_db_host].ansible_default_ipv4.address }}"
+# hive_db: metastore
+# hive_db_user: hive
+# hive_db_pass: mapr
+# hive_db_host: "{{groups['hiveserver'] | first}}"
+# hive_metastore_host: "{{ hostvars[hive_db_host].ansible_default_ipv4.address }}"

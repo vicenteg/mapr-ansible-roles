@@ -1,11 +1,24 @@
 
 - hosts: localhost
   roles:
-    - mapr-aws-bootstrap
+    - { role: mapr-aws-bootstrap,
+        ec2_keypair: 'vgonzalez_keypair',
+        ec2_security_group: 'sg-b7e12fde',
+        ec2_region: 'us-east-1',
+        ec2_zone: 'us-east-1a', # use with subnet-8f999ba7
+        ec2_image: 'ami-8997afe0',
+        vpc_subnet: 'subnet-8f999ba7',
+        ec2_name_tag: 'MSG',
+        edge_node_count: 1,
+        edge_node_type: 'm3.medium',
+        edge_node_price: 0.032,
+        cluster_node_count: 5,
+        cluster_node_type: 'm3.xlarge',
+        cluster_node_price: 0.096 }
 
 # NB: instances is dynamically created in the bootstrap play above.
 # don't look for it in the inventory file.
 - hosts: instances
   tasks:
-    - name: extend root FS to fill volume
+    - name: extend root FS to fill volume in case it's larger than the base AMI
       command: resize2fs /dev/xvde

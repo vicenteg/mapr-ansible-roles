@@ -3,11 +3,13 @@
   sudo: yes
   roles:
     - scala
-    - mapr-spark-master
+    - { role: mapr-spark-master,
+    	spark_version: 0.9.1,
+		spark_home: '/opt/mapr/spark/spark-{{spark_version}}' }
 
 - hosts: spark_slave
   sudo: yes
   sudo_user: root
   roles:
     - scala
-    - mapr-spark-slave
+    - { role: mapr-spark-slave, spark_work_dir: '/opt/mapr/spark/tmp' }

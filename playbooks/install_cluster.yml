@@ -1,9 +1,10 @@
 
 --- 
-# First, install the cluster - all nodes running core Hadoop services.
 - hosts: cluster
   gather_facts: no
   max_fail_percentage: 0
+  # vars:
+  #   mapr_cluster_name: 'my.cluster.com'
   tasks:
     - name: get ec2 facts
       ec2_facts:
@@ -19,14 +20,24 @@
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - mapr-redhat-prereqs
+    - { role: mapr-redhat-prereqs,
+        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+        mapr_uid: 2147483632,
+        mapr_gid: 2147483632,
+        mapr_home: '/home/mapr',
+        mapr_version: 'v3.1.1' } # will this work everywhere it's needed?
 
 # Debian derived distro specific prereqs
 - hosts: Debian;Ubuntu
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - mapr-debian-prereqs
+    - { role: mapr-debian-prereqs,
+        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+        mapr_uid: 2147483632,
+        mapr_gid: 2147483632,
+        mapr_home: '/home/mapr',
+        mapr_version: 'v3.1.1' } # will this work everywhere it's needed?
 
 - hosts: zookeepers
   max_fail_percentage: 0
@@ -64,7 +75,10 @@
 - hosts: fileserver
   sudo: yes
   roles:
-    - mapr-fileserver
+    - { role: mapr-fileserver,
+        mapr_disks: [ '/dev/xvdf', '/dev/xvdg' ],
+        java_home: '/usr',
+        cluster_name: '{{mapr_cluster_name}}' } # will this work everywhere it's needed?
 
 - hosts: zookeepers
   sudo: yes
@@ -124,10 +138,26 @@
 #- include: install_spark.yml
 
 # uncomment the following line to install hive
-#- include: install_hive.yml
+- include: install_hive.yml
 
-# uncomment the following line to install metrics
-- include: install_metrics.yml
+# Install mapr-metrics
+- hosts: hiveserver
+  sudo: yes
+  roles:
+    - { role: metrics-database,
+        mysql_root_user: root,
+        mysql_root_password: mapr,
+        mysql_host: "{{ groups['hiveserver'] | first }}" }
+
+- hosts: webserver:jobtracker
+  sudo: yes
+  roles:
+    - { role: mapr-metrics,
+        cluster_name: '{{mapr_cluster_name}}',
+        metrics_user: maprmetrics,
+        metrics_password: mapr,
+        metrics_host: "{{ groups['hiveserver'] | first }}" }
+
 
 
 # For convenience, print the URL for the MCS.
