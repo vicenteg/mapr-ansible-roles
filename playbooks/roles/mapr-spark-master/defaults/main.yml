@@ -1,4 +1,4 @@
 ---
 # defaults file for mapr-spark
-spark_version: 0.9.1
-spark_home: /opt/mapr/spark/spark-{{spark_version}}
+# spark_version: 0.9.1
+# spark_home: /opt/mapr/spark/spark-{{spark_version}}
