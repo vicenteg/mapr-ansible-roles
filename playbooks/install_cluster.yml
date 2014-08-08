@@ -3,9 +3,10 @@
 - hosts: cluster
   gather_facts: no
   max_fail_percentage: 0
-  # vars:
-  #   mapr_cluster_name: 'my.cluster.com'
   tasks:
+    - name: ensure some critical vars are set, fail early if not.
+      fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars"
+      when: mapr_version is not defined or mapr_cluster_name is not defined 
     - name: get ec2 facts
       ec2_facts:
       register: ec2_facts
@@ -24,8 +25,7 @@
         mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
-        mapr_home: '/home/mapr',
-        mapr_version: 'v3.1.1' } # will this work everywhere it's needed?
+        mapr_home: '/home/mapr' }
 
 # Debian derived distro specific prereqs
 - hosts: Debian;Ubuntu
@@ -36,8 +36,7 @@
         mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
-        mapr_home: '/home/mapr',
-        mapr_version: 'v3.1.1' } # will this work everywhere it's needed?
+        mapr_home: '/home/mapr' }
 
 - hosts: zookeepers
   max_fail_percentage: 0
