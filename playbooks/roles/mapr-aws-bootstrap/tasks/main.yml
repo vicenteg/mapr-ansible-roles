@@ -4,7 +4,7 @@
     sudo: yes
     pip: name=boto state=present
 
-  - name: create nodes for non-cluster roles
+  - name: create spot nodes for non-cluster roles
     action:
       module: ec2
       region: '{{ec2_region}}'
@@ -12,7 +12,7 @@
       spot_price: '{{edge_node_price}}'
       key_name: '{{ec2_keypair}}'
       group: '{{ec2_security_group}}'
-      image: '{{ec2_image}}' # This is a CentOS 6 image
+      image: '{{ec2_image}}'
       vpc_subnet_id: '{{vpc_subnet}}'
       assign_public_ip: true
       instance_type: '{{edge_node_type}}'
@@ -27,8 +27,34 @@
       instance_tags:
         Name: '{{ec2_name_tag}}'
     register: external
+    when: spot_price is defined
 
-  - name: create some cluster nodes
+  - name: create on-demand nodes for non-cluster roles
+    action:
+      module: ec2
+      region: '{{ec2_region}}'
+      zone: '{{ec2_zone}}'
+      # spot_price: '{{edge_node_price}}'
+      key_name: '{{ec2_keypair}}'
+      group: '{{ec2_security_group}}'
+      image: '{{ec2_image}}'
+      vpc_subnet_id: '{{vpc_subnet}}'
+      assign_public_ip: true
+      instance_type: '{{edge_node_type}}'
+      count: '{{edge_node_count}}'
+      wait: yes
+      wait_timeout: '{{ec2_wait_timeout}}'
+      volumes:
+      - device_name: /dev/sda
+        volume_size: 24
+        delete_on_termination: true
+      monitoring: yes
+      instance_tags:
+        Name: '{{ec2_name_tag}}'
+    register: external
+    when: spot_price is not defined
+
+  - name: create some spot cluster nodes
     action:
       module: ec2
       region: '{{ec2_region}}'
@@ -61,6 +87,41 @@
       instance_tags:
         Name: '{{ec2_name_tag}}'
     register: ec2_cluster
+    when: spot_price is defined
+
+  - name: create some on-demand cluster nodes
+    action:
+      module: ec2
+      region: '{{ec2_region}}'
+      zone: '{{ec2_zone}}'
+      key_name: '{{ec2_keypair}}'
+      group: '{{ec2_security_group}}'
+      image: '{{ec2_image}}' # This is a CentOS 6 image
+      vpc_subnet_id: '{{vpc_subnet}}'
+      assign_public_ip: true
+      instance_type: '{{cluster_node_type}}'
+      count: '{{cluster_node_count}}'
+      wait: yes
+      wait_timeout: '{{ec2_wait_timeout}}'
+      volumes:
+      - device_name: /dev/sda
+        # confusingly, the root device is referred to as /dev/sda in AWS console, but
+        # the device in linux is /dev/xvde. If you want to change the size of the underlying
+        # volume as we are here, the device_name above MUST be /dev/sda. Unsure whether this
+        # changes with different AMIs. Additional volumes do not seem to have this problem.
+        volume_size: 24
+        delete_on_termination: true
+      - device_name: /dev/xvdf
+        volume_size: 128
+        delete_on_termination: true
+      - device_name: /dev/xvdg
+        volume_size: 128
+        delete_on_termination: true
+      monitoring: yes
+      instance_tags:
+        Name: '{{ec2_name_tag}}'
+    register: ec2_cluster
+    when: spot_price is not defined
 
   - name: write an inventory file containing the just-created cluster
     template: src=cluster.hosts.j2 dest='./cluster.hosts' mode=0644 backup=yes

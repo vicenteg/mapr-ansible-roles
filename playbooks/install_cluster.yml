@@ -157,10 +157,7 @@
         metrics_password: mapr,
         metrics_host: "{{ groups['hiveserver'] | first }}" }
 
-
-
 # For convenience, print the URL for the MCS.
-
 - hosts: webserver
   sudo: yes
   gather_facts: no
@@ -168,9 +165,6 @@
     - name: get ec2 facts
       ec2_facts:
       register: ec2_facts
-
-    - name: debug ec2_facts
-      debug: var=ec2_facts
 
     - name: print webserver URLs
       debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
