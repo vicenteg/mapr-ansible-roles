@@ -13,6 +13,7 @@
   sudo: yes
   roles:
     - { role: mapr-metrics,
+        cluster_name: "{{mapr_cluster_name}}",
         metrics_user: maprmetrics,
         metrics_password: mapr,
         metrics_host: "{{ groups['hiveserver'] | first }}" }
