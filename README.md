@@ -55,11 +55,28 @@ Prerequisites - AWS
 
 Please review [the README for mapr-aws-bootstrap](https://github.com/vicenteg/mapr-singlenode-vagrant/tree/master/playbooks/roles/mapr-aws-bootstrap).
 
-Before starting the installation, you'll need to edit the following variables. Note that if the variables do not exist in the file, you can add them. You can also add these variables to your playbook invocation using something like `--extra-vars "mykey=myvalue"` where mykey is the variable name below, and the myvalue is what you set.
+Before starting the installation, you will want to edit some variables. Variables can be modified in the top-level playbooks. For each group, you can inspect the role variables. An example, so you know what to look for is here:
 
-Copy `playbooks/roles/mapr-aws-bootstrap/defaults/main.yml` to `playbooks/roles/mapr-aws-bootstrap/vars/main.yml`. Variables set in `vars/main.yml` override variable set in `defaults/main.yml`.
+```
+- hosts: CentOS;RedHat
+  max_fail_percentage: 0
+  sudo: yes
+  roles:
+    - { role: mapr-redhat-prereqs,
+        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+        mapr_uid: 2147483632,
+        mapr_gid: 2147483632,
+        mapr_home: '/home/mapr',
+        mapr_version: 'v3.1.1' }
+```
 
-Review `vars/main.yml` - it has comments that will explain what each variable is for.
+Edit them in the file, or you can override these using the `--extra-vars` argument to ansible-playbook. For example, the argument would look like this to change mapr_version:
+
+```
+--extra-vars "mapr_version=v3.1.1"
+```
+
+You could also copy `playbooks/roles/mapr-aws-bootstrap/defaults/main.yml` to `playbooks/roles/mapr-aws-bootstrap/vars/main.yml`. Variables set in `vars/main.yml` override variable set in `defaults/main.yml`. But I think using the top level role variables or overriding them on the ansible-playbook command line is easier.
 
 For mapr-metrics, review [its README file](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/roles/mapr-metrics/README.md).
 
@@ -67,9 +84,9 @@ For mapr-metrics, review [its README file](https://github.com/vicenteg/mapr-ansi
 Pre-Install - AWS & Vagrant
 ===========================
 
-1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in `playbooks/group_vars/all` in the variable `mapr_user_pw`.
-2. Take a look at the rest of the variables in group_vars/all and override them as needed.
-3. For each subdirectory of `roles`, there is a file `defaults/main.yml` which contains (you guessed it!) defaults for each role. It's worth a look at these to see if there's anything you want to override. In particular, look at `playbooks/roles/mapr-fileserver/defaults/main.yml` and add the disks to 
+1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in either extra-vars or in the role variables in the top-level playbook. 
+2. Make sure that the list of disks you want to use aligns with the disks present on the systems. If you didn't change the bootstrap playbook, you should not have to do anything.
+3. Check all the ec2 related variables. Chances are excellent you need to change something there.
 
 Installation - Vagrant
 =======================
@@ -80,10 +97,12 @@ Issue `vagrant up`, and watch as vagrant sets up your VM and provisions it.
 Installation - AWS
 ===================
 
-After modifying configuration files as needed, run the playbook as follows, substituting your keypair for mine:
+After modifying configuration files as needed, run the playbook as follows, being sure to substitute the path to your private key.
 
 ```
-ansible-playbook -i playbooks/cluster.hosts --private-key <path/to/your/private_key> -u root playbooks/install_cluster.yml
+ansible-playbook -i playbooks/cluster.hosts --private-key <path/to/your/private_key> -u root \
+	--extra-vars "mapr_cluster_name=my.cluster.com mapr_version=v3.1.1" \
+	playbooks/install_cluster.yml
 ```
 
 

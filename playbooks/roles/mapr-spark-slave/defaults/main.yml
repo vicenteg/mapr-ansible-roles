@@ -1,4 +1,4 @@
 ---
 # defaults file for sparkslave
-spark_work_dir: /opt/mapr/spark/tmp
+# spark_work_dir: /opt/mapr/spark/tmp
 

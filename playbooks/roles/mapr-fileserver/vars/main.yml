@@ -1,7 +1,2 @@
 ---
 # vars file for mapr-fileserver
-# disk list for virtualbox instance, where device names are /dev/sdX
-#mapr_disks: [ '/dev/sdb', '/dev/sdc', '/dev/sdd', '/dev/sde' ]
-
-# example disk list for AWS EC2 nodes
-mapr_disks: [ '/dev/xvdf', '/dev/xvdg' ]

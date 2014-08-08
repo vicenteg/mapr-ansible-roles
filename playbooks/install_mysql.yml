@@ -4,4 +4,6 @@
 - hosts: hiveserver
   sudo: yes
   roles:
-    - mysql-server
+    - { role: mysql-server,
+        mysql_root_user: root,
+        mysql_root_password: mapr }

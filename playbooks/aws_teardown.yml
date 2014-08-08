@@ -2,6 +2,9 @@
 --- 
 - hosts: all
   gather_facts: no
+  vars:
+    i_am_sure: True
+    ec2_region: 'us-east-1'
   tasks:
     - name: are you sure?
       fail: msg='If you run this playbook, all instances referred to by the inventory file will be terminated. Set i_am_sure=True to continue.'
