@@ -29,7 +29,9 @@
     host="{{item}}"
     priv="*.*:ALL,GRANT"
   with_items:
-    - localhost
+    - "localhost"
+    - "{{ansible_default_ipv4.address}}"
+    - "{{ansible_hostname}}"
 
 - name: lock down root user to cluster nodes
   mysql_user:
