@@ -8,6 +8,7 @@ install:
 - pip install boto --download-cache $HOME/.pip-cache
 - wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
 - unzip -d $HOME ec2-api-tools.zip
+- $EC2_HOME/bin/ec2-delete-keypair travis_temp
 - $EC2_HOME/bin/ec2-create-keypair travis_temp | grep -A 50 BEGIN > $HOME/travis_temp.pem
 - chmod 0600 $HOME/travis_temp.pem
 before_script:
@@ -19,11 +20,11 @@ script:
 - ansible all -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem -u root
   -m ping
 - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem
-  --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large"
+  --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large mapr_version=v3.1.1 mapr_cluster_name=TravisCI"
   playbooks/install_cluster.yml
-- ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem
-  --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large"
-  playbooks/install_hive.yml
+# - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem
+#   --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large"
+#   playbooks/install_hive.yml
 after_success:
 - ansible-playbook -i playbooks/cluster.hosts --extra-vars "ec2_region=us-east-1"
   --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml

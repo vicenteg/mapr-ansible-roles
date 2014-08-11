@@ -1,9 +1,19 @@
 ---
-- hosts: cldb:mysql:zookeepers
+- hosts: cldb:zookeepers
 # just collecting facts so that we can locate the CLDB and mysql
 
 - hosts: hiveserver
   sudo: yes
   roles:
-    - mapr-client
-    - mapr-hive
+    - { role: mapr-client,
+        java_home: '/usr' }
+
+    - { role: mapr-hive,
+        hive_db: 'metastore',
+        hive_db_user: 'hive',
+        hive_db_pass: 'mapr',
+        hive_metastore_host: 'localhost',
+        hive_db_host: 'localhost',
+        mysql_root_user: 'root',
+        mysql_root_password: 'mapr',
+        hive_version: '0.12*' }

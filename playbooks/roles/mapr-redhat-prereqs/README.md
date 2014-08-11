@@ -8,8 +8,8 @@ Requirements
 ------------
 
 This role expects to be able to install some packages from standard CentOS or
-Redhat repositories, so the node should be configured to allow access to an
-internal or external CentOS/Redhat repository.
+RedHat repositories, so the node should be configured to allow access to an
+internal or external CentOS/RedHat repository.
 
 Role Variables
 --------------
@@ -44,7 +44,7 @@ Example Playbook
     - group_by: key={{ansible_virtualization_type}}
     - group_by: key={{ansible_distribution}}
 
-- hosts: CentOS;Redhat
+- hosts: CentOS;RedHat
   max_fail_percentage: 0
   sudo: yes
   roles:
