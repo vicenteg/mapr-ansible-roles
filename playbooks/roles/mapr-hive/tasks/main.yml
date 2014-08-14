@@ -9,10 +9,14 @@
   yum: name={{item}} state=present
   with_items:
     - mysql
-    - 'mapr-hive-{{hive_version}}'
-    - 'mapr-hiveserver2-{{hive_version}}'
-    - 'mapr-hivemetastore-{{hive_version}}'
+    - 'mapr-hive-{{hive_version}}*'
+    - 'mapr-hiveserver2-{{hive_version}}*'
+    - 'mapr-hivemetastore-{{hive_version}}*'
   notify: reconfigure roles
+
+- name: store the path to hive
+  shell: rpm -ql mapr-hive  | head -2 | tail -1
+  register: hive_home
 
 - name: ensure the top level hive directory is owned by mapr so logs directory can be created
   file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes
@@ -33,15 +37,25 @@
     login_host="{{hive_metastore_host}}"
   register: db_changed
 
-- name: create the hive metastore schema
+- name: create the hive metastore schema for hive 0.12
   mysql_db:
     name="{{hive_db}}"
     state=import
-    target="/opt/mapr/hive/hive-0.12/scripts/metastore/upgrade/mysql/hive-schema-0.12.0.mysql.sql"
+    target="{{hive_home.stdout}}/scripts/metastore/upgrade/mysql/hive-schema-0.12.0.mysql.sql"
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
     login_host="{{hive_metastore_host}}"
-  when: db_changed.changed
+  when: db_changed.changed and hive_version == '0.12'
+
+- name: create the hive metastore schema for hive 0.13
+  mysql_db:
+    name="{{hive_db}}"
+    state=import
+    target="{{hive_home.stdout}}/scripts/metastore/upgrade/mysql/hive-schema-0.13.0.mysql.sql"
+    login_user="{{mysql_root_user}}"
+    login_password="{{mysql_root_password}}"
+    login_host="{{hive_metastore_host}}"
+  when: db_changed.changed and hive_version == '0.13'
 
 - name: create mapr user@localhost
   mysql_user:
@@ -74,5 +88,5 @@
     - "%"
 
 - name: copy hive-site.xml into place
-  template: src=hive-site.xml.j2 dest=/opt/mapr/hive/hive-0.12/conf/hive-site.xml
+  template: src=hive-site.xml.j2 dest="{{hive_home.stdout}}/conf/hive-site.xml"
 

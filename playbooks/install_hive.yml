@@ -16,4 +16,4 @@
         hive_db_host: 'localhost',
         mysql_root_user: 'root',
         mysql_root_password: 'mapr',
-        hive_version: '0.12*' }
+        hive_version: '0.13' }
