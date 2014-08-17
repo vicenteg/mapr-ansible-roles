@@ -22,7 +22,7 @@
 {% endfor %}
 
 [jobtracker]
-{% for instance in ec2_cluster.instances[3:5] %}
+{% for instance in ec2_cluster.instances[3:6] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
@@ -42,7 +42,7 @@
 {% endfor %}
 
 [cldb]
-{% for instance in ec2_cluster.instances[0:3] %}
+{% for instance in ec2_cluster.instances[3:6] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
