@@ -90,3 +90,13 @@
 - name: copy hive-site.xml into place
   template: src=hive-site.xml.j2 dest="{{hive_home.stdout}}/conf/hive-site.xml"
 
+# XXX: this directory should not be hard coded
+- name: does hive warehouse directory exist?
+  command: hadoop fs -test -d /user/hive/warehouse
+  register: warehouse_exists
+  failed_when: warehouse_exists.rc not in (0,255)
+
+- name: create hive warehouse directory
+  command: hadoop fs -mkdir /user/hive/warehouse
+  when: warehouse_exists.rc != 0
+  
