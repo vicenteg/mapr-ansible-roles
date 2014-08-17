@@ -6,4 +6,5 @@
   sudo: yes
   roles:
     - mapr-redhat-prereqs
-    - { role: mapr-client }
+    - { role: mapr-client,
+        cluster_name: '{{mapr_cluster_name}}' }
