@@ -1,2 +1,3 @@
 mapr_version: v3.1.1
-mapr_cluster_name: aws.maprse.com
+mapr_cluster_name: msg-poc
+#secure_cluster: true

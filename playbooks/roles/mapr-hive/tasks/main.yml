@@ -92,11 +92,11 @@
 
 # XXX: this directory should not be hard coded
 - name: does hive warehouse directory exist?
-  command: hadoop fs -test -d /user/hive/warehouse
+  command: sudo -u mapr hadoop fs -test -d /user/hive/warehouse
   register: warehouse_exists
   failed_when: warehouse_exists.rc not in (0,255)
 
 - name: create hive warehouse directory
-  command: hadoop fs -mkdir /user/hive/warehouse
+  command: sudo -u mapr hadoop fs -mkdir /user/hive/warehouse
   when: warehouse_exists.rc != 0
   

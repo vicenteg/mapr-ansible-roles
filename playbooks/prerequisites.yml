@@ -4,7 +4,7 @@
     - group_by: key={{ansible_virtualization_type}}
     - group_by: key={{ansible_distribution}}
 
-- hosts: CentOS;RedHat
+- hosts: CentOS;RedHat;Amazon
   max_fail_percentage: 0
   sudo: yes
   roles:

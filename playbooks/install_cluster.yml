@@ -7,36 +7,12 @@
     - name: ensure some critical vars are set, fail early if not.
       fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars"
       when: mapr_version is not defined or mapr_cluster_name is not defined 
+
     - name: get ec2 facts
       ec2_facts:
       register: ec2_facts
 
-- hosts: cluster
-  tasks:
-    - group_by: key={{ansible_virtualization_type}}
-    - group_by: key={{ansible_distribution}}
-
-# RedHat derived distro specific prereqs
-- hosts: CentOS;RedHat
-  max_fail_percentage: 0
-  sudo: yes
-  roles:
-    - { role: mapr-redhat-prereqs,
-        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
-        mapr_uid: 2147483632,
-        mapr_gid: 2147483632,
-        mapr_home: '/home/mapr' }
-
-# Debian derived distro specific prereqs
-- hosts: Debian;Ubuntu
-  max_fail_percentage: 0
-  sudo: yes
-  roles:
-    - { role: mapr-debian-prereqs,
-        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
-        mapr_uid: 2147483632,
-        mapr_gid: 2147483632,
-        mapr_home: '/home/mapr' }
+- include: prerequisites.yml
 
 - hosts: zookeepers
   max_fail_percentage: 0
@@ -74,14 +50,16 @@
 - hosts: fileserver
   sudo: yes
   roles:
-    - { role: mapr-fileserver,
-        mapr_disks: [ '/dev/xvdf', '/dev/xvdg' ],
-        java_home: '/usr',
-        cluster_name: '{{mapr_cluster_name}}' } # will this work everywhere it's needed?
+    - mapr-fileserver
+
+- include: configure_cluster.yml
 
 - hosts: zookeepers
   sudo: yes
   tasks:
+    - name: ensure mapr user owns /opt/mapr/zkdata
+      file: path=/opt/mapr/zkdata owner=mapr group=mapr mode=0750 state=directory
+
     - name: start zookeeper on ZK nodes
       service: name=mapr-zookeeper state=started enabled=yes
       register: zk_started
@@ -89,7 +67,7 @@
     - name: wait for zookeeper to be listening
       wait_for: port=5181 delay=10 timeout=90
 
-    - name: wait for a few seconds to let zookeepers initialize
+    - name: wait for a few more seconds to let zookeepers initialize
       pause: seconds=15
       when: zk_started.changed
 
@@ -137,7 +115,7 @@
 #- include: install_spark.yml
 
 # uncomment the following line to install hive
-- include: install_hive.yml
+#- include: install_hive.yml
 
 # Install mapr-metrics
 - hosts: hiveserver
@@ -148,7 +126,8 @@
         mysql_root_password: mapr,
         mysql_host: "{{ groups['hiveserver'] | first }}" }
 
-- hosts: webserver:jobtracker
+#- hosts: webserver:jobtracker
+- hosts: cluster
   sudo: yes
   roles:
     - { role: mapr-metrics,

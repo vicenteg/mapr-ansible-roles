@@ -3,13 +3,7 @@
 
 - name: install EPEL repo
   yum: state=present name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+  when: ansible_distribution in ("CentOS", "RedHat", "Amazon")
 
 - name: install mapr-metrics
   yum: state=present name=mapr-metrics
-
-- name: write configure script
-  template: src=do_configure_metrics.sh.j2 dest=/tmp/do_configure_metrics.sh mode=0700 owner=root group=root 
-
-- name: configure the cluster
-  command: /tmp/do_configure_metrics.sh chdir=/tmp

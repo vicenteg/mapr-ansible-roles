@@ -7,7 +7,7 @@
   yum: name='{{item}}' state=present
   with_items:
     - mapr-spark-master
-  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+  when: ansible_distribution in ("CentOS", "RedHat", "Amazon")
   notify:
     - re-run configure.sh to enable spark-master
 

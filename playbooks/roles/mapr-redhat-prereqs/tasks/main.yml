@@ -1,20 +1,26 @@
 ---
 # tasks file for mapr-rh-prereqs
 - name: save the current list of installed packages
-  shell: rpm -qa --queryformat '%{NAME}\t%{VERSION}\n' > /root/packages_before_mapr_install
+  shell: rpm -qa --queryformat '%{NAME}\t%{VERSION}\n' > /root/packages_before_prereqs
   args:
-    creates: /root/packages_before_mapr_install 
+    creates: /root/packages_before_prereqs
 
 - name: install libselinux-python tools
   yum: name="{{item}}" state=present
   with_items:
     - libselinux-python
 
+- name: install sdparm
+  yum: name=http://mirror.thelinuxfix.com/CentOS/6.5/os/x86_64/Packages/sdparm-1.04-1.1.el6.x86_64.rpm state=present
+  when: ansible_distribution == 'Amazon'
+
 - name: set selinux config to permissive
   selinux: state=permissive policy=targeted
+  when: ansible_distribution not in ('Amazon')
 
 - name: selinux to permissive now
   command: setenforce permissive
+  when: ansible_distribution not in ('Amazon')
 
 - name: disable iptables
   service: name=iptables state=stopped enabled=no
@@ -66,3 +72,13 @@
 
 - name: install EPEL 6 x86_64
   yum: name=http://mirrors.einstein.yu.edu/epel/6/x86_64/epel-release-6-8.noarch.rpm state=installed
+  when: ansible_distribution not in ('Amazon')
+
+- name: enable EPEL 6
+  copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo owner=root group=root mode=0644
+  when: ansible_distribution in ('Amazon')
+
+- name: save the current list of installed packages after prereqs
+  shell: rpm -qa --queryformat '%{NAME}\t%{VERSION}\n' > /root/packages_after_prereqs
+  args:
+    creates: /root/packages_after_prereqs

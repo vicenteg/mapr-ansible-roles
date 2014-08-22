@@ -20,7 +20,7 @@
       wait: yes
       wait_timeout: '{{ec2_wait_timeout}}'
       volumes:
-      - device_name: /dev/sda
+      - device_name: '{{root_device_path}}'
         volume_size: 24
         delete_on_termination: true
       monitoring: yes
@@ -45,7 +45,7 @@
       wait: yes
       wait_timeout: '{{ec2_wait_timeout}}'
       volumes:
-      - device_name: /dev/sda
+      - device_name: '{{root_device_path}}'
         volume_size: 24
         delete_on_termination: true
       monitoring: yes
@@ -70,7 +70,7 @@
       wait: yes
       wait_timeout: '{{ec2_wait_timeout}}'
       volumes:
-      - device_name: /dev/sda
+      - device_name: '{{root_device_path}}'
         # confusingly, the root device is referred to as /dev/sda in AWS console, but
         # the device in linux is /dev/xvde. If you want to change the size of the underlying
         # volume as we are here, the device_name above MUST be /dev/sda. Unsure whether this
@@ -104,7 +104,7 @@
       wait: yes
       wait_timeout: '{{ec2_wait_timeout}}'
       volumes:
-      - device_name: /dev/sda
+      - device_name: '{{root_device_path}}'
         # confusingly, the root device is referred to as /dev/sda in AWS console, but
         # the device in linux is /dev/xvde. If you want to change the size of the underlying
         # volume as we are here, the device_name above MUST be /dev/sda. Unsure whether this
@@ -137,11 +137,11 @@
     when: ec2_cluster_ondemand.instances is defined
 
   - name: add the new hosts to inventory
-    add_host: name={{item.private_ip}} groups=instances ansible_ssh_user=root
+    add_host: name={{item.private_ip}} groups=instances ansible_ssh_user='{{ssh_user}}'
     with_items: ec2_cluster_ondemand.instances
     when: ec2_cluster_ondemand.instances is defined
 
   - name: add the new hosts to inventory
-    add_host: name={{item.private_ip}} groups=instances ansible_ssh_user=root
+    add_host: name={{item.private_ip}} groups=instances ansible_ssh_user='{{ssh_user}}'
     with_items: ec2_cluster_spot.instances
     when: ec2_cluster_spot.instances is defined

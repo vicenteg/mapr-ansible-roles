@@ -1,0 +1,12 @@
+---
+- name: write configure script (genkeys)
+  template: src=do_configure_sh_genkeys.j2 dest=/tmp/do_configure_genkeys.sh mode=0700 owner=root group=root
+
+- name: write configure script (configure)
+  template: src=do_configure_sh.j2 dest=/tmp/do_configure.sh mode=0700 owner=root group=root
+
+- name: configure env.sh with JAVA_HOME
+  lineinfile: dest=/opt/mapr/conf/env.sh insertafter="^#export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}"
+
+- name: write out disk config
+  template: src=disks.txt.j2 dest=/tmp/disks.txt mode=0644 owner=root group=root

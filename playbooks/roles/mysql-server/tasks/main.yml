@@ -2,7 +2,7 @@
 # tasks file for mysql-server
 - name: install MySQL 
   yum: name=mysql-server state=present
-  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+  when: ansible_distribution in ("CentOS", "RedHat", "Amazon")
 
 - name: install MySQL on Debian derived OSes
   apt: name=mysql-server state=present
@@ -13,7 +13,7 @@
 
 - name: install MySQL python module
   yum: name=MySQL-python state=installed
-  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+  when: ansible_distribution in ("CentOS", "RedHat", "Amazon")
 
 - name: install MySQL python module  on Debian derived OSes
   apt: name=python-mysqldb state=installed
