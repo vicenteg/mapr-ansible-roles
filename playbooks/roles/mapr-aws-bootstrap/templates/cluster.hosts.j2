@@ -16,8 +16,23 @@
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
-[metrics]
-{% for instance in ec2_cluster.instances[1:5] %}
+[hue]
+{% for instance in ec2_cluster.instances[2:3] %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+
+[impalastatestore]
+{% for instance in ec2_cluster.instances[1:2] %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+
+[impalacatalog]
+{% for instance in ec2_cluster.instances[1:2] %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+
+[impalaserver]
+{% for instance in ec2_cluster.instances[3:6] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
@@ -26,13 +41,21 @@
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
+[webserver]
+{% for instance in ec2_cluster.instances[1:3] %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+
 [tasktracker]
 {% for instance in ec2_cluster.instances %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
-[webserver]
+[metrics]
 {% for instance in ec2_cluster.instances[1:3] %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+{% for instance in ec2_cluster.instances[3:6] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 

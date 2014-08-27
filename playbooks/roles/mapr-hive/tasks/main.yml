@@ -21,14 +21,12 @@
 - name: ensure the top level hive directory is owned by mapr so logs directory can be created
   file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes
 
-- name: debug
-  debug: var=hostvars[metrics_host]
 # Note that this template may rely on variables in other groups, and as a result, 
 # my not always work when this playbook is run individually.
 - name: write .my.cnf for root
   template: src=dot-my.cnf.j2 dest=/root/.my.cnf mode=0600 owner=root group=root
 
-- name: ensure hivemeta exists
+- name: ensure hive metastore database exists
   mysql_db:
     name="{{hive_db}}"
     state=present
