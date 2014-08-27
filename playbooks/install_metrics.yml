@@ -8,6 +8,6 @@
         mysql_root_password: mapr,
         mysql_host: "{{ groups['hiveserver'] | first }}" }
 
-- hosts: webserver:jobtracker
+- hosts: webserver;jobtracker
   roles:
     - mapr-metrics
