@@ -8,18 +8,16 @@
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - { role: mapr-redhat-prereqs, mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.' }
-    - { role: mapr-redhat-prereqs, mapr_uid: 2147483632 }
-    - { role: mapr-redhat-prereqs, mapr_gid: 2147483632 }
-    - { role: mapr-redhat-prereqs, mapr_home: '/home/mapr' }
-    - mapr-redhat-prereqs
+    - { role: mapr-redhat-prereqs, mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+        mapr_uid: 2147483632,
+        mapr_gid: 2147483632,
+        mapr_home: '/home/mapr' }
 
 - hosts: Ubuntu;Debian
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - { role: mapr-debian-prereqs, mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.' }
-    - { role: mapr-debian-prereqs, mapr_uid: 2147483632 }
-    - { role: mapr-debian-prereqs, mapr_gid: 2147483632 }
-    - { role: mapr-debian-prereqs, mapr_home: '/home/mapr' }
-    - mapr-debian-prereqs
+    - { role: mapr-debian-prereqs, mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+        mapr_uid: 2147483632,
+        mapr_gid: 2147483632,
+        mapr_home: '/home/mapr' }
