@@ -1,6 +1,3 @@
-- name: open port 5181 for zookeeper
-  command: iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 5181 -j ACCEPT
-
 - name: install mapr-zookeeper
   yum: name='{{item}}' state=present
   with_items:
