@@ -1,3 +1,9 @@
+IMPORTANT!
+==
+
+These playbooks now assume the use of internal ec2 hostnames, in a VPC. This means the playbooks below should be run from an EC2 host, or over a VPN connection.
+
+
 mapr-ansible-roles
 =======================
 
