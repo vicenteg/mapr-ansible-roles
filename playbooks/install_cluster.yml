@@ -143,3 +143,11 @@
     - name: print webserver URLs
       debug: msg="webserver=https://{{ansible_eth1.ipv4.address}}:8443"
       when: "ec2_facts is not defined"
+
+
+- hosts: cldb[0]
+  sudo: yes
+  tasks:
+    - name: set replication to 1 if single node
+      shell: maprcli volume list -columns volumename | grep -v volumename | awk '{print $1}' | xargs -n1 -I'{}' maprcli volume modify -name '{}' -replication 1 -minreplication 1
+      when: single_node_cluster is defined and single_node_cluster == True

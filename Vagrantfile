@@ -14,8 +14,7 @@ Vagrant.configure("2") do |config|
     node1.vm.network :forwarded_port, guest: 8443, host: 8443
     node1.vm.network :forwarded_port, guest: 8000, host: 8000
     node1.vm.network :forwarded_port, guest: 10000, host: 10000
-    #node1.vm.network :private_network, type: "dhcp"
-    node1.vm.network :private_network, :ip =>'192.168.59.0', :auto_network => true, :type => "dhcp" 
+    node1.vm.network :private_network, :ip =>'192.168.99.0', :auto_network => true, :type => "dhcp" 
 
     node1.vm.provider :virtualbox do |provider|
       provider.name = "mapr_singlenode"
@@ -39,8 +38,12 @@ Vagrant.configure("2") do |config|
     ansible.inventory_path = 'hosts'
     ansible.host_key_checking = false
     #ansible.verbose = "vvvv" 
+    ansible.sudo = true
     ansible.extra_vars = {
-      mapr_disks: [ "/dev/sdb","/dev/sdc","/dev/sdd","/dev/sde" ]
+      mapr_disks: [ "/dev/sdb","/dev/sdc","/dev/sdd","/dev/sde" ],
+      mapr_cluster_name: 'vagrant',
+      single_node_cluster: true,
+      #secure_cluster: False
     }
     ansible.playbook = "playbooks/install_cluster.yml"
   end

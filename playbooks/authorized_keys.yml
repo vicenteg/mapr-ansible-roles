@@ -22,6 +22,7 @@
         - "/tmp/root*id_dsa.pub"
 
 - hosts: localhost
+  sudo: no
   tasks:
     - name: clean up the public keys we copied to the local machine in the last play
       file: state=absent path={{item}}
