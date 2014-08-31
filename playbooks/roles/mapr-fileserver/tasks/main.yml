@@ -1,28 +1,8 @@
 ---
 # tasks file for mapr-fileserver
 
-- name: install mapr packages
+- name: install mapr-fileserver
   yum: name='{{item}}' state=present
   with_items:
     - mapr-fileserver
-  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
-
-- name: write out disk config
-  template: src=disks.txt.j2 dest=/tmp/disks.txt mode=0644 owner=root group=root
-
-- name: configure env.sh with JAVA_HOME
-  lineinfile: dest=/opt/mapr/conf/env.sh insertafter="^#export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}" 
-
-- name: write configure script
-  template: src=do_configure_sh.j2 dest=/tmp/do_configure.sh mode=0700 owner=root group=root 
-
-- name: configure the cluster
-  command: /tmp/do_configure.sh chdir=/tmp creates=/opt/mapr/conf/mapr-clusters.conf
-
-- name: check whether we have disks already
-  shell: /opt/mapr/server/disklist.sh
-  register: disklist
-
-- name: add the disks
-  command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt
-  when: "disklist is defined and disklist.stdout.find('MapR-FS') == -1"
+  when: ansible_distribution in ('CentOS', 'RedHat', 'Amazon')

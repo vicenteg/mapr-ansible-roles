@@ -5,4 +5,6 @@
 - hosts: edge
   sudo: yes
   roles:
-    - mapr-client
+    - mapr-redhat-prereqs
+    - { role: mapr-client,
+        cluster_name: '{{mapr_cluster_name}}' }

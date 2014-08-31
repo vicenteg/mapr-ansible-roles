@@ -4,83 +4,73 @@
   gather_facts: no
   max_fail_percentage: 0
   tasks:
+    - name: ensure some critical vars are set, fail early if not.
+      fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars"
+      when: mapr_version is not defined or mapr_cluster_name is not defined 
+
     - name: get ec2 facts
       ec2_facts:
       register: ec2_facts
 
-- hosts: cluster
-  tasks:
-    - group_by: key={{ansible_virtualization_type}}
-    - group_by: key={{ansible_distribution}}
-
-# RedHat derived distro specific prereqs
-- hosts: CentOS;RedHat
-  max_fail_percentage: 0
-  sudo: yes
-  roles:
-    - { role: mapr-redhat-prereqs,
-        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
-        mapr_uid: 2147483632,
-        mapr_gid: 2147483632,
-        mapr_home: '/home/mapr',
-        mapr_version: 'v3.1.1' } # will this work everywhere it's needed?
-
-# Debian derived distro specific prereqs
-- hosts: Debian;Ubuntu
-  max_fail_percentage: 0
-  sudo: yes
-  roles:
-    - { role: mapr-debian-prereqs,
-        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
-        mapr_uid: 2147483632,
-        mapr_gid: 2147483632,
-        mapr_home: '/home/mapr',
-        mapr_version: 'v3.1.1' } # will this work everywhere it's needed?
+- include: prerequisites.yml
 
 - hosts: zookeepers
   max_fail_percentage: 0
-  sudo: yes
   roles:
     - zookeeper
 
 - hosts: cldb
   max_fail_percentage: 0
-  sudo: yes
   roles:
     - mapr-cldb
 
 - hosts: jobtracker
   max_fail_percentage: 0
-  sudo: yes
   roles:
     - mapr-jobtracker
 
 - hosts: tasktracker
-  sudo: yes
   roles:
     - mapr-tasktracker
 
 - hosts: webserver
-  sudo: yes
   roles:
     - webserver
 
 - hosts: nfs
-  sudo: yes
   roles:
     - mapr-nfs
 
 - hosts: fileserver
-  sudo: yes
   roles:
-    - { role: mapr-fileserver,
-        mapr_disks: [ '/dev/xvdf', '/dev/xvdg' ],
-        java_home: '/usr',
-        cluster_name: '{{mapr_cluster_name}}' } # will this work everywhere it's needed?
+    - mapr-fileserver
+
+# uncomment the following line to install mysql (hive metastore and metrics)
+- include: install_mysql.yml
+
+# Install mapr-metrics
+- hosts: hiveserver
+  roles:
+    - { role: metrics-database,
+        mysql_root_user: root,
+        mysql_root_password: mapr,
+        mysql_host: "{{ groups['hiveserver'] | first }}" }
+
+- hosts: webserver;jobtracker
+  roles:
+    - { role: mapr-metrics,
+        cluster_name: '{{mapr_cluster_name}}',
+        metrics_user: maprmetrics,
+        metrics_password: mapr,
+        metrics_host: "{{ groups['hiveserver'] | first }}" }
+
+- include: configure_cluster.yml
 
 - hosts: zookeepers
-  sudo: yes
   tasks:
+    - name: ensure mapr user owns /opt/mapr/zkdata
+      file: path=/opt/mapr/zkdata owner=mapr group=mapr mode=0750 state=directory
+
     - name: start zookeeper on ZK nodes
       service: name=mapr-zookeeper state=started enabled=yes
       register: zk_started
@@ -88,7 +78,7 @@
     - name: wait for zookeeper to be listening
       wait_for: port=5181 delay=10 timeout=90
 
-    - name: wait for a few seconds to let zookeepers initialize
+    - name: wait for a few more seconds to let zookeepers initialize
       pause: seconds=15
       when: zk_started.changed
 
@@ -97,7 +87,6 @@
       register: zk_qstatus
 
 - hosts: cldb
-  sudo: yes
   tasks:
     - name: start warden on CLDBs first per doc.mapr.com
       service: name=mapr-warden state=started enabled=yes
@@ -108,7 +97,6 @@
       when: cldb_started.changed
 
 - hosts: cluster
-  sudo: yes
   tasks:
     - name: start the warden on all nodes
       service: name={{item}} state=started
@@ -129,36 +117,16 @@
 # Some of the below will need to be uncommented, or be run manually.
 #
 
-# uncomment the following line to install mysql (hive metastore and metrics)
-- include: install_mysql.yml
 
 # uncomment the following line to install spark (spark, shark, spark-master)
 #- include: install_spark.yml
 
 # uncomment the following line to install hive
-- include: install_hive.yml
+#- include: install_hive.yml
 
-# Install mapr-metrics
-- hosts: hiveserver
-  sudo: yes
-  roles:
-    - { role: metrics-database,
-        mysql_root_user: root,
-        mysql_root_password: mapr,
-        mysql_host: "{{ groups['hiveserver'] | first }}" }
-
-- hosts: webserver:jobtracker
-  sudo: yes
-  roles:
-    - { role: mapr-metrics,
-        cluster_name: '{{mapr_cluster_name}}',
-        metrics_user: maprmetrics,
-        metrics_password: mapr,
-        metrics_host: "{{ groups['hiveserver'] | first }}" }
 
 # For convenience, print the URL for the MCS.
 - hosts: webserver
-  sudo: yes
   gather_facts: no
   tasks:
     - name: get ec2 facts

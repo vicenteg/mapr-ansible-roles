@@ -1,18 +1,13 @@
 ---
-- hosts: cldb:zookeeper:cluster
+- hosts: cluster;cldb;zookeepers
 
 - hosts: hiveserver
-  sudo: yes
   roles:
     - { role: metrics-database,
         mysql_root_user: root,
         mysql_root_password: mapr,
         mysql_host: "{{ groups['hiveserver'] | first }}" }
 
-- hosts: webserver:jobtracker
-  sudo: yes
+- hosts: webserver;jobtracker
   roles:
-    - { role: mapr-metrics,
-        metrics_user: maprmetrics,
-        metrics_password: mapr,
-        metrics_host: "{{ groups['hiveserver'] | first }}" }
+    - mapr-metrics

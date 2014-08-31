@@ -9,22 +9,24 @@
   yum: name={{item}} state=present
   with_items:
     - mysql
-    - 'mapr-hive-{{hive_version}}'
-    - 'mapr-hiveserver2-{{hive_version}}'
-    - 'mapr-hivemetastore-{{hive_version}}'
+    - 'mapr-hive-{{hive_version}}*'
+    - 'mapr-hiveserver2-{{hive_version}}*'
+    - 'mapr-hivemetastore-{{hive_version}}*'
   notify: reconfigure roles
+
+- name: store the path to hive
+  shell: rpm -ql mapr-hive  | head -2 | tail -1
+  register: hive_home
 
 - name: ensure the top level hive directory is owned by mapr so logs directory can be created
   file: path=/opt/mapr/hive owner=mapr group=mapr recurse=yes
 
-- name: debug
-  debug: var=hostvars[metrics_host]
 # Note that this template may rely on variables in other groups, and as a result, 
 # my not always work when this playbook is run individually.
 - name: write .my.cnf for root
   template: src=dot-my.cnf.j2 dest=/root/.my.cnf mode=0600 owner=root group=root
 
-- name: ensure hivemeta exists
+- name: ensure hive metastore database exists
   mysql_db:
     name="{{hive_db}}"
     state=present
@@ -33,15 +35,25 @@
     login_host="{{hive_metastore_host}}"
   register: db_changed
 
-- name: create the hive metastore schema
+- name: create the hive metastore schema for hive 0.12
   mysql_db:
     name="{{hive_db}}"
     state=import
-    target="/opt/mapr/hive/hive-0.12/scripts/metastore/upgrade/mysql/hive-schema-0.12.0.mysql.sql"
+    target="{{hive_home.stdout}}/scripts/metastore/upgrade/mysql/hive-schema-0.12.0.mysql.sql"
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
     login_host="{{hive_metastore_host}}"
-  when: db_changed.changed
+  when: db_changed.changed and hive_version == '0.12'
+
+- name: create the hive metastore schema for hive 0.13
+  mysql_db:
+    name="{{hive_db}}"
+    state=import
+    target="{{hive_home.stdout}}/scripts/metastore/upgrade/mysql/hive-schema-0.13.0.mysql.sql"
+    login_user="{{mysql_root_user}}"
+    login_password="{{mysql_root_password}}"
+    login_host="{{hive_metastore_host}}"
+  when: db_changed.changed and hive_version == '0.13'
 
 - name: create mapr user@localhost
   mysql_user:
@@ -74,5 +86,15 @@
     - "%"
 
 - name: copy hive-site.xml into place
-  template: src=hive-site.xml.j2 dest=/opt/mapr/hive/hive-0.12/conf/hive-site.xml
+  template: src=hive-site.xml.j2 dest="{{hive_home.stdout}}/conf/hive-site.xml"
 
+# XXX: this directory should not be hard coded
+- name: does hive warehouse directory exist?
+  command: sudo -u mapr hadoop fs -test -d /user/hive/warehouse
+  register: warehouse_exists
+  failed_when: warehouse_exists.rc not in (0,255)
+
+- name: create hive warehouse directory
+  command: sudo -u mapr hadoop fs -mkdir /user/hive/warehouse
+  when: warehouse_exists.rc != 0
+  

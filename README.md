@@ -1,39 +1,36 @@
 mapr-ansible-roles
 =======================
 
-[![Build Status](https://magnum.travis-ci.com/vicenteg/mapr-ansible-roles.svg?token=JzqxKHfcdq9e6TfMmyz7&branch=master)](https://magnum.travis-ci.com/vicenteg/mapr-ansible-roles)
-
-Read This
-=========
-
-First off, you need to change stuff in order to log in to the cluster that results from running these playbooks. 
-
-Please skim through this README and look at what needs to change before you build.
-
-
 Intro
 ======
 
 This repo contains Ansible playbooks that do the following:
 
-* Launch EC2 instances for MapR
-* Apply MapR OS prerequisites per http://doc.mapr.com/display/MapR/Preparing+Each+Node
-* Install a basic cluster 
-* Optionally install some ecosystem packages (Hive, Spark)
+* Launch EC2 instances for MapR [playbooks/aws_bootstrap.yml](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/aws_bootstrap.yml)
+* Apply MapR OS prerequisites per http://doc.mapr.com/display/MapR/Preparing+Each+Node [playbooks/prerequisites.yml](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/prerequisites.yml)
+* Install a cluster [playbooks/install_cluster.yml](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/install_cluster.yml)
+* Optionally install some ecosystem packages (explore the playbooks directory for the latest)
 
-This project also includes a Vagrantfile that creates a single VM instance suitable to run MapR. The playbooks here can be used either for vagrant instances or EC2 instances.
+This project also includes a Vagrantfile that creates a single local VM instance, or a local VM cluster, suitable to run MapR. The playbooks here can be used either for vagrant instances or EC2 instances.
 
-This will install MapR release 3.1.1 by default. 3.0.2, 3.0.3 should also work. 
+This will install MapR release 3.1.1 by default. 3.0.2, 3.0.3 should also work provided you modify the necessary variables.
 
 This does not include a license, so to enable licensed features, you'll need to obtain a license here: http://www.mapr.com/user/addcluster
 
 AWS Instances
 ==============
 
+AWS instances you create will be spot instances by default unless you comment out the lines in `aws_bootstrap.yml` that specify the bid price. If you comment those out, you will get on demand instances, which will cost significantly more. The recommendation is that you consider using spot instances if the following apply:
 
-AWS instances you create will be spot instances by default. Be sure to check the latest spot prices for the instances you're looking to create. Also keep in mind that not all instances are available as spot instances. Importantly, remember that spot instances can be terminated by Amazon at any time if the bid price goes above the maximum price you set. So don't use spot instances if you absolutely must keep the instances running!
+1. You will not use the cluster for a live demo
+2. You will not store any important or long-lived data
+3. You are OK with the cluster being terminated (i.e., destroyed forever) without warning
+4. You need the instances to survive a reboot
 
-If you prefer on-demand instances (so that you're not at risk of automatic termination), edit `playbooks/roles/mapr-aws-bootstrap/tasks/main.yml` and command out the lines with `spot_price`.
+If any of the above are not true (i.e, you will be doing a live demo, or you need the cluster to come up if you reboot a node) you should use on demand instances.
+
+Be sure to check the latest spot prices for the instances you're looking to create. Also keep in mind that not all instances are available as spot instances. Importantly, remember that spot instances can be terminated by Amazon at any time if the bid price goes above the maximum price you set. So don't use spot instances if you absolutely must keep the instances running!
+
 
 Prerequisites - Vagrant
 =======================

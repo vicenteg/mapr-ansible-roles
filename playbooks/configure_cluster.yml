@@ -1,0 +1,67 @@
+---
+- hosts: cluster
+  sudo: yes
+  roles:
+    - { role: mapr-configuration,
+        mapr_disks: [ '/dev/xvdf', '/dev/xvdg' ],
+        java_home: '/etc/alternatives/java_sdk',
+        cluster_name: '{{mapr_cluster_name}}',
+        metrics_user: maprmetrics,
+        metrics_password: mapr,
+        metrics_host: "{{ groups['hiveserver'] | first }}" }
+
+- hosts: cldb[0]
+  sudo: yes
+  tasks:
+    - name: generate keys
+      command: creates=/opt/mapr/conf/cldb.key /tmp/do_configure_genkeys.sh
+      when: secure_cluster is defined
+
+    - name: copy the generated files
+      fetch: src='{{item}}' dest=/tmp/ flat=yes
+      with_items:
+        - /opt/mapr/conf/cldb.key
+        - /opt/mapr/conf/maprserverticket
+        - /opt/mapr/conf/ssl_keystore
+        - /opt/mapr/conf/ssl_truststore
+      when: secure_cluster is defined
+
+- hosts: cldb;zookeepers
+  sudo: yes
+  tasks: 
+    - name: copy cldb.key
+      copy: src=/tmp/cldb.key dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      when: secure_cluster is defined
+
+- hosts: cluster
+  sudo: yes
+  tasks:
+    - name: copy maprserverticket, ssl_keystore, and ssl_truststore
+      copy: src='/tmp/{{item}}' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      with_items:
+        - maprserverticket
+        - ssl_keystore
+        - ssl_truststore
+      when: secure_cluster is defined
+
+- hosts: edge
+  sudo: yes
+  tasks:
+    - name: copy ssl_truststore to edge nodes
+      copy: src='/tmp/ssl_truststore' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      ignore_errors: yes
+
+- hosts: cluster
+  sudo: yes
+  tasks:
+    - name: configure cluster
+      command: creates=/opt/mapr/conf/mapr-cluster.conf chdir=/tmp /tmp/do_configure.sh
+
+    - name: get the disk list
+      shell: /opt/mapr/server/disklist.sh
+      register: disklist 
+      
+
+    - name: add the disks
+      command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt
+      when: "disklist is defined and disklist.stdout.find('MapR-FS') == -1"
