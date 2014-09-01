@@ -1,14 +1,9 @@
 mapr-aws-bootstrap
 ========
 
-This role uses the ec2 module via a local action to set up a multi-node MapR cluster with one or more non-cluster nodes. The service layout attempts to mostly follow the 5-node HA M5 cluster described here: http://doc.mapr.com/display/MapR/Planning+the+Cluster#PlanningtheCluster-ExampleClusterDesigns
+This role uses the ec2 module via a local action to set up a multi-node MapR cluster with one or more non-cluster nodes. The service layout attempts to follow MapR best practices as they become available.
 
-It does not yet automatically set up service layout to match larger clusters.
-
-This role will only create the nodes - it will not apply any configuration or install any packages. Once you've bootstrapped your cluster, you can follow the instructions at the below link to do the installation:
-
-https://github.com/vicenteg/mapr-singlenode-vagrant#installation---aws
-
+This role will only create the nodes - it will not apply any configuration or install any packages. 
 
 Requirements
 ------------
@@ -16,7 +11,7 @@ Requirements
 1. AWS credentials (account ID and secret key). If you don't know what this means, read this: http://docs.aws.amazon.com/general/latest/gr/getting-aws-sec-creds.html
 2. We will provision nodes in a VPC. A VPC must exist, with at least one subnet. You'll need the subnet ID.
 3. You will need a base image. This has been tested with the CentOS 6.5 AMI in us-east-1 having ID `ami-8997afe0`.
-4. You will need your SSH keypair already generated and available in AWS.
+4. You will need your SSH keypair already generated and available in AWS. You will want to have the PEM file local as well.
 5. You will need a security group. The cluster that results from the install_cluster play uses a security group that allows ports 22 and 8443 as well as all traffic originating from the VPC subnet.
 6. It might be a good idea to configure your SSH client (assuming you use a *nix like system) so that it automatically uses your AWS private key when connecting to AWS servers. Try something like the below, substituting paths as necessary.
 ```
@@ -53,6 +48,7 @@ ec2_zone: 'us-east-1b'
 ec2_image: 'ami-8997afe0'
 
 vpc_subnet: 'subnet-9bfae2ef'
+
 
 Turn Off - (on-demand instances only)
 ------------

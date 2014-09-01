@@ -37,6 +37,7 @@ If any of the above are not true (i.e, you will be doing a live demo, or you nee
 
 Be sure to check the latest spot prices for the instances you're looking to create. Also keep in mind that not all instances are available as spot instances. Importantly, remember that spot instances can be terminated by Amazon at any time if the bid price goes above the maximum price you set. So don't use spot instances if you absolutely must keep the instances running!
 
+If you prefer on-demand instances (so that you're not at risk of automatic termination), edit `playbooks/aws_bootstrap.yml` and comment out the lines with `spot_price`.
 
 Prerequisites - Vagrant
 =======================
