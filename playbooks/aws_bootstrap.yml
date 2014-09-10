@@ -9,7 +9,7 @@
         ec2_image: 'ami-8997afe0',
         #ec2_image: 'ami-76817c1e',
         vpc_subnet: 'subnet-9bfae2ef',
-        ec2_name_tag: 'msg-poc',
+        ec2_name_tag: 'my.cluster.com',
         edge_node_count: 1,
         edge_node_type: 'm1.large',
         edge_node_price: 0.032,
