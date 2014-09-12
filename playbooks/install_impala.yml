@@ -1,0 +1,63 @@
+---
+
+# N.B. - something like the following is required after running this playbook
+# $ sudo -u mapr maprcli node services -action restart -name impalacatalo-filter csvc==impalacatalog
+# $ sudo -u mapr maprcli node services -action restart -name impalastore -filter csvc==impalastore
+# $ sudo -u mapr maprcli node services -action restart -name impalaserver -filter csvc==impalaserver
+# For amazon linux, add libicu .42 and libevent 1.4
+
+- hosts: cldb:zookeepers
+# just collecting facts so that we can locate the CLDB and mysql
+
+- hosts: impalaserver
+  roles:
+    - python-lxml
+    - { role: mapr-impala,
+        hive_db: "metastore_{{hive_version|replace('.','_')}}",
+        hive_metastore_host: "172.16.1.14",
+        hive_db_host:  "{{groups['hiveserver']|first}}" }
+
+- hosts: impalastatestore
+  roles:
+    - python-lxml
+  vars: 
+    - hive_metastore_host: "172.16.1.14"
+  tasks:
+    - name: install statestore and catalog
+      yum: name="{{item}}" state=present
+      with_items:
+        - mapr-hive-0.12*
+        - mapr-impala
+        - mapr-impala-statestore
+        - mapr-impala-catalog
+
+
+- hosts: impalastatestore;impalaserver
+  vars: 
+    - hive_metastore_host: "172.16.1.14"
+    - impala_state_store_host: "{{groups['impalastatestore']|first}}"
+  tasks:
+    - name: update impala configuration with metastore host
+      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="HIVE_METASTORE_URI" line="HIVE_METASTORE_URI=thrift://{{hive_metastore_host}}:9083" backup=true
+
+    - name: set HIVE_HOME appropriately
+      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^(#.*)?HIVE_HOME" line="HIVE_HOME=/opt/mapr/hive/hive-0.12" state=present  backup=true
+
+    - name: update hive configuration to point at metastore
+      hadoop_properties:
+        file: /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+        name: hive.metastore.uris
+        value: "thrift://{{hive_metastore_host}}:9083"
+
+    - name: link impala hive-site.xml to hive 0.12
+      file: state=link src=/opt/mapr/hive/hive-0.12/conf/hive-site.xml path=/opt/mapr/impala/impala-1.2.3/conf/hive-site.xml backup=true
+
+    - name: update impala configuration with statestore host
+      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^IMPALA_STATE_STORE_HOST=" line="IMPALA_STATE_STORE_HOST={{hostvars[impala_state_store_host].ansible_default_ipv4.address}}" state=present backup=true
+
+    - name: update impala configuration with catalogserver host
+      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^CATALOG_SERVICE_HOST=" line="CATALOG_SERVICE_HOST={{hostvars[impala_state_store_host].ansible_default_ipv4.address}}" backup=true
+
+    - name: reconfigure roles
+      command: /opt/mapr/server/configure.sh -R
+

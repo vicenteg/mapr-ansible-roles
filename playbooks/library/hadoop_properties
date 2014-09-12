@@ -1,0 +1,152 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# hadoop_properties: Create, update or delete properties in hadoop XML properties files.
+#
+# Copyright 2014, Vince Gonzalez
+# Vince Gonzalez <vince.gonzalez@gmail.com>
+#
+# Copyright 2014, Red Hat, Inc.
+# Tim Bielawa <tbielawa@redhat.com>
+# Magnus Hedemark <mhedemar@redhat.com>
+#
+# This software may be freely redistributed under the terms of the GNU
+# general public license version 2.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+
+DOCUMENTATION = '''
+---
+module: hadoop_properties
+short_description: Manage properties in hadoop XML files.
+description:
+  - Create, update or delete properties in hadoop XML properties files.
+version_added: "1.0"
+options:
+  file:
+    description:
+      - Path to the file to operate on. File must exist ahead of time.
+    required: true 
+    default: null
+    choices: []
+  state:
+    description:
+      - Set or remove an xpath selection (node(s), attribute(s))
+    required: false
+    default: present
+    choices:
+      - "absent"
+      - "present"
+  name:
+    description:
+      - Name of the property to operate upon.
+    required: true
+    default: null
+  value:
+    description:
+      - Desired value of the property. Either a string, or to unset a value, the Python C(None) keyword (YAML Equivalent, C(null)).
+    required: false
+    default: Elements default to no value. 
+    choices: []
+requirements:
+    - The remote end must have the Python C(lxml) library installed
+author: Vince Gonzalez (based on a module by Tim Bielawa and Magnus Hedemark)
+'''
+
+
+from io import BytesIO
+from lxml import etree
+try:
+    import json
+except:
+    import simplejson as json
+import lxml
+import os
+
+def create_or_modify_property(tree, property_name, value, module):
+    changed = False
+    xpath = '/configuration/property[contains(name, "%s")]' % property_name
+    node = None
+    try:
+        node = tree.xpath(xpath)[0]
+    except IndexError as e:
+        configuration = tree.xpath('/configuration')[0]
+        node = etree.SubElement(configuration, 'property')
+        name = etree.SubElement(node, 'name')
+        name.text = property_name
+        etree.SubElement(node, 'value')
+
+    value_element = node.xpath('value')[0]
+    if value_element.text != value:
+        value_element.text = value
+        changed = True
+
+    finish(tree, property_name, module, changed=changed)
+
+def delete_property(tree, property_name, module):
+    changed = False
+    try:
+        for node in tree.xpath('/configuration/property[contains(name, "%s")]' % property_name):
+            if not module.check_mode: 
+                parent = node.getparent()
+                parent.remove(node)
+                changed = True
+    except Exception as e:
+        abort("Could not remove property '%s': %s" % (property_name, e))
+    else:
+        finish(tree, property_name, module, changed=changed)
+
+def abort(msg, m):
+    m.fail_json(msg=msg)
+
+def finish(tree, property_name, m, changed=False, msg="", hitcount=0):
+    if changed:
+        tree.write(m.params['file'], xml_declaration=True, encoding='UTF-8')
+    m.exit_json(changed=changed,actions={"name": property_name, "state": m.params['state']}, msg=msg, count=hitcount)
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            file=dict(required=False, default=None),
+            name=dict(required=False, default='/'),
+            state=dict(required=False, default='present', choices=['absent', 'present']),
+            create=dict(required=False, default=True, choices=[True,False]),
+            value=dict(required=False, default=None)
+        ),
+        supports_check_mode=False,
+        mutually_exclusive = [
+        ]
+    )
+
+    xml_file = module.params['file']
+    property_name = module.params['name']
+    state = module.params['state']
+    value = module.params['value']
+    create = module.params['create']
+
+    if os.path.isfile(xml_file):
+        infile = file(xml_file, 'r')
+    elif create == True:
+        infile = file(xml_file, 'w')
+    else:
+        module.fail_json(
+            msg="The target XML source does not exist: %s" %
+            xml_file)
+
+    try:
+        x = etree.parse(infile)
+    except etree.XMLSyntaxError, e:
+        module.fail_json(
+            msg="Error while parsing file: %s" %
+            str(e))
+
+    if state == 'absent':
+        delete_property(x, property_name, module)
+    elif state == 'present':
+        create_or_modify_property(x, property_name, value, module)
+        set_target_attribute(x, xpath, attribute, value, module)
+
+from ansible.module_utils.basic import *
+main()
