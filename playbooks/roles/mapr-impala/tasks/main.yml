@@ -1,0 +1,15 @@
+---
+# tasks file for mapr-impala
+
+- name: install mapr-impala
+  yum: name="{{item}}" state=present
+  with_items:
+    - mapr-impala
+    - mapr-impala-server
+
+- name: update hive configuration to point at metastore
+  hadoop_properties:
+    file: /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+    name: hive.metastore.uris
+    value: "thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083"
+
