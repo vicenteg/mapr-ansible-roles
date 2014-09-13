@@ -90,3 +90,6 @@
     - name: clean up the teragen
       command: hadoop fs -rmr /user/teragen
       when: teragen.rc == 0
+
+    - name: run a minimal hive command
+      command: hive -e 'show tables'
