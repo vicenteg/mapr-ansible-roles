@@ -1,0 +1,17 @@
+- hosts: webserver
+  tasks:
+    - name: get ec2 facts
+      ec2_facts:
+      register: ec2_facts
+      when: '"instance_id" in hostvars[inventory_hostname]'
+
+    - name: print webserver URLs
+      debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
+      when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
+
+# if this is a virtualbox node, print out the IP for eth1, which is a host interface.
+- hosts: virtualbox
+  tasks:
+    - name: print webserver URLs
+      debug: msg="webserver=https://{{ansible_eth1.ipv4.address}}:8443"
+      when: "ec2_facts is not defined"

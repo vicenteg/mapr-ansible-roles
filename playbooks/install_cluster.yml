@@ -117,33 +117,14 @@
 # Some of the below will need to be uncommented, or be run manually.
 #
 
-
 # uncomment the following line to install spark (spark, shark, spark-master)
 #- include: install_spark.yml
 
 # uncomment the following line to install hive
-#- include: install_hive.yml
+- include: install_hive.yml
 
-
-# For convenience, print the URL for the MCS.
-- hosts: webserver
-  gather_facts: no
-  tasks:
-    - name: get ec2 facts
-      ec2_facts:
-      register: ec2_facts
-
-    - name: print webserver URLs
-      debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
-      when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
-
-# if this is a virtualbox node, print out the IP for eth1, which is a host interface.
-- hosts: virtualbox
-  tasks:
-    - name: print webserver URLs
-      debug: msg="webserver=https://{{ansible_eth1.ipv4.address}}:8443"
-      when: "ec2_facts is not defined"
-
+# uncomment the following line to install impala
+- include: install_impala.yml
 
 - hosts: cldb[0]
   sudo: yes
@@ -151,3 +132,6 @@
     - name: set replication to 1 if single node
       shell: maprcli volume list -columns volumename | grep -v volumename | awk '{print $1}' | xargs -n1 -I'{}' maprcli volume modify -name '{}' -replication 1 -minreplication 1
       when: single_node_cluster is defined and single_node_cluster == True
+
+# For convenience, print the URL for the MCS.
+- include: print_cluster_info.yml
