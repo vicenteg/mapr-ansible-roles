@@ -1,10 +1,28 @@
 ---
 # just collecting facts so that we can locate the CLDB and mysql
-- hosts: zookeepers;cldb;mysql;nfs
+- hosts: zookeepers;cldb;mysql;nfs;hiveserver
 
 - hosts: edge
-  sudo: yes
+  vars:
+    - hive_metastore_host: "{{groups['hiveserver'] | first}}"
   roles:
     - mapr-redhat-prereqs
+    - python-lxml
     - { role: mapr-client,
         cluster_name: '{{mapr_cluster_name}}' }
+
+  tasks:
+    - name: install hive
+      yum: name=mapr-hive state=present
+
+    - name: store the path to hive
+      shell: rpm -ql mapr-hive  | head -2 | tail -1
+      register: hive_home
+
+    - name: configure metastore
+      hadoop_properties:
+        file: "{{hive_home.stdout}}/conf/hive-site.xml"
+        name: "hive.metastore.uris" 
+        value: "thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083" 
+        state: present
+
