@@ -14,14 +14,14 @@
     - python-lxml
     - { role: mapr-impala,
         hive_db: "metastore_{{hive_version|replace('.','_')}}",
-        hive_metastore_host: "172.16.1.14",
+        hive_metastore_host: "{{groups['hiveserver']|first}}",
         hive_db_host:  "{{groups['hiveserver']|first}}" }
 
 - hosts: impalastatestore
   roles:
     - python-lxml
   vars: 
-    - hive_metastore_host: "172.16.1.14"
+    - hive_metastore_host: "{{groups['hiveserver']|first}}"
   tasks:
     - name: install statestore and catalog
       yum: name="{{item}}" state=present
@@ -34,11 +34,11 @@
 
 - hosts: impalastatestore;impalaserver
   vars: 
-    - hive_metastore_host: "172.16.1.14"
+    - hive_metastore_host: "{{groups['hiveserver']|first}}"
     - impala_state_store_host: "{{groups['impalastatestore']|first}}"
   tasks:
     - name: update impala configuration with metastore host
-      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="HIVE_METASTORE_URI" line="HIVE_METASTORE_URI=thrift://{{hive_metastore_host}}:9083" backup=true
+      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="HIVE_METASTORE_URI" line="HIVE_METASTORE_URI=thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083" backup=true
 
     - name: set HIVE_HOME appropriately
       lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^(#.*)?HIVE_HOME" line="HIVE_HOME=/opt/mapr/hive/hive-0.12" state=present  backup=true
@@ -47,7 +47,7 @@
       hadoop_properties:
         file: /opt/mapr/hive/hive-0.12/conf/hive-site.xml
         name: hive.metastore.uris
-        value: "thrift://{{hive_metastore_host}}:9083"
+        value: "thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083"
 
     - name: link impala hive-site.xml to hive 0.12
       file: state=link src=/opt/mapr/hive/hive-0.12/conf/hive-site.xml path=/opt/mapr/impala/impala-1.2.3/conf/hive-site.xml backup=true

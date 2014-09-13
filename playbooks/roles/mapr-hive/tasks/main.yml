@@ -88,6 +88,9 @@
 - name: copy hive-site.xml into place
   template: src=hive-site.xml.j2 dest="{{hive_home.stdout}}/conf/hive-site.xml"
 
+- name: set hive metastore server
+  hadoop_properties: name="hive.metastore.uris" state=present value="thrift://{{hive_metastore_host}}:9083" file=/opt/mapr/hive/hive-{{hive_version}}/conf/hive-site.xml
+
 # XXX: this directory should not be hard coded
 - name: does hive warehouse directory exist?
   command: sudo -u mapr hadoop fs -test -d /user/hive/warehouse

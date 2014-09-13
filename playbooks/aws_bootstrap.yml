@@ -14,8 +14,8 @@
         edge_node_type: 'm1.large',
         edge_node_price: 0.032,
         cluster_node_count: 6,
-        cluster_node_type: 'hi1.4xlarge',
-        cluster_node_price: 0.25,
+        cluster_node_type: 'c3.4xlarge',
+        cluster_node_price: 0.75,
         ec2_wait_timeout: 1200,
         root_device_path: '/dev/sda',
         ssh_user: 'root'
