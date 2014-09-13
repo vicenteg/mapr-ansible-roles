@@ -126,8 +126,12 @@
 # uncomment the following line to install impala
 - include: install_impala.yml
 
+# uncomment the followng line to install an edge node
+- include: install_edgenode.yml
+
 - hosts: cldb[0]
   sudo: yes
+  sudo_user: mapr
   tasks:
     - name: set replication to 1 if single node
       shell: maprcli volume list -columns volumename | grep -v volumename | awk '{print $1}' | xargs -n1 -I'{}' maprcli volume modify -name '{}' -replication 1 -minreplication 1
