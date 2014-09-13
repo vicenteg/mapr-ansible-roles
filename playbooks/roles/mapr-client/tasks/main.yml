@@ -21,14 +21,6 @@
   command: /tmp/client_configure.sh chdir=/tmp
   when: mapr_clusters.stat.exists == false
 
-- name: refresh node roles
-  command: /opt/mapr/server/configure.sh -R -on-prompt-cont y
-  when: mapr_clusters.stat.exists == true and mapr_version in ("v3.1.0", "v3.1.1")
-
-- name: refresh node roles
-  command: /opt/mapr/server/configure.sh -R 
-  when: mapr_clusters.stat.exists == true and mapr_version in ("v3.0.2", "v3.0.3")
-
 - name: remove configuration script
   file: state=absent path=/tmp/client_configure.sh 
 
@@ -37,6 +29,17 @@
   ignore_errors: true
   register: nfs_role
 
-- name: add NFS mountpoint to fstab but do not mount
+
+- name: create NFS mountpoints
+  file: path={{item}} state=directory
+  with_items:
+    - /mapr
+    - /user
+
+- name: add NFS mount /mapr to fstab but do not mount
   mount: name=/mapr src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr" fstype=nfs opts="rw,hard" state=present
+  when: nfs_role.stat.exists == false and hostvars[groups['nfs'][0]].ansible_default_ipv4.address is defined
+
+- name: add NFS mount /user to fstab but do not mount
+  mount: name=/user src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr/{{cluster_name}}/user" fstype=nfs opts="rw,hard" state=present
   when: nfs_role.stat.exists == false and hostvars[groups['nfs'][0]].ansible_default_ipv4.address is defined
