@@ -20,7 +20,9 @@ Requirements
     IdentityFile "~/.ssh/my_keypair.pem"
 ```
 
-When run, the play will expect to obtain AWS credentials from environment variables. A sample file is provided here: https://github.com/vicenteg/mapr-singlenode-vagrant/blob/master/aws/credentials.sh.sample
+When run, the play will expect to obtain AWS credentials from environment variables. A sample file is here:
+
+https://github.com/vicenteg/mapr-ansible-roles/blob/master/aws/credentials.sh.sample
 
 Copy the contents to your own `credentials.sh`, and edit the variables as needed.
 
