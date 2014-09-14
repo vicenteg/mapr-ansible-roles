@@ -42,6 +42,7 @@
        shell: maprcli node list -columns svc -filter hn==`hostname` -noheader | grep cldb
        register: grep_cldb
        failed_when: grep_cldb.rc not in (0, 1)
+       changed_when: False
 
      - name: check that CLDB is listening on 7222
        wait_for: port=7222 timeout=5 state=started
@@ -50,34 +51,40 @@
 - hosts: fileserver
   max_fail_percentage: 0
   tasks:
-     - name: check that fileserver role exists
-       stat: path=/opt/mapr/roles/fileserver
-       register: fileserver_role
+   - name: check that fileserver role exists
+     stat: path=/opt/mapr/roles/fileserver
+     register: fileserver_role
 
-     - fail: msg="fileserver role not installed on node in fileserver group."
-       when: fileserver_role.stat.exists != true
+   - fail: msg="fileserver role not installed on node in fileserver group."
+     when: fileserver_role.stat.exists != true
 
-     - name: check that fileserver is listening on 5660
-       wait_for: port=5660 timeout=5 state=started
+   - name: check that fileserver is listening on 5660
+     wait_for: port=5660 timeout=5 state=started
 
 - hosts: jobtracker
   max_fail_percentage: 0
   tasks:
-     - name: check that jobtracker role exists
-       stat: path=/opt/mapr/roles/jobtracker
-       register: jobtracker
+    - name: check that jobtracker role exists
+      stat: path=/opt/mapr/roles/jobtracker
+      register: jobtracker
+    - fail: msg="jobtracker role not installed on node in jobtracker group."
+      when: jobtracker.stat.exists != true
+    - name: check if jobtracker is running on this node
+      shell: maprcli node list -columns svc -filter hn==`hostname` -noheader | grep jobtracker
+      register: grep_jobtracker
+      changed_when: False
+      failed_when: grep_jobtracker.rc not in (0,1)
+    - name: check that jobtracker is listening on 9001
+      wait_for: port=9001 timeout=5 state=started
+      when: grep_jobtracker.rc == 0
 
-     - fail: msg="jobtracker role not installed on node in jobtracker group."
-       when: jobtracker.stat.exists != true
-
-     - name: check if jobtracker is running on this node
-       shell: maprcli node list -columns svc -filter hn==`hostname` -noheader | grep jobtracker
-       register: grep_jobtracker
-       failed_when: grep_jobtracker.rc not in (0,1) 
-
-     - name: check that jobtracker is listening on 9001
-       wait_for: port=9001 timeout=5 state=started
-       when: grep_jobtracker.rc == 0
+- hosts: impalaserver
+  tasks:
+    - name: run a minimal impala query on all impalad nodes (will connect locally)
+      command: impala-shell --query='show tables'
+      register: impala_show_tables
+      changed_when: False
+      failed_when: impala_show_tables.rc != 0
 
 - hosts: edge
   sudo: yes
@@ -93,3 +100,4 @@
 
     - name: run a minimal hive command
       command: hive -e 'show tables'
+      changed_when: False
