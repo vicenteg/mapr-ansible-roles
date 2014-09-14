@@ -9,12 +9,11 @@ install:
 - pip install boto --download-cache $HOME/.pip-cache
 - wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
 - unzip -d $HOME ec2-api-tools.zip
+
+before_script:
 - $EC2_HOME/bin/ec2-delete-keypair travis_temp
 - $EC2_HOME/bin/ec2-create-keypair travis_temp | grep -A 50 BEGIN > $HOME/travis_temp.pem
 - chmod 0600 $HOME/travis_temp.pem
-
-before_script:
-- 
 
 script:
 - ansible-playbook --extra-vars "ec2_keypair=travis_temp ec2_region=us-east-1 cluster_node_count=5
@@ -39,7 +38,7 @@ after_failure:
 env:
   global:
   - JAVA_HOME=/etc/alternatives/java_sdk
-  - EC2_HOME=$HOME/ec2-api-tools-1.7.1.0
+  - EC2_HOME=$HOME/ec2-api-tools-*
   - ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
   - secure: kCErPj0w4fOVeXjZf6NDLGQ9m9AHYQfQt9cPuAM7ff4qQyRBS+GYQ4Q1gTDZFo7KSyCXCIui+Aq6DMAsIzkLK/pmXsC56GDFod2UXM1+U09P2Vsa4XcUEKF2ydswItl5vJBIeza5LGYRLdNeyCxxOW3eI9AYzcAp/+Kpeb6Of7I=
   - secure: e+EGZplUxu4H+5rG56IOO+vktyQSeTJFsFOuO7usp3Sb8Ef+kj6Xfs6w/ig1seFzkgqF/3xuwIpcaN+Rqv0dqauvoG508vtlJJk5gclhdPSilQ0Zf6aoqCbwjwfRnc9gof4JPjexPsDiXsmSM0dawR4XUZ61j09d9/Ju1ss3llY=
