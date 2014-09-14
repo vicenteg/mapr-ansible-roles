@@ -38,7 +38,7 @@ after_failure:
 env:
   global:
   - JAVA_HOME=/etc/alternatives/java_sdk
-  - EC2_HOME=$HOME/ec2-api-tools-*
+  - EC2_HOME=`ls -d $HOME/ec2-api-tools-*`
   - ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
   - secure: kCErPj0w4fOVeXjZf6NDLGQ9m9AHYQfQt9cPuAM7ff4qQyRBS+GYQ4Q1gTDZFo7KSyCXCIui+Aq6DMAsIzkLK/pmXsC56GDFod2UXM1+U09P2Vsa4XcUEKF2ydswItl5vJBIeza5LGYRLdNeyCxxOW3eI9AYzcAp/+Kpeb6Of7I=
   - secure: e+EGZplUxu4H+5rG56IOO+vktyQSeTJFsFOuO7usp3Sb8Ef+kj6Xfs6w/ig1seFzkgqF/3xuwIpcaN+Rqv0dqauvoG508vtlJJk5gclhdPSilQ0Zf6aoqCbwjwfRnc9gof4JPjexPsDiXsmSM0dawR4XUZ61j09d9/Ju1ss3llY=
