@@ -3,6 +3,7 @@ python: '2.6'
 cache:
   directories:
   - $HOME/.pip-cache/
+
 install:
 - pip install boto ansible --download-cache $HOME/.pip-cache
 - pip install boto --download-cache $HOME/.pip-cache
@@ -11,8 +12,10 @@ install:
 - $EC2_HOME/bin/ec2-delete-keypair travis_temp
 - $EC2_HOME/bin/ec2-create-keypair travis_temp | grep -A 50 BEGIN > $HOME/travis_temp.pem
 - chmod 0600 $HOME/travis_temp.pem
+
 before_script:
 - 
+
 script:
 - ansible-playbook --extra-vars "ec2_keypair=travis_temp ec2_region=us-east-1 cluster_node_count=5
   ec2_name_tag=TravisCI cluster_node_type=m1.large" -i hosts --private-key=$HOME/travis_temp.pem
@@ -20,27 +23,28 @@ script:
 - ansible all -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem -u root
   -m ping
 - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem
-  --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large mapr_version=v3.1.1 mapr_cluster_name=TravisCI"
+  --extra-vars "ec2_region=us-east-1 cluster_node_count=6 ec2_name_tag=TravisCI cluster_node_type=m1.large mapr_version=v3.1.1 mapr_cluster_name=TravisCI"
   playbooks/install_cluster.yml
-# - ansible-playbook -u root -i playbooks/cluster.hosts --private-key $HOME/travis_temp.pem
-#   --extra-vars "ec2_region=us-east-1 cluster_node_count=5 ec2_name_tag=TravisCI cluster_node_type=m1.large"
-#   playbooks/install_hive.yml
+
 after_success:
 - ansible-playbook -i playbooks/cluster.hosts --extra-vars "ec2_region=us-east-1"
   --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
 - $EC2_HOME/bin/ec2-delete-keypair travis_temp
+
 after_failure:
 - ansible-playbook -i playbooks/cluster.hosts --extra-vars "ec2_region=us-east-1"
   --extra-vars "i_am_sure=True" playbooks/aws_teardown.yml
 - $EC2_HOME/bin/ec2-delete-keypair travis_temp
+
 env:
   global:
-  - JAVA_HOME=/usr
+  - JAVA_HOME=/etc/alternatives/java_sdk
   - EC2_HOME=$HOME/ec2-api-tools-1.7.1.0
   - ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
   - secure: kCErPj0w4fOVeXjZf6NDLGQ9m9AHYQfQt9cPuAM7ff4qQyRBS+GYQ4Q1gTDZFo7KSyCXCIui+Aq6DMAsIzkLK/pmXsC56GDFod2UXM1+U09P2Vsa4XcUEKF2ydswItl5vJBIeza5LGYRLdNeyCxxOW3eI9AYzcAp/+Kpeb6Of7I=
   - secure: e+EGZplUxu4H+5rG56IOO+vktyQSeTJFsFOuO7usp3Sb8Ef+kj6Xfs6w/ig1seFzkgqF/3xuwIpcaN+Rqv0dqauvoG508vtlJJk5gclhdPSilQ0Zf6aoqCbwjwfRnc9gof4JPjexPsDiXsmSM0dawR4XUZ61j09d9/Ju1ss3llY=
   - secure: kIzs4vi5qt8OCuobtgx3pvfTCe/LOilDKCae/IyPfjA9JceXOxnOn2GSUrn1o4HuBu+6RHNPMt8UiZJk8yXsXX+28Tw/kQVvYLlyGSd5bjNYvt0uEn9qZLpVCvxG3S4HDf8tOvNJbeYg2lMXniI/zJrjuTjoyKhMPcDCVkN6Jo4=
+
 notifications:
   slack:
     secure: YrqIG1ZwEC3QXu6JSm3h1QaZ5g0Pbo2oLkY1/T7/L/ItAfoQHbu/s5NbNt1pOUG4p7YcYZbVtWtA6nDE0rsqRbfxXIITa1nHR9otm9irX9B2v6PegdVDRO3Fnk612FnJX2MOx49l5PDmDpQmCLfLn4R9ZxR+3JUxUcENX3PGzqI=
