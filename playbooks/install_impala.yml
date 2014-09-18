@@ -26,7 +26,6 @@
     - name: install statestore and catalog
       yum: name="{{item}}" state=present
       with_items:
-        - mapr-hive-0.12*
         - mapr-impala
         - mapr-impala-statestore
         - mapr-impala-catalog
@@ -49,6 +48,7 @@
         name: hive.metastore.uris
         value: "thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083"
 
+    # XXX: This is probably not necessary.
     - name: link impala hive-site.xml to hive 0.12
       file: state=link src=/opt/mapr/hive/hive-0.12/conf/hive-site.xml path=/opt/mapr/impala/impala-1.2.3/conf/hive-site.xml backup=true
 
