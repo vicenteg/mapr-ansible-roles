@@ -5,9 +5,13 @@
       register: ec2_facts
       when: '"instance_id" in hostvars[inventory_hostname]'
 
-    - name: print webserver URLs
+    - name: print ec2 webserver URLs
       debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
       when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
+
+    - name: print webserver URLs
+      debug: msg="webserver = https://{{ansible_default_ipv4.address}}:8443"
+      when: ec2_fact is not defined
 
 # if this is a virtualbox node, print out the IP for eth1, which is a host interface.
 - hosts: virtualbox
