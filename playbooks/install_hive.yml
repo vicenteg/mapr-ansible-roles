@@ -9,9 +9,6 @@
 - hosts: hiveserver
   sudo: yes
   roles:
-    - { role: mapr-client,
-        java_home: '/usr' }
-
     - { role: mapr-hive,
         hive_db: "metastore_{{hive_version|replace('.','_')}}",
         hive_db_user: 'hive',
@@ -20,14 +17,11 @@
         hive_db_host:  "{{groups['hiveserver']|first}}",
         mysql_root_user: 'root',
         mysql_root_password: 'mapr',
-        hive_version: '0.12' }
+        hive_version: '0.13' }
 
 - hosts: hue
   sudo: yes
   roles:
-    - { role: mapr-client,
-        java_home: '/usr' }
-
     - { role: mapr-hive,
         hive_db: "metastore_{{hive_version|replace('.','_')}}",
         hive_db_user: 'hive',
