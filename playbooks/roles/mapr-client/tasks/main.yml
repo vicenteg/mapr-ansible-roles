@@ -29,12 +29,12 @@
   ignore_errors: true
   register: nfs_role
 
-
 - name: create NFS mountpoints
   file: path={{item}} state=directory
   with_items:
     - /mapr
     - /user
+  when: nfs_role.stat.exists == false
 
 - name: add NFS mount /mapr to fstab but do not mount
   mount: name=/mapr src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr" fstype=nfs opts="rw,hard" state=present
