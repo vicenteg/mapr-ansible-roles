@@ -7,7 +7,7 @@
 
     - name: print ec2 webserver URLs
       debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
-      when: '"ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
+      when: 'ec2_facts is defined and ansible_ec2_public_hostname in ec2_facts.ansible_facts.keys()'
 
     - name: print webserver URLs
       debug: msg="webserver = https://{{ansible_default_ipv4.address}}:8443"
