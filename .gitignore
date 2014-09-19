@@ -7,4 +7,4 @@ tmp
 playbooks/*.hosts*
 demolicense.txt
 vars/main.yml
-
+scripts/env.sh
