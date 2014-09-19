@@ -25,7 +25,7 @@
 # ec2_wait_timeout: 1200
 
 # pick a name for the cluster. This will be the RHS of the "Name" tag.
-# ec2_name_tag: 'mapr_aws_cluster'
+ec2_name_tag: 'my.cluster.com'
 
 # recommend 3 edge node
 # edge_node_count: 2
