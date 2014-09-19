@@ -22,12 +22,12 @@
 {% endfor %}
 
 [impalastatestore]
-{% for instance in ec2_cluster.instances[1:2] %}
+{% for instance in ec2_cluster.instances[3:4] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
 [impalacatalog]
-{% for instance in ec2_cluster.instances[1:2] %}
+{% for instance in ec2_cluster.instances[3:4] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 

@@ -1,5 +1,6 @@
 ---
 - hosts: all
+  max_fail_percentage: 0
   tasks:
     - group_by: key={{ansible_virtualization_type}}
     - group_by: key={{ansible_distribution}}
@@ -8,6 +9,7 @@
   max_fail_percentage: 0
   sudo: yes
   roles:
+    - python-lxml
     - { role: mapr-redhat-prereqs, mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,

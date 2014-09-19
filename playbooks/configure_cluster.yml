@@ -44,13 +44,6 @@
         - ssl_truststore
       when: secure_cluster is defined
 
-- hosts: edge
-  sudo: yes
-  tasks:
-    - name: copy ssl_truststore to edge nodes
-      copy: src='/tmp/ssl_truststore' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
-      ignore_errors: yes
-
 - hosts: cluster
   sudo: yes
   tasks:
@@ -65,3 +58,12 @@
     - name: add the disks
       command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt
       when: "disklist is defined and disklist.stdout.find('MapR-FS') == -1"
+
+- hosts: edge
+  sudo: yes
+  tasks:
+    - name: copy ssl_truststore to edge nodes
+      copy: src='/tmp/ssl_truststore' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      ignore_errors: yes
+      when: secure_cluster is defined
+

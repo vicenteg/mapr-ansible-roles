@@ -83,11 +83,16 @@
 
 - hosts: impalaserver
   tasks:
+    - name: verify the impalaserver role is present
+      stat: path=/opt/mapr/roles/impalaserver
+      register: impalaserver_role
+
     - name: run a minimal impala query on all impalad nodes (will connect locally)
       command: impala-shell --query='show tables'
       register: impala_show_tables
       changed_when: False
       failed_when: impala_show_tables.rc != 0
+      when: impalaserver_role.stat.exists
 
 - hosts: edge
   sudo: yes
