@@ -56,7 +56,6 @@
         mysql_root_password: mapr,
         mysql_host: "{{ groups['hiveserver'] | first }}" }
 
-- include: install_hbase.yml
 
 - hosts: webserver;jobtracker
   roles:
@@ -121,6 +120,9 @@
 
 # uncomment the following line to install spark (spark, shark, spark-master)
 #- include: install_spark.yml
+
+# uncomment the following line to install hbase
+- include: install_hbase.yml
 
 # uncomment the following line to install hive
 - include: install_hive.yml
