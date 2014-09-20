@@ -1,0 +1,6 @@
+---
+# tasks file for hbase-regionserver
+
+- name: install regionserver
+  yum: name=mapr-hbase-regionserver state=present
+  notify: reconfigure roles

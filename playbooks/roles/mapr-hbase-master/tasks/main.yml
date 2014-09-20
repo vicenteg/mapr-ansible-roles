@@ -1,0 +1,6 @@
+---
+# tasks file for mapr-hbase
+
+- name: install mapr-hbase
+  yum: name=mapr-hbase-master state=present 
+  notify: reconfigure roles

@@ -56,6 +56,8 @@
         mysql_root_password: mapr,
         mysql_host: "{{ groups['hiveserver'] | first }}" }
 
+- include: install_hbase.yml
+
 - hosts: webserver;jobtracker
   roles:
     - { role: mapr-metrics,
