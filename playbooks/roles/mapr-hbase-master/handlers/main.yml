@@ -1,0 +1,6 @@
+---
+# handlers file for hbase-regionserver
+
+- name: reconfigure roles
+  sudo: yes
+  command: /opt/mapr/server/configure.sh -R

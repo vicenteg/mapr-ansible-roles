@@ -1,0 +1,8 @@
+
+- hosts: hbasemaster
+  roles:
+    - mapr-hbase-master
+
+- hosts: regionserver
+  roles:
+    - mapr-hbase-regionserver
