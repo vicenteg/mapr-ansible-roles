@@ -15,7 +15,13 @@ This repo contains Ansible playbooks that do the following:
 * Launch EC2 instances for MapR [playbooks/aws_bootstrap.yml](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/aws_bootstrap.yml)
 * Apply MapR OS prerequisites per http://doc.mapr.com/display/MapR/Preparing+Each+Node [playbooks/prerequisites.yml](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/prerequisites.yml)
 * Install a cluster [playbooks/install_cluster.yml](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/install_cluster.yml)
-* Optionally install some ecosystem packages (explore the playbooks directory for the latest)
+* Install MapR Metrics & MySQL
+* Install ecosystem projects:
+  * Hive
+  * Impala
+  * HBase
+* Print some information about the resulting cluster 
+  * webserver URLs
 
 This project also includes a Vagrantfile that creates a single local VM instance, or a local VM cluster, suitable to run MapR. The playbooks here can be used either for vagrant instances or EC2 instances.
 
