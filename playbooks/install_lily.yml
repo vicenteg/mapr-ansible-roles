@@ -1,0 +1,10 @@
+# get facts about zookeepers
+- hosts: zookeepers
+
+- hosts: lily
+  roles:
+    - lily
+  
+- hosts: solr
+  roles:
+    - { role: solr, solr_collection: 'solr_collection', zookeeper_port: 5181 }

@@ -1,0 +1,45 @@
+---
+# tasks file for lily
+
+- name: stat the lily tarball
+  stat: path="/opt/lily-2.4.tar.gz"
+  register: lily_tarball
+
+- name: Download Lily 2.4
+  get_url: 
+    url: "http://lilyproject.org/release/2.4/lily-2.4.tar.gz" 
+    dest: /tmp
+    sha256sum: "cf60c778066e9f3b6700bec7b2a68deae10c4f05467614dd9d3237e939f03733"
+  when: lily_tarball.stat.exists == False
+
+- name: figure out hbase home
+  shell: ls /opt/mapr/hbase/ | grep hbase-
+  register: hbase_path
+
+- name: untar lily
+  command: tar -C /opt -xf lily-2.4.tar.gz
+  args:
+    chdir: /tmp
+    creates: /opt/lily-2.4
+
+- name: copy lily jars to hbase lib directory
+  command: cp -ba /opt/lily-2.4/{{item}} {{hbase_path.stdout}}/lib
+  args:
+    chdir: /opt/mapr/hbase
+  with_items:
+    - lib/org/lilyproject/lily-repository-impl/2.4/lily-repository-impl-2.4.jar
+    - lib/org/lilyproject/lily-bytes/2.4/lily-bytes-2.4.jar
+    - lib/org/lilyproject/lily-util/2.4/lily-util-2.4.jar
+    - lib/org/lilyproject/lily-repository-api/2.4/lily-repository-api-2.4.jar
+    - lib/org/lilyproject/lily-repository-id-impl/2.4/lily-repository-id-impl-2.4.jar
+    - lib/org/lilyproject/lily-hbaseindex-base/2.4/lily-hbaseindex-base-2.4.jar
+    - lib/com/gotometrics/orderly/orderly/0.11/orderly-0.11.jar
+    - lib/org/lilyproject/lily-indexer-derefmap-indexfilter/2.4/lily-indexer-derefmap-indexfilter-2.4.jar
+    - lib/com/ngdata/hbase-sep-api/1.1/hbase-sep-api-1.1.jar
+    - lib/com/ngdata/hbase-sep-impl/1.1/hbase-sep-impl-1.1.jar
+
+- name: set ownership to mapr for lily 
+  file: state=directory mode=0755 owner=mapr group=mapr recurse=true path={{item}}
+  with_items:
+    - /opt/lily-2.4
+

@@ -1,0 +1,53 @@
+---
+# tasks file for solr
+
+- name: install lsof (needed by solr start)
+  yum: name=lsof state=present
+
+- name: stat the solr tarball
+  stat: path="/mapr/{{mapr_cluster_name}}/user/mapr/solr-4.10.0.tgz"
+  register: solr_tarball
+
+- name: Download Solr 4.10.0
+  get_url:
+    url: "http://www.gtlib.gatech.edu/pub/apache/lucene/solr/4.10.0/solr-4.10.0.tgz"
+    dest: /tmp
+    sha256sum: "0c9c3e03b42e6afd9a2fea97a1fe2078640e97342b8b53e47df8207670661e9f"
+  when: solr_tarball.stat.exists == False
+
+- name: untar Solr
+  command: tar -C /opt -xf solr-4.10.0.tgz
+  args:
+    chdir: /tmp
+    creates: /opt/solr-4.10.0
+
+- name: set ownership to mapr for solr
+  file: state=directory mode=0755 owner=mapr group=mapr recurse=true path={{item}}
+  with_items:
+    - /opt/solr-4.10.0
+
+- name: XXX - better to create a new volume here?
+  file: state=directory path=/mapr/{{mapr_cluster_name}}/user/mapr/solr owner=mapr group=mapr
+
+- name: XXX - better to create a new volume here?
+  file: state=directory path=/mapr/{{mapr_cluster_name}}/user/mapr/solr/{{ansible_hostname}} owner=mapr group=mapr
+
+- name: copy solr config to solr's home
+  sudo: yes
+  sudo_user: mapr
+  command: cp -r /opt/solr-4.10.0/example /mapr/{{mapr_cluster_name}}/user/mapr/solr/{{ansible_hostname}}
+
+- name: disable locks on the index files (we are storing on NFS, no locking)
+  lineinfile:
+    line: "<lockType>${solr.lock.type:single}</lockType>"
+    regexp: "<lockType>.*solr.lock.type"
+    dest: /opt/solr-4.10.0/example/solr/collection1/conf/solrconfig.xml
+
+- name: set data dir to a MapR FS directory
+  lineinfile:
+    line: "<dataDir>${solr.data.dir:/mapr/{{mapr_cluster_name}}/user/mapr/solr/{{ansible_hostname}}}</dataDir>"
+    regexp: "<dataDir>.*solr.data.dir"
+    dest: /opt/solr-4.10.0/example/solr/collection1/conf/solrconfig.xml
+
+- name: write warden.conf for solr
+  template: src=warden.solr.conf.j2 dest=/opt/mapr/conf/conf.d/warden.solr.conf mode=0644 owner=mapr group=mapr 
