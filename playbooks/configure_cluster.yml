@@ -1,5 +1,5 @@
 ---
-- hosts: cluster
+- hosts: all
   sudo: yes
   roles:
     - { role: mapr-configuration,
@@ -48,12 +48,14 @@
   sudo: yes
   tasks:
     - name: configure cluster
-      command: creates=/opt/mapr/conf/mapr-cluster.conf chdir=/tmp /tmp/do_configure.sh
+      command: /tmp/do_configure.sh
+      args:
+        chdir: /tmp
+        creates: /opt/mapr/conf/mapr-cluster.conf
 
     - name: get the disk list
       shell: /opt/mapr/server/disklist.sh
       register: disklist 
-      
 
     - name: add the disks
       command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt
@@ -62,6 +64,12 @@
 - hosts: edge
   sudo: yes
   tasks:
+    - name: configure cluster
+      command: /tmp/do_configure.sh
+      args:
+        chdir: /tmp
+        creates: /opt/mapr/conf/mapr-cluster.conf
+
     - name: copy ssl_truststore to edge nodes
       copy: src='/tmp/ssl_truststore' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
       ignore_errors: yes

@@ -95,9 +95,9 @@
 - name: does hive warehouse directory exist?
   command: sudo -u mapr hadoop fs -test -d /user/hive/warehouse
   register: warehouse_exists
-  failed_when: warehouse_exists.rc not in (0,255)
+  failed_when: warehouse_exists.rc not in (0,1)
 
 - name: create hive warehouse directory
-  command: sudo -u mapr hadoop fs -mkdir /user/hive/warehouse
-  when: warehouse_exists.rc != 0
+  command: sudo -u mapr hadoop fs -mkdir -p /user/hive/warehouse
+  when: warehouse_exists.rc == 1
   

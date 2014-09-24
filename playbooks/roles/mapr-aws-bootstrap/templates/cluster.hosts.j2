@@ -47,7 +47,12 @@
 {% endfor %}
 
 [jobtracker]
-{% for instance in ec2_cluster.instances[3:6] %}
+{% for instance in ec2_cluster.instances[3:5] %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+
+[resourcemanager]
+{% for instance in ec2_cluster.instances[3:4] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 

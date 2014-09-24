@@ -29,6 +29,11 @@
   roles:
     - mapr-jobtracker
 
+- hosts: resourcemanager
+  max_fail_percentage: 0
+  roles:
+    - mapr-resourcemanager
+
 - hosts: tasktracker
   roles:
     - mapr-tasktracker

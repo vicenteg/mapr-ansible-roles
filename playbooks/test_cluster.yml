@@ -98,13 +98,26 @@
   sudo: yes
   sudo_user: mapr
   tasks:
-    - name: try to submit a small job (teragen)
+    - name: try to submit a small job (teragen - MRv1)
+      environment:
+        MAPR_MAPREDUCE_MODE: classic
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100 /user/teragen
       register: teragen
 
     - name: clean up the teragen
       command: hadoop fs -rmr /user/teragen
       when: teragen.rc == 0
+
+    - name: try to submit a small job (teragen - MRv2)
+      environment:
+        MAPR_MAPREDUCE_MODE: yarn
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100 /user/teragen
+      register: teragen
+
+    - name: clean up the teragen
+      command: hadoop fs -rmr /user/teragen
+      when: teragen.rc == 0
+
 
     - name: run a minimal hive command
       command: hive -e 'show tables'

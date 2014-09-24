@@ -1,0 +1,8 @@
+---
+# tasks file for mapr-resourcemanager
+
+- name: install mapr-resourcemanager and mapr-historyserver
+  yum: name={{item}} state=present
+  with_items:
+    - mapr-resourcemanager
+    - mapr-historyserver

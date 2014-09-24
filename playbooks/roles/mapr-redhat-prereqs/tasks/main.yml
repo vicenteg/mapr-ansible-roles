@@ -78,6 +78,9 @@
   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo owner=root group=root mode=0644
   when: ansible_distribution in ('Amazon')
 
+- name: install the MapR GPG key
+  command: rpm --import http://package.mapr.com/releases/pub/maprgpg.key
+
 - name: save the current list of installed packages after prereqs
   shell: rpm -qa --queryformat '%{NAME}\t%{VERSION}\n' > /root/packages_after_prereqs
   args:
