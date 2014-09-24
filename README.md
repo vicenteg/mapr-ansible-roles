@@ -25,7 +25,7 @@ This repo contains Ansible playbooks that do the following:
 
 This project also includes a Vagrantfile that creates a single local VM instance, or a local VM cluster, suitable to run MapR. The playbooks here can be used either for vagrant instances or EC2 instances.
 
-This will install MapR release 3.1.1 by default. 3.0.2, 3.0.3 should also work provided you modify the necessary variables.
+This will install MapR release 4.0.1 by default. It will not work for earlier releases.
 
 This does not include a license, so to enable licensed features, you'll need to obtain a license here: http://www.mapr.com/user/addcluster
 
@@ -34,10 +34,10 @@ AWS Instances
 
 AWS instances you create will be spot instances by default unless you comment out the lines in `aws_bootstrap.yml` that specify the bid price. If you comment those out, you will get on demand instances, which will cost significantly more. The recommendation is that you consider using spot instances if the following apply:
 
-1. You will not use the cluster for a live demo
+1. You will not use the cluster for a live demonstration in front of important people
 2. You will not store any important or long-lived data
 3. You are OK with the cluster being terminated (i.e., destroyed forever) without warning
-4. You need the instances to survive a reboot
+4. You don't need the instances to survive a reboot
 
 If any of the above are not true (i.e, you will be doing a live demo, or you need the cluster to come up if you reboot a node) you should use on demand instances.
 
@@ -77,13 +77,13 @@ Before starting the installation, you will want to edit some variables. Variable
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
         mapr_home: '/home/mapr',
-        mapr_version: 'v3.1.1' }
+        mapr_version: 'v4.0.1' }
 ```
 
 Edit them in the file, or you can override these using the `--extra-vars` argument to ansible-playbook. For example, the argument would look like this to change mapr_version:
 
 ```
---extra-vars "mapr_version=v3.1.1"
+--extra-vars "mapr_version=v4.0.1"
 ```
 
 You could also copy `playbooks/roles/mapr-aws-bootstrap/defaults/main.yml` to `playbooks/roles/mapr-aws-bootstrap/vars/main.yml`. Variables set in `vars/main.yml` override variable set in `defaults/main.yml`. But I think using the top level role variables or overriding them on the ansible-playbook command line is easier.
@@ -111,7 +111,7 @@ After modifying configuration files as needed, run the playbook as follows, bein
 
 ```
 ansible-playbook -i playbooks/cluster.hosts --private-key <path/to/your/private_key> -u root \
-	--extra-vars "mapr_cluster_name=my.cluster.com mapr_version=v3.1.1" \
+	--extra-vars "mapr_cluster_name=my.cluster.com mapr_version=v4.0.1" \
 	playbooks/install_cluster.yml
 ```
 
@@ -151,7 +151,7 @@ No need to manually mount the loopback NFS - warden will take care of that for y
 Post-Install Validation - Vagrant and AWS
 ========================
 
-To test, try running a teragen:
+For a simple smoke test, try running a teragen:
 
 ```
 hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar \
@@ -159,5 +159,14 @@ hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar \
 ```
 
 If you don't see a java traceback, things are probably mostly OK.
+
+For a little more, try running the test playbook:
+
+```
+ansible -i playbooks/cluster.hosts playbooks/test_cluster.yml
+```
+
+If nothing comes back failed, you should be ready to rock.
+
 
 Have fun.
