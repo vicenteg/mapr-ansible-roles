@@ -25,9 +25,6 @@
 - name: disable iptables
   service: name=iptables state=stopped enabled=no
 
-- name: install fastestmirror for yum
-  yum: name=yum-plugin-fastestmirror state=present
-
 - name: write /etc/hosts with cluster node names
   template: src=hosts.j2 dest=/etc/hosts mode=0644 
 
