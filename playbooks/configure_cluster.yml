@@ -58,7 +58,7 @@
       register: disklist 
 
     - name: add the disks
-      command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup /tmp/disks.txt
+      command: creates=/opt/mapr/conf/disktab /opt/mapr/server/disksetup -F /tmp/disks.txt
       when: "disklist is defined and disklist.stdout.find('MapR-FS') == -1"
 
 - hosts: edge
