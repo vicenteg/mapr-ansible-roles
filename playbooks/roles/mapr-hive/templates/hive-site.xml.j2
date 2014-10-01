@@ -38,7 +38,7 @@
 
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
-    <value>jdbc:mysql://{{hive_metastore_host}}:3306/{{hive_db}}</value>
+    <value>jdbc:mysql://{{hostvars[hive_metastore_host].ansible_hostname}}:3306/{{hive_db}}</value>
     <description>the URL of the MySQL database</description>
   </property>
 
@@ -69,7 +69,7 @@
 
   <property>
     <name>hive.metastore.uris</name>
-    <value>thrift://localhost:9083</value>
+    <value>thrift://{{hostvars[hive_metastore_host].ansible_hostname}}:9083</value>
     <description>IP address (or fully-qualified domain name) and port of the metastore host</description>
   </property>
 </configuration>
