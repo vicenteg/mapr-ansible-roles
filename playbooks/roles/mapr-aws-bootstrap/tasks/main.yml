@@ -123,8 +123,13 @@
     register: ec2_cluster_ondemand
     when: cluster_node_price is not defined
 
-  - name: write an inventory file containing the just-created cluster
-    template: src=cluster.hosts.j2 dest='./cluster.hosts' mode=0644 backup=yes
+  - name: write an inventory file containing the just-created cluster (development)
+    template: src=cluster.hosts.dev.j2 dest='./cluster.hosts' mode=0644 backup=yes
+    when: cluster_node_count == 3
+
+  - name: write an inventory file containing the just-created cluster (small-production)
+    template: src=cluster.hosts.smallprod.j2 dest='./cluster.hosts' mode=0644 backup=yes
+    when: cluster_node_count == 6
 
   - name: wait for the hosts to be available via ssh before moving on
     local_action: wait_for host='{{item.private_ip}}' port=22 delay=30 timeout=300 state=started
