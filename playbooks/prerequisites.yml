@@ -10,7 +10,7 @@
   sudo: yes
   roles:
     - { role: mapr-redhat-prereqs,
-        mapr_user_pw: '$1$RK1O7/4r$2Ff/OWxXibays7JWsBBaf1',
+        mapr_user_pw: '$1$zYDojdfY$XjvXNpfy/Ac08.LocsXvl0',
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
         mapr_home: '/home/mapr' }
@@ -21,7 +21,7 @@
   sudo: yes
   roles:
     - { role: mapr-debian-prereqs,
-        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+        mapr_user_pw: '$1$zYDojdfY$XjvXNpfy/Ac08.LocsXvl0',
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
         mapr_home: '/home/mapr' }
