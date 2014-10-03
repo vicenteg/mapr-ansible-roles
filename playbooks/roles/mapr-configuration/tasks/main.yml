@@ -5,8 +5,17 @@
 - name: write configure script (configure)
   template: src=do_configure_sh.j2 dest=/tmp/do_configure.sh mode=0700 owner=root group=root
 
+- name: stat /opt/mapr/conf/env.sh
+  stat: path=/opt/mapr/conf/env.sh 
+  register: env_sh
+
 - name: configure env.sh with JAVA_HOME
   lineinfile: dest=/opt/mapr/conf/env.sh regexp="^export JAVA_HOME" state=present line="export JAVA_HOME={{java_home}}"
+  when: env_sh.stat.exists
+
+- name: configure env.sh with MAPR_SUBNETS, if set
+  lineinfile: dest=/opt/mapr/conf/env.sh regexp="export MAPR_SUBNETS" line="export MAPR_SUBNETS={{mapr_subnets}}"
+  when: env_sh.stat.exists and mapr_subnets is defined
 
 - name: write out disk config
   template: src=disks.txt.j2 dest=/tmp/disks.txt mode=0644 owner=root group=root

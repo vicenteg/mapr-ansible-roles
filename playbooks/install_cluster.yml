@@ -5,12 +5,8 @@
   max_fail_percentage: 0
   tasks:
     - name: ensure some critical vars are set, fail early if not.
-      fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars"
-      when: mapr_version is not defined or mapr_cluster_name is not defined 
-
-    - name: get ec2 facts
-      ec2_facts:
-      register: ec2_facts
+      fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars." 
+      when: mapr_version is not defined or mapr_cluster_name is not defined
 
 - include: prerequisites.yml
 
@@ -28,6 +24,17 @@
   max_fail_percentage: 0
   roles:
     - mapr-jobtracker
+
+- hosts: resourcemanager
+  max_fail_percentage: 0
+  roles:
+    - mapr-resourcemanager
+
+- hosts: historyserver
+  max_fail_percentage: 0
+  tasks:
+    - name: install historyserver
+      yum: name=mapr-historyserver state=present
 
 - hosts: tasktracker
   roles:
@@ -64,6 +71,9 @@
         metrics_user: maprmetrics,
         metrics_password: mapr,
         metrics_host: "{{ groups['hiveserver'] | first }}" }
+
+# uncomment the followng line to install an edge node
+- include: install_edgenode.yml
 
 - include: configure_cluster.yml
 
@@ -122,16 +132,13 @@
 #- include: install_spark.yml
 
 # uncomment the following line to install hbase
-- include: install_hbase.yml
+#- include: install_hbase.yml
 
 # uncomment the following line to install hive
 - include: install_hive.yml
 
 # uncomment the following line to install impala
-- include: install_impala.yml
-
-# uncomment the followng line to install an edge node
-- include: install_edgenode.yml
+#- include: install_impala.yml
 
 - hosts: cldb[0]
   sudo: yes

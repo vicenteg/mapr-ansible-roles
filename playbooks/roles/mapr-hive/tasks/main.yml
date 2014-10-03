@@ -32,7 +32,7 @@
     state=present
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
-    login_host="{{hive_metastore_host}}"
+    login_host="{{hostvars[hive_metastore_host].ansible_hostname}}"
   register: db_changed
 
 - name: create the hive metastore schema for hive 0.12
@@ -42,7 +42,7 @@
     target="{{hive_home.stdout}}/scripts/metastore/upgrade/mysql/hive-schema-0.12.0.mysql.sql"
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
-    login_host="{{hive_metastore_host}}"
+    login_host="{{hostvars[hive_metastore_host].ansible_hostname}}"
   when: db_changed.changed and hive_version == '0.12'
 
 - name: create the hive metastore schema for hive 0.13
@@ -52,7 +52,7 @@
     target="{{hive_home.stdout}}/scripts/metastore/upgrade/mysql/hive-schema-0.13.0.mysql.sql"
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
-    login_host="{{hive_metastore_host}}"
+    login_host="{{hostvars[hive_metastore_host].ansible_hostname}}"
   when: db_changed.changed and hive_version == '0.13'
 
 - name: create mapr user@localhost
@@ -64,7 +64,7 @@
     priv={{hive_db}}.*:ALL
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
-    login_host="{{hive_metastore_host}}"
+    login_host="{{hostvars[hive_metastore_host].ansible_hostname}}"
   with_items:
     - "{{ansible_default_ipv4.address}}"
     - "{{ansible_hostname}}"
@@ -79,25 +79,26 @@
     priv={{hive_db}}.*:ALL
     login_user="{{mysql_root_user}}"
     login_password="{{mysql_root_password}}"
-    login_host="{{hive_metastore_host}}"
+    login_host="{{hostvars[hive_metastore_host].ansible_hostname}}"
   with_items:
     - "{{ansible_default_ipv4.address}}"
-    - "{{ansible_hostname}}"
+    - "{{hostvars[hive_metastore_host].ansible_hostname}}"
+    - "{{hostvars[hive_metastore_host].ansible_fqdn}}"
     - "%"
 
 - name: copy hive-site.xml into place
   template: src=hive-site.xml.j2 dest="{{hive_home.stdout}}/conf/hive-site.xml"
 
 - name: set hive metastore server
-  hadoop_properties: name="hive.metastore.uris" state=present value="thrift://{{hive_metastore_host}}:9083" file={{hive_home.stdout}}/conf/hive-site.xml
+  hadoop_properties: name="hive.metastore.uris" state=present value="thrift://{{hostvars[hive_metastore_host].ansible_hostname}}:9083" file={{hive_home.stdout}}/conf/hive-site.xml
 
 # XXX: this directory should not be hard coded
 - name: does hive warehouse directory exist?
   command: sudo -u mapr hadoop fs -test -d /user/hive/warehouse
   register: warehouse_exists
-  failed_when: warehouse_exists.rc not in (0,255)
+  failed_when: warehouse_exists.rc not in (0,1)
 
 - name: create hive warehouse directory
-  command: sudo -u mapr hadoop fs -mkdir /user/hive/warehouse
-  when: warehouse_exists.rc != 0
+  command: sudo -u mapr hadoop fs -mkdir -p /user/hive/warehouse
+  when: warehouse_exists.rc == 1
   

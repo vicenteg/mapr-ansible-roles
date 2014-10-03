@@ -31,6 +31,7 @@
   with_items:
     - "localhost"
     - "{{ansible_default_ipv4.address}}"
+    - "{{ansible_fqdn}}"
     - "{{ansible_hostname}}"
 
 - name: lock down root user to cluster nodes

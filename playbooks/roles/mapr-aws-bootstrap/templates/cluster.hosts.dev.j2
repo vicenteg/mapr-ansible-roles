@@ -5,7 +5,6 @@
 	{% set ec2_cluster = ec2_cluster_spot %}
 	{% set external = external_spot %}
 {% endif %}
-
 [cluster]
 {% for instance in ec2_cluster.instances %}
 {{instance.private_ip}} instance_id={{instance.id}}
@@ -32,27 +31,32 @@
 {% endfor %}
 
 [impalastatestore]
-{% for instance in ec2_cluster.instances[3:4] %}
+{% for instance in ec2_cluster.instances[2:3] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
 [impalacatalog]
-{% for instance in ec2_cluster.instances[3:4] %}
+{% for instance in ec2_cluster.instances[2:3] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
 [impalaserver]
-{% for instance in ec2_cluster.instances[3:6] %}
+{% for instance in ec2_cluster.instances %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
 [jobtracker]
-{% for instance in ec2_cluster.instances[3:5] %}
+{% for instance in ec2_cluster.instances[1:3] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
 [resourcemanager]
-{% for instance in ec2_cluster.instances[3:4] %}
+{% for instance in ec2_cluster.instances[1:3] %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+
+[historyserver]
+{% for instance in ec2_cluster.instances[1:2] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
@@ -70,9 +74,6 @@
 {% for instance in ec2_cluster.instances[1:3] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
-{% for instance in ec2_cluster.instances[3:6] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [zookeepers]
 {% for instance in ec2_cluster.instances[0:3] %}
@@ -80,7 +81,7 @@
 {% endfor %}
 
 [cldb]
-{% for instance in ec2_cluster.instances[3:6] %}
+{% for instance in ec2_cluster.instances[0:2] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 

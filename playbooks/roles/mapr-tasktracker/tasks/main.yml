@@ -4,3 +4,4 @@
   yum: name='{{item}}' state=present
   with_items:
     - mapr-tasktracker
+    - mapr-nodemanager

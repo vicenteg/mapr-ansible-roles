@@ -1,4 +1,4 @@
-- name: install mapr-jobtracker packages
+- name: install mapr-jobtracker and mapr-resourcemanager 
   yum: name='{{item}}' state=present
   with_items:
     - mapr-jobtracker

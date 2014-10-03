@@ -1,13 +1,13 @@
 [maprtech]
-name=MapR Technologies
-baseurl=http://package.mapr.com/releases/{{mapr_version}}/redhat/
+name=MapR
+baseurl=http://{{mirror_host}}/releases/v4.0.1/redhat/
 enabled=1
-gpgcheck=0
+gpgcheck=1
 protect=1
 
 [maprecosystem]
-name=MapR Technologies
-baseurl=http://package.mapr.com/releases/ecosystem/redhat
+name=MapR Ecosystem
+baseurl=http://{{mirror_host}}/releases/ecosystem-4.x/redhat/
 enabled=1
 gpgcheck=0
 protect=1

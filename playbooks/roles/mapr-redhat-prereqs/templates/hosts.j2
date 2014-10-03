@@ -8,11 +8,8 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 {% for host in groups['all'] %}
-  {% if host in hostvars -%}
-    {% if hostvars[host].ansible_eth1 is defined -%}
-{{hostvars[host].ansible_eth1.ipv4.address}} {{hostvars[host].ansible_hostname}} {{hostvars[host].ansible_fqdn}}
-    {% else -%}
-{{hostvars[host].ansible_default_ipv4.address}} {{hostvars[host].ansible_hostname}} {{hostvars[host].ansible_fqdn}}
-    {% endif -%}
-  {% endif %}
+  {%- if host in hostvars -%}
+{{hostvars[host].ansible_eth0.ipv4.address}} {{hostvars[host].ansible_hostname}} {{hostvars[host].ansible_fqdn}}
+  {%- endif %}
+
 {% endfor %}

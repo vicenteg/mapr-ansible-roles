@@ -1,0 +1,12 @@
+
+services=solr:all
+service.displayname=Solr
+service.command.start=/opt/solr-4.10.0/bin/solr -Dcollection.configName={{solr_collection}} -DzkHost={%- for zk in groups['zookeepers'] %}{{hostvars[zk].ansible_default_ipv4.address}}:{{zookeeper_port}}{% if not loop.last %},{% endif %}{% endfor %} -jar start.jar
+service.command.stop=/opt/solr-4.10.0/bin/solr stop
+service.command.type=inline
+service.command.monitorcommand=/opt/solr-4.10.0/bin/solr -i
+service.port=8983
+service.ui.port=8983
+service.uri=about
+service.logs.location=/opt/solr-4.10.0/logs
+service.process.type=JAVA

@@ -9,17 +9,19 @@
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - python-lxml
-    - { role: mapr-redhat-prereqs, mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+    - { role: mapr-redhat-prereqs,
+        mapr_user_pw: '$1$RK1O7/4r$2Ff/OWxXibays7JWsBBaf1',
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
         mapr_home: '/home/mapr' }
+    - python-lxml
 
 - hosts: Ubuntu;Debian
   max_fail_percentage: 0
   sudo: yes
   roles:
-    - { role: mapr-debian-prereqs, mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
+    - { role: mapr-debian-prereqs,
+        mapr_user_pw: '$1$yoPLWBQ6$6fvQchDTBu3Ccs3PVURpA.',
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
         mapr_home: '/home/mapr' }
