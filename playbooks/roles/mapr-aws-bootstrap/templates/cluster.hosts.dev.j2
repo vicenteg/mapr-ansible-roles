@@ -56,7 +56,7 @@
 {% endfor %}
 
 [historyserver]
-{% for instance in ec2_cluster.instances[2:3] %}
+{% for instance in ec2_cluster.instances[1:2] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
