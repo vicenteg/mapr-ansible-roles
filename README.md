@@ -170,3 +170,17 @@ If nothing comes back failed, you should be ready to rock.
 
 
 Have fun.
+
+Potential Gotchas
+==
+
+## Amazon Credentials
+
+If you see messages like the following:
+
+```
+msg: No handler was ready to authenticate. 1 handlers were checked. ['QuerySignatureV2AuthHandler'] Check your credentials
+failed: [172.16.2.80 -> 127.0.0.1] => {"failed": true}
+```
+
+You missed the step about sourcing your Amazon credentials.
