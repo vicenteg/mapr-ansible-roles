@@ -42,7 +42,7 @@
 {% endfor %}
 
 [impalaserver]
-{% for instance in ec2_cluster.instances %}
+{% for instance in ec2_cluster.instances[3:6] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 

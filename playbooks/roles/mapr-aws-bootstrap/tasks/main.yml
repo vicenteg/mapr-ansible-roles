@@ -80,9 +80,11 @@
       - device_name: /dev/xvdf
         volume_size: 128
         delete_on_termination: true
+        #ephemeral: ephemeral0
       - device_name: /dev/xvdg
         volume_size: 128
         delete_on_termination: true
+        #ephemeral: ephemeral1
       monitoring: yes
       instance_tags:
         Name: '{{ec2_name_tag}}'
@@ -114,9 +116,11 @@
       - device_name: /dev/xvdf
         volume_size: 128
         delete_on_termination: true
+        #ephemeral: ephemeral0
       - device_name: /dev/xvdg
         volume_size: 128
         delete_on_termination: true
+        #ephemeral: ephemeral1
       monitoring: yes
       instance_tags:
         Name: '{{ec2_name_tag}}'
