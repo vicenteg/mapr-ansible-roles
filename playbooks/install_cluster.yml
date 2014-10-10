@@ -144,6 +144,14 @@
   sudo: yes
   sudo_user: mapr
   tasks:
+    - name: set default desired replication to 1
+      command: maprcli config save -values "{cldb.volumes.default.replication:1}"
+      when: single_node_cluster is defined and single_node_cluster == True
+
+    - name: set default min replication to 1
+      command: maprcli config save -values "{cldb.volumes.default.min.replication:1}"
+      when: single_node_cluster is defined and single_node_cluster == True
+
     - name: set replication to 1 if single node
       shell: maprcli volume list -columns volumename | grep -v volumename | awk '{print $1}' | xargs -n1 -I'{}' maprcli volume modify -name '{}' -replication 1 -minreplication 1
       when: single_node_cluster is defined and single_node_cluster == True
