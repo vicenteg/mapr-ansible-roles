@@ -8,11 +8,26 @@
 
     - name: print edge server IP
       debug: msg="edgenode = {{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}"
-      when: "ec2_facts is defined and 'ansible_ec2_public_hostname' in ec2_facts.ansible_facts.keys()"
+      when: '"instance_id" in hostvars[inventory_hostname] and "ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
 
     - name: print edge server IP
       debug: msg="edgenode = {{ansible_default_ipv4.address}}"
       when: "ec2_facts is not defined" 
+
+- hosts: hue
+  tasks:
+    - name: get ec2_facts
+      ec2_facts:
+      register: ec2_facts
+      when: '"instance_id" in hostvars[inventory_hostname]'
+
+    - name: print ec2 hue URLs
+      debug: msg="hue = http://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8888"
+      when: '"instance_id" in hostvars[inventory_hostname] and "ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
+    - name: print webserver URLs
+      debug: msg="hue = http://{{ansible_default_ipv4.address}}:8888"
+      when: ec2_facts.ansible_facts is not defined
+
 
 - hosts: webserver
   tasks:
@@ -23,7 +38,7 @@
 
     - name: print ec2 webserver URLs
       debug: msg="webserver = https://{{ec2_facts.ansible_facts.ansible_ec2_public_hostname}}:8443"
-      when: "ec2_facts is defined and 'ansible_ec2_public_hostname' in ec2_facts.ansible_facts.keys()"
+      when: '"instance_id" in hostvars[inventory_hostname] and "ansible_ec2_public_hostname" in ec2_facts.ansible_facts.keys()'
 
     - name: print webserver URLs
       debug: msg="webserver = https://{{ansible_default_ipv4.address}}:8443"
