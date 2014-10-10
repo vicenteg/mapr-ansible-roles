@@ -18,6 +18,12 @@ node1
 [tasktracker]
 node1
 
+[resourcemanager]
+node1
+
+[historyserver]
+node1
+
 [webserver]
 node1
 
@@ -37,6 +43,16 @@ node1
 node1
 
 [edge]
+
+[impalaserver]
+node1
+
+[impalastore]
+node1
+
+[impalacatalog]
+
+[hue]
 node1
 
 [hiveserver]
