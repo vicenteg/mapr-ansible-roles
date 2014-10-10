@@ -48,10 +48,6 @@
         name: hive.metastore.uris
         value: "thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083"
 
-    # XXX: This is probably not necessary.
-    - name: link impala hive-site.xml to hive 0.12
-      file: state=link src=/opt/mapr/hive/hive-0.12/conf/hive-site.xml path=/opt/mapr/impala/impala-1.2.3/conf/hive-site.xml backup=true
-
     - name: update impala configuration with statestore host
       lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^IMPALA_STATE_STORE_HOST=" line="IMPALA_STATE_STORE_HOST={{hostvars[impala_state_store_host].ansible_default_ipv4.address}}" state=present backup=true
 
