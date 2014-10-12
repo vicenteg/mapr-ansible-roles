@@ -24,23 +24,3 @@
         mysql_root_user: 'root',
         mysql_root_password: 'mapr',
         hive_version: '0.12' }
-
-- hosts: hue
-  sudo: yes
-  roles:
-    - { role: mapr-hive,
-        hive_db: "metastore_{{hive_version|replace('.','_')}}",
-        hive_db_user: 'hive',
-        hive_db_pass: 'mapr',
-        # if modifying hive_metastore_host, you MUST specify the hostname
-        # as it appears in the inventory. DO NOT hard code an IP - the play
-        # will fail.
-        hive_metastore_host: "{{groups['hiveserver']|first}}",
-        # if modifying hive_db_host, you MUST specify the hostname
-        # as it appears in the inventory. DO NOT hard code an IP - the play
-        # will fail.
-        hive_db_host:  "{{groups['hiveserver']|first}}",
-        mysql_root_user: 'root',
-        mysql_root_password: 'mapr',
-        hive_version: '0.13' }
-
