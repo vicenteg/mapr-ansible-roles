@@ -118,8 +118,17 @@
       command: hadoop fs -rmr /user/teragen
       when: teragen.rc == 0
 
-    - name: run TestDFSIO to write 10GB of data
-      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -write -size 1GB -nrFiles 10 -resFile /tmp/results
+    - name: run TestDFSIO to write,read 100GB of data
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -size 1GB -nrFiles 100 -resFile /tmp/result-{{item}}
+      with_items:
+        - write
+        - read
+
+    - name: get the results files
+      fetch: src=/tmp/result-{{item}} dest=/tmp/results fail_on_missing=true
+      with_items:
+        - read
+        - write
 
     - name: clean up TestDFSIO data
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -clean
@@ -127,3 +136,11 @@
     - name: run a minimal hive command
       command: hive -e 'show tables'
       changed_when: False
+
+
+    - name: load some data into hive and select
+      command: hive -e "CREATE TABLE IF NOT EXISTS pokes (foo INT, bar STRING); LOAD DATA LOCAL INPATH '/opt/mapr/hive/hive-0.13/examples/files/kv1.txt' OVERWRITE INTO TABLE pokes; SELECT * FROM pokes;"
+      changed_when: False
+
+    - name: drop pokes table
+      command: hive -e 'DROP TABLE pokes;'
