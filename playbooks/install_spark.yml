@@ -1,15 +1,18 @@
 ---
+- hosts: spark_slave
+  sudo: yes
+  sudo_user: root
+  roles:
+    - { role: scala }
+    - { role: mapr-spark-slave,
+        spark_version: 1.0.2,
+        spark_work_dir: '/opt/mapr/spark/tmp' }
+
 - hosts: spark_master
   sudo: yes
   roles:
     - scala
     - { role: mapr-spark-master,
-    	spark_version: 0.9.1,
-		spark_home: '/opt/mapr/spark/spark-{{spark_version}}' }
+        spark_version: 1.0.2,
+        spark_home: '/opt/mapr/spark/spark-{{spark_version}}' }
 
-- hosts: spark_slave
-  sudo: yes
-  sudo_user: root
-  roles:
-    - scala
-    - { role: mapr-spark-slave, spark_work_dir: '/opt/mapr/spark/tmp' }

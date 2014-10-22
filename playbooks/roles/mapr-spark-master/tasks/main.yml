@@ -24,3 +24,6 @@
 
 - name: install spark-env.sh
   template: src=spark-env.sh.j2 dest={{spark_home}}/conf/spark-env.sh.j2 mode=0644 owner=root group=root
+
+- name: ensure spark log directory exists
+  file: state=directory path=/opt/mapr/spark/spark-{{spark_version}}/logs owner=mapr group=mapr mode=0750
