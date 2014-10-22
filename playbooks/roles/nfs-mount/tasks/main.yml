@@ -1,0 +1,22 @@
+---
+# tasks file for nfs-mount
+ 
+- name: check roles to see whether this is an NFS server
+  stat: path=/opt/mapr/roles/nfs 
+  ignore_errors: true
+  register: nfs_role
+
+- name: create NFS mountpoints
+  file: path={{item}} state=directory
+  with_items:
+    - /mapr
+    - /user
+  when: nfs_role.stat.exists == false
+
+- name: add NFS mount /mapr to fstab but do not mount
+  mount: name=/mapr src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr" fstype=nfs opts="rw,hard" state=present
+  when: nfs_role.stat.exists == false and hostvars[groups['nfs'][0]].ansible_fqdn is defined
+
+- name: add NFS mount /user to fstab but do not mount
+  mount: name=/user src="{{hostvars[groups['nfs'][0]].ansible_default_ipv4.address}}:/mapr/{{cluster_name}}/user" fstype=nfs opts="rw,hard" state=present
+  when: nfs_role.stat.exists == false and hostvars[groups['nfs'][0]].ansible_fqdn is defined

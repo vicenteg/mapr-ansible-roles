@@ -8,55 +8,70 @@
       fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars." 
       when: mapr_version is not defined or mapr_cluster_name is not defined
 
-- include: prerequisites.yml
+- include: prerequisites.yml tags=install
 
 - hosts: zookeepers
+  tags: install
   max_fail_percentage: 0
   roles:
     - zookeeper
 
 - hosts: cldb
+  tags: install
   max_fail_percentage: 0
   roles:
     - mapr-cldb
 
 - hosts: jobtracker
+  tags: install
   max_fail_percentage: 0
   roles:
     - mapr-jobtracker
 
 - hosts: resourcemanager
+  tags: install
   max_fail_percentage: 0
   roles:
     - mapr-resourcemanager
 
 - hosts: historyserver
+  tags: install
   max_fail_percentage: 0
   tasks:
     - name: install historyserver
       yum: name=mapr-historyserver state=present
 
 - hosts: tasktracker
+  tags: install
   roles:
     - mapr-tasktracker
 
+- hosts: nodemanager
+  tags: install
+  roles:
+    - mapr-nodemanager
+
 - hosts: webserver
+  tags: install
   roles:
     - webserver
 
 - hosts: nfs
+  tags: install
   roles:
     - mapr-nfs
 
 - hosts: fileserver
+  tags: install
   roles:
     - mapr-fileserver
 
 # uncomment the following line to install mysql (hive metastore and metrics)
-- include: install_mysql.yml
+- include: install_mysql.yml tags=install
 
 # Install mapr-metrics
 - hosts: hiveserver
+  tags: install,metrics
   roles:
     - { role: metrics-database,
         mysql_root_user: root,
@@ -64,7 +79,8 @@
         mysql_host: "{{ groups['hiveserver'] | first }}" }
 
 
-- hosts: webserver;jobtracker
+- hosts: webserver;jobtracker;resourcemanager
+  tags: metrics
   roles:
     - { role: mapr-metrics,
         cluster_name: '{{mapr_cluster_name}}',
@@ -73,9 +89,9 @@
         metrics_host: "{{ groups['hiveserver'] | first }}" }
 
 # uncomment the followng line to install an edge node
-- include: install_edgenode.yml
+- include: install_edgenode.yml tags=edgenode
 
-- include: configure_cluster.yml
+- include: configure_cluster.yml tags=configure
 
 - hosts: zookeepers
   tasks:
@@ -119,9 +135,13 @@
       pause: seconds=10
       when: warden_started.changed
 
+- hosts: cluster
+  roles:
+    - { role: nfs-mount, cluster_name: '{{mapr_cluster_name}}' }
+
 # Configure all cluster nodes with public key access
 # This allows passwordless SSH between cluster nodes for root and mapr users.
-- include: authorized_keys.yml
+- include: authorized_keys.yml tags=authorized_keys
 
 #
 # Having installed and started the cluster, install optional ecosystem and client services.
@@ -135,7 +155,7 @@
 #- include: install_hbase.yml
 
 # uncomment the following line to install hive
-- include: install_hive.yml
+- include: install_hive.yml tags=hive
 
 # uncomment the following line to install impala
 #- include: install_impala.yml
@@ -157,4 +177,4 @@
       when: single_node_cluster is defined and single_node_cluster == True
 
 # For convenience, print the URL for the MCS.
-- include: print_cluster_info.yml
+- include: print_cluster_info.yml tags=cluster_info
