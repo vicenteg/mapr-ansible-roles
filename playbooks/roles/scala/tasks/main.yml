@@ -4,6 +4,8 @@
   command: /usr/bin/scala -version
   register: scala
   ignore_errors: true
+  failed_when: scala.rc not in (1,2)
+  changed_when: false
 
 - name: install scala 2.10.4 for RedHat/CentOS
   yum: name=http://downloads.typesafe.com/scala/2.10.4/scala-2.10.4.rpm state=present
