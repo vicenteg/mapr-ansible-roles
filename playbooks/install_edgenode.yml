@@ -8,8 +8,8 @@
   roles:
     - mapr-redhat-prereqs
     - python-lxml
-    - { role: mapr-client,
-        cluster_name: '{{mapr_cluster_name}}' }
+    - { role: mapr-client, cluster_name: '{{mapr_cluster_name}}' }
+    - { role: nfs-mount, cluster_name: '{{mapr_cluster_name}}' }
 
   tasks:
     - name: install hive
