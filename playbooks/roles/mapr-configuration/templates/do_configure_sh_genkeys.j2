@@ -6,4 +6,4 @@
   -RM {% for node in groups['resourcemanager'] -%}{{hostvars[node].ansible_eth0.ipv4.address }}{% if not loop.last %},{% endif %}{% endfor %} \
   -HS {% for node in groups['historyserver'] -%}{{hostvars[node].ansible_eth0.ipv4.address }}{% if not loop.last %},{% endif %}{% endfor %} \
   -N {{cluster_name}} {% if ansible_virtualization_role == "guest" %} --isvm{% endif %} \
-  -genkeys -secure
+  -genkeys -secure -on-prompt-cont y

@@ -6,4 +6,4 @@
 	-N {{cluster_name}} {% if ansible_virtualization_role == "guest" %}--isvm{% endif %} \
 	-RM {% for node in groups['resourcemanager'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
 	-HS {% for node in groups['historyserver'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
-	-du {{metrics_user}} -dp {{metrics_password}} -d {{hostvars[metrics_host].ansible_fqdn}}
+	-du {{metrics_user}} -dp {{metrics_password}} -d {{hostvars[metrics_host].ansible_fqdn}} -on-prompt-cont y
