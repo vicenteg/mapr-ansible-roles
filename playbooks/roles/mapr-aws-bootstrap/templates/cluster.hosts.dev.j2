@@ -70,6 +70,11 @@
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
+[nodemanager]
+{% for instance in ec2_cluster.instances %}
+{{instance.private_ip}} instance_id={{instance.id}}
+{% endfor %}
+
 [metrics]
 {% for instance in ec2_cluster.instances[1:3] %}
 {{instance.private_ip}} instance_id={{instance.id}}
