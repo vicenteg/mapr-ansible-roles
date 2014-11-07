@@ -1,0 +1,7 @@
+---
+# tasks file for hostfile
+- name: Collect EC2 Facts
+  ec2_facts:
+  register: ec2_facts
+- name: save hosts file
+  local_action: template src=hosts.j2 dest='./hosts_entry' mode=0644 backup=no
