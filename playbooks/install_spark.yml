@@ -5,7 +5,7 @@
   roles:
     - { role: scala }
     - { role: mapr-spark-slave,
-        spark_version: 1.0.2,
+        spark_version: 1.1.0,
         spark_work_dir: '/opt/mapr/spark/tmp' }
 
 - hosts: spark_master
@@ -13,6 +13,13 @@
   roles:
     - scala
     - { role: mapr-spark-master,
-        spark_version: 1.0.2,
+        spark_version: 1.1.0,
         spark_home: '/opt/mapr/spark/spark-{{spark_version}}' }
 
+# N.B., if this fails, ensure user mapr has public-key authentication configured
+- hosts: spark_master
+  sudo: yes
+  sudo_user: mapr
+  tasks:
+    - name: start slaves
+      command: /opt/mapr/spark/spark-1.1.0/sbin/start-slaves.sh
