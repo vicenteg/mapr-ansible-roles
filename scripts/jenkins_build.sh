@@ -3,7 +3,7 @@
 # . "scripts/env.sh" || exit -1
 # . "$WD/aws/credentials.sh" || exit -1
 
-export JAVA_HOME="/etc/alternatives"
+export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 export CLUSTER_NAME="jenkins-vgonzalez"
 export EC2_KEYPAIR="jenkins-vgonzalez"
 export PEM_FILE="jenkins-vgonzalez.pem"
