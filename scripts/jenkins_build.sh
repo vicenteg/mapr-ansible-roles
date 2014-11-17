@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# . "scripts/env.sh" || exit -1
-# . "$WD/aws/credentials.sh" || exit -1
-
 export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 export CLUSTER_NAME="jenkins-vgonzalez"
 export EC2_KEYPAIR="jenkins-vgonzalez"
@@ -20,11 +17,11 @@ ansible-playbook \
 	--extra-vars "ec2_keypair=$EC2_KEYPAIR ec2_name_tag=$CLUSTER_NAME" \
 	--extra-vars "cluster_node_type=m3.xlarge cluster_node_price=0.17" \
 	--extra-vars "edge_node_type=m3.xlarge edge_node_price=0.17" \
-	--private-key="$PEM_FILE" "$WD/playbooks/aws_bootstrap.yml"
+	--private-key="$PEM_FILE" playbooks/aws_bootstrap.yml
 
 ansible all -i playbooks/cluster.hosts --private-key $PEM_FILE -m ping
 
 ansible-playbook \
 	-i playbooks/cluster.hosts \
 	--extra-vars "ec2_keypair=$EC2_KEYPAIR ec2_name_tag=$CLUSTER_NAME" \
-	--private-key="$PEM_FILE" "$WD/playbooks/install_cluster.yml"
+	--private-key="$PEM_FILE" playbooks/install_cluster.yml
