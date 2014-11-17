@@ -3,10 +3,10 @@
 # . "scripts/env.sh" || exit -1
 # . "$WD/aws/credentials.sh" || exit -1
 
-CLUSTER_NAME="jenkins-vgonzalez"
-EC2_KEYPAIR="jenkins-vgonzalez"
-PEM_FILE="jenkins-vgonzalez.pem"
-EC2_HOME=/opt/ec2-api-tools-1.7.0.2
+export CLUSTER_NAME="jenkins-vgonzalez"
+export EC2_KEYPAIR="jenkins-vgonzalez"
+export PEM_FILE="jenkins-vgonzalez.pem"
+export EC2_HOME=/opt/ec2-api-tools-1.7.0.2
 
 test -d $EC2_HOME || exit -1
 
