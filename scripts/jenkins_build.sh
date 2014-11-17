@@ -17,6 +17,8 @@ ansible-playbook \
 	--extra-vars "ec2_keypair=$EC2_KEYPAIR ec2_name_tag=$CLUSTER_NAME" \
 	--extra-vars "cluster_node_type=$INSTANCE_TYPE cluster_node_price=$INSTANCE_PRICE" \
 	--extra-vars "edge_node_type=$INSTANCE_TYPE edge_node_price=$INSTANCE_PRICE" \
+	--extra-vars "edge_node_type=$INSTANCE_TYPE edge_node_price=$INSTANCE_PRICE" \
+	--extra-vars "cluster_node_count=6" \
 	--private-key="$PEM_FILE" playbooks/aws_bootstrap.yml
 
 ansible all -i playbooks/cluster.hosts --private-key $PEM_FILE -m ping
