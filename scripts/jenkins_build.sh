@@ -15,8 +15,8 @@ chmod 0600 $PEM_FILE
 ansible-playbook \
 	-i hosts \
 	--extra-vars "ec2_keypair=$EC2_KEYPAIR ec2_name_tag=$CLUSTER_NAME" \
-	--extra-vars "cluster_node_type=m3.xlarge cluster_node_price=0.17" \
-	--extra-vars "edge_node_type=m3.xlarge edge_node_price=0.17" \
+	--extra-vars "cluster_node_type=m3.xlarge cluster_node_price=0.30" \
+	--extra-vars "edge_node_type=m3.xlarge edge_node_price=0.30" \
 	--private-key="$PEM_FILE" playbooks/aws_bootstrap.yml
 
 ansible all -i playbooks/cluster.hosts --private-key $PEM_FILE -m ping
