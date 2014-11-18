@@ -5,6 +5,10 @@ export CLUSTER_NAME="jenkins-vgonzalez"
 export EC2_KEYPAIR="jenkins-vgonzalez"
 export PEM_FILE="jenkins-vgonzalez.pem"
 export EC2_HOME=/opt/ec2-api-tools-1.7.0.2
+export ANSIBLE_FORCE_COLOR=true
+
+test -z INSTANCE_TYPE && INSTANCE_TYPE=m3.xlarge
+test -z INSTANCE_PRICE && INSTANCE_PRICE=""
 
 test -d $EC2_HOME || exit -1
 
@@ -21,7 +25,7 @@ ansible-playbook \
 	--extra-vars "cluster_node_count=6" \
 	--private-key="$PEM_FILE" playbooks/aws_bootstrap.yml
 
-ansible all -i playbooks/cluster.hosts --private-key $PEM_FILE -m ping
+ansible all -i playbooks/cluster.hosts --private-key="$PEM_FILE" -m ping
 
 ansible-playbook \
 	-i playbooks/cluster.hosts \
