@@ -30,3 +30,18 @@ ansible-playbook \
 	-i playbooks/cluster.hosts -u root \
 	--extra-vars "ec2_keypair=$EC2_KEYPAIR ec2_name_tag=$CLUSTER_NAME" \
 	--private-key="$PEM_FILE" playbooks/install_cluster.yml
+
+ansible-playbook \
+	-i playbooks/cluster.hosts -u root \
+	--private-key="$PEM_FILE" playbooks/install_spark.yml
+
+ansible-playbook \
+	-i playbooks/cluster.hosts -u root \
+	--private-key="$PEM_FILE" playbooks/install_impala.yml
+
+ansible-playbook \
+	-i playbooks/cluster.hosts -u root \
+	--extra-vars "ec2_keypair=$EC2_KEYPAIR \
+	--private-key="$PEM_FILE" playbooks/test_cluster.yml
+
+
