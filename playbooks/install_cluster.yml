@@ -93,6 +93,14 @@
 
 - include: configure_cluster.yml tags=configure
 
+- hosts: resourcemanager[1]
+  tags: install
+  max_fail_percentage: 0
+  tasks:
+    - name: set RM id correctly to work around a bug
+      hadoop_properties: name="yarn.resourcemanager.ha.id" state=present value="rm2" file=/opt/mapr/hadoop/hadoop-2.4.1/etc/hadoop/yarn-site.xml
+
+
 - hosts: zookeepers
   tasks:
     - name: ensure mapr user owns /opt/mapr/zkdata
