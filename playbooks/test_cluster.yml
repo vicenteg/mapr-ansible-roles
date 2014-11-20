@@ -139,7 +139,7 @@
         - read
 
     - name: get the results files
-      fetch: src=/tmp/mrv2-result-{{item}} dest=/tmp/results fail_on_missing=true
+      fetch: src=/tmp/mrv2-result-{{item}} dest=test_results fail_on_missing=true
       with_items:
         - read
         - write
