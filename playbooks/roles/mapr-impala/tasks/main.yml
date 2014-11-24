@@ -9,7 +9,7 @@
 
 - name: update hive configuration to point at metastore
   hadoop_properties:
-    file: /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+    file: /opt/mapr/hive/hive-0.13/conf/hive-site.xml
     name: hive.metastore.uris
     value: "thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083"
 
