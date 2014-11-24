@@ -37,22 +37,22 @@
     - impala_state_store_host: "{{groups['impalastatestore']|first}}"
   tasks:
     - name: update impala configuration with metastore host
-      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="HIVE_METASTORE_URI" line="HIVE_METASTORE_URI=thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083" backup=true
+      lineinfile: dest=/opt/mapr/impala/impala-1.4.1/conf/env.sh regexp="HIVE_METASTORE_URI" line="HIVE_METASTORE_URI=thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083" backup=true
 
     - name: set HIVE_HOME appropriately
-      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^(#.*)?HIVE_HOME" line="HIVE_HOME=/opt/mapr/hive/hive-0.12" state=present  backup=true
+      lineinfile: dest=/opt/mapr/impala/impala-1.4.1/conf/env.sh regexp="^(#.*)?HIVE_HOME" line="HIVE_HOME=/opt/mapr/hive/hive-0.13" state=present  backup=true
 
     - name: update hive configuration to point at metastore
       hadoop_properties:
-        file: /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+        file: /opt/mapr/hive/hive-0.13/conf/hive-site.xml
         name: hive.metastore.uris
         value: "thrift://{{hostvars[hive_metastore_host].ansible_default_ipv4.address}}:9083"
 
     - name: update impala configuration with statestore host
-      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^IMPALA_STATE_STORE_HOST=" line="IMPALA_STATE_STORE_HOST={{hostvars[impala_state_store_host].ansible_default_ipv4.address}}" state=present backup=true
+      lineinfile: dest=/opt/mapr/impala/impala-1.4.1/conf/env.sh regexp="^IMPALA_STATE_STORE_HOST=" line="IMPALA_STATE_STORE_HOST={{hostvars[impala_state_store_host].ansible_default_ipv4.address}}" state=present backup=true
 
     - name: update impala configuration with catalogserver host
-      lineinfile: dest=/opt/mapr/impala/impala-1.2.3/conf/env.sh regexp="^CATALOG_SERVICE_HOST=" line="CATALOG_SERVICE_HOST={{hostvars[impala_state_store_host].ansible_default_ipv4.address}}" backup=true
+      lineinfile: dest=/opt/mapr/impala/impala-1.4.1/conf/env.sh regexp="^CATALOG_SERVICE_HOST=" line="CATALOG_SERVICE_HOST={{hostvars[impala_state_store_host].ansible_default_ipv4.address}}" backup=true
 
     - name: reconfigure roles
       command: /opt/mapr/server/configure.sh -R
