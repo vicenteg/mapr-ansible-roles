@@ -104,7 +104,7 @@ def abort(msg, m):
 def finish(tree, property_name, m, changed=False, msg="", hitcount=0):
     if changed:
         tree.write(m.params['file'], xml_declaration=True, encoding='UTF-8')
-    m.exit_json(changed=changed,actions={"name": property_name, "state": m.params['state']}, msg=msg, count=hitcount)
+    m.exit_json(changed=changed,actions={"name": property_name, "tree": etree.tostring(tree, pretty_print=True), "changed": changed, "state": m.params['state']}, msg=msg, count=hitcount)
 
 def main():
     module = AnsibleModule(
@@ -146,7 +146,6 @@ def main():
         delete_property(x, property_name, module)
     elif state == 'present':
         create_or_modify_property(x, property_name, value, module)
-        set_target_attribute(x, xpath, attribute, value, module)
 
 from ansible.module_utils.basic import *
 main()
