@@ -143,6 +143,13 @@
       pause: seconds=10
       when: warden_started.changed
 
+- hosts: resourcemanager[1]
+  tags: install
+  max_fail_percentage: 0
+  tasks:
+    - name: restart RM on all RM nodes
+      command: maprcli node services -action restart -filter csvc==resourcemanager -name resourcemanager
+
 - hosts: cluster
   roles:
     - { role: nfs-mount, cluster_name: '{{mapr_cluster_name}}' }
