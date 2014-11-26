@@ -128,7 +128,7 @@
       register: cldb_started
 
     - name: pause for a bit and wait for CLDBs to come up
-      pause: seconds=15
+      wait_for: port=7222 delay=5 timeout=90
       when: cldb_started.changed
 
 - hosts: cluster
@@ -140,7 +140,7 @@
       register: warden_started
 
     - name: wait a bit before proceeding
-      pause: seconds=10
+      pause: seconds=30
       when: warden_started.changed
 
 - hosts: resourcemanager[1]
