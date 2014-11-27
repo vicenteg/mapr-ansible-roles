@@ -43,9 +43,10 @@
        failed_when: grep_cldb.rc not in (0, 1)
        changed_when: False
 
-     - name: check that CLDB is listening on 7222
-       wait_for: port=7222 timeout=5 state=started
+     - name: ensure we can obtain the cldbmaster
+       command: maprcli node cldbmaster
        when: grep_cldb.rc == 0
+       changed_when: False
 
 - hosts: fileserver
   max_fail_percentage: 0
@@ -95,7 +96,7 @@
       command: hadoop fs -rmr /user/teragen
       when: teragen.rc == 0
 
-    - name: run TestDFSIO to write,read 100GB of data
+    - name: run TestDFSIO to write,read 100GB of data (MRv1)
       environment:
         MAPR_MAPREDUCE_MODE: classic
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -size 1GB -nrFiles 100 -resFile /tmp/mrv1-result-{{item}}
@@ -130,7 +131,7 @@
       command: hadoop fs -rm -r /user/teragen
       when: teragen.rc == 0
 
-    - name: run TestDFSIO to write,read 100GB of data
+    - name: run TestDFSIO to write,read 100GB of data (MRv2)
       environment:
         MAPR_MAPREDUCE_MODE: yarn
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -size 1GB -nrFiles 100 -resFile /tmp/mrv2-result-{{item}}
