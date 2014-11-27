@@ -1,4 +1,4 @@
-[![Build Status](https://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-ec2-build)](https://test-1085049401.us-east-1.elb.amazonaws.com/job/mapr-ec2-build/)
+<img src="https://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-ec2-build">
 
 IMPORTANT!
 ==
