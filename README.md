@@ -1,3 +1,5 @@
+https://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-ec2-build
+
 IMPORTANT!
 ==
 
