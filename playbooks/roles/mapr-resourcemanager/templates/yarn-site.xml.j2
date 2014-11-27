@@ -1,3 +1,8 @@
+{% if inventory_hostname == groups['resourcemanager'][0] %}
+{% set ha_id = "rm1" %}
+{% elif inventory_hostname == groups['resourcemanager'][1] %}
+{% set ha_id = "rm2" %}
+{% endif %}
 {% set rm1 = groups['resourcemanager'][0] %}
 {% set rm2 = groups['resourcemanager'][1] %}
 <?xml version="1.0"?>
@@ -42,7 +47,7 @@
   </property>
   <property>
     <name>yarn.resourcemanager.ha.id</name>
-    <value>rm1</value>
+    <value>{{ha_id}}</value>
   </property>
   <property>
     <name>yarn.resourcemanager.zk-address</name>
@@ -76,7 +81,7 @@
     <value>{{hostvars[rm1].ansible_fqdn}}:8090</value>
   </property>
 
-  <!-- Configuration for rm2 -->
+  <!-- Configuration for rm2-->
   <property>
     <name>yarn.resourcemanager.scheduler.address.rm2</name>
     <value>{{hostvars[rm2].ansible_fqdn}}:8030</value>

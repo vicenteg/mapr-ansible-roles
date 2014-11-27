@@ -1,7 +1,10 @@
 ---
 # tasks file for mapr-resourcemanager
 
-- name: install mapr-resourcemanager and mapr-historyserver
+- name: install mapr-resourcemanager
   yum: name={{item}} state=present
   with_items:
     - mapr-resourcemanager
+
+- name: install a correct yarn-site.xml from template
+  template: src=yarn-site.xml.j2 dest=/opt/mapr/hadoop/hadoop-2.4.1/etc/hadoop/yarn-site.xml backup=yes
