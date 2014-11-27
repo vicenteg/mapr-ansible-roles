@@ -1,0 +1,108 @@
+{% set rm1 = groups['resourcemanager'][0] %}
+{% set rm2 = groups['resourcemanager'][1] %}
+<?xml version="1.0"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+<configuration>
+  <!-- Resource Manager HA Configs -->
+  <property>
+    <name>yarn.resourcemanager.ha.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.automatic-failover.embedded</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.recovery.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.cluster-id</name>
+    <value>yarn-{{mapr_cluster_name}}</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.rm-ids</name>
+    <value>rm1,rm2</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.id</name>
+    <value>rm1</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.zk-address</name>
+    <value>{% for node in groups['zookeepers'] -%}{{ hostvars[node].ansible_fqdn }}:5181{% if not loop.last %},{% endif %}{% endfor %}</value>
+  </property>
+
+
+  <!-- Configuration for rm1 -->
+  <property>
+    <name>yarn.resourcemanager.scheduler.address.rm1</name>
+    <value>{{hostvars[rm1].ansible_fqdn}}:8030</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address.rm1</name>
+    <value>{{hostvars[rm1].ansible_fqdn}}:8031</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.address.rm1</name>
+    <value>{{hostvars[rm1].ansible_fqdn}}:8032</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.admin.address.rm1</name>
+    <value>{{hostvars[rm1].ansible_fqdn}}:8033</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.address.rm1</name>
+    <value>{{hostvars[rm1].ansible_fqdn}}:8088</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.https.address.rm1</name>
+    <value>{{hostvars[rm1].ansible_fqdn}}:8090</value>
+  </property>
+
+  <!-- Configuration for rm2 -->
+  <property>
+    <name>yarn.resourcemanager.scheduler.address.rm2</name>
+    <value>{{hostvars[rm2].ansible_fqdn}}:8030</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address.rm2</name>
+    <value>{{hostvars[rm2].ansible_fqdn}}:8031</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.address.rm2</name>
+    <value>{{hostvars[rm2].ansible_fqdn}}:8032</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.admin.address.rm2</name>
+    <value>{{hostvars[rm2].ansible_fqdn}}:8033</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.address.rm2</name>
+    <value>{{hostvars[rm2].ansible_fqdn}}:8088</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.https.address.rm2</name>
+    <value>{{hostvars[rm2].ansible_fqdn}}:8090</value>
+  </property>
+
+  <!-- :::CAUTION::: DO NOT EDIT ANYTHING ON OR ABOVE THIS LINE -->
+</configuration>
+
+

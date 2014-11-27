@@ -11,58 +11,51 @@
 - include: prerequisites.yml tags=install
 
 - hosts: zookeepers
-  tags: install
+  tags: 
+    - install
   max_fail_percentage: 0
   roles:
     - zookeeper
 
 - hosts: cldb
-  tags: install cldb
+  tags: 
+    - install
+    - cldb
   max_fail_percentage: 0
   roles:
     - mapr-cldb
 
+- include: install_yarn.yml
+
 - hosts: jobtracker
-  tags: install
+  tags:
+    - install
   max_fail_percentage: 0
   roles:
     - mapr-jobtracker
 
-- hosts: resourcemanager
-  tags: install
-  max_fail_percentage: 0
-  roles:
-    - mapr-resourcemanager
-
-- hosts: historyserver
-  tags: install
-  max_fail_percentage: 0
-  tasks:
-    - name: install historyserver
-      yum: name=mapr-historyserver state=present
-
 - hosts: tasktracker
-  tags: install
+  tags:
+    - install
   roles:
     - mapr-tasktracker
 
-- hosts: nodemanager
-  tags: install
-  roles:
-    - mapr-nodemanager
-
 - hosts: webserver
-  tags: install
+  tags:
+    - install
   roles:
     - webserver
 
 - hosts: nfs
-  tags: install
+  tags:
+    - install
+    - nfs
   roles:
     - mapr-nfs
 
 - hosts: fileserver
-  tags: install
+  tags:
+    - install
   roles:
     - mapr-fileserver
 
@@ -71,7 +64,9 @@
 
 # Install mapr-metrics
 - hosts: hiveserver
-  tags: install,metrics
+  tags:
+    - install
+    - metrics
   roles:
     - { role: metrics-database,
         mysql_root_user: root,
@@ -92,14 +87,6 @@
 - include: install_edgenode.yml tags=edgenode
 
 - include: configure_cluster.yml tags=configure
-
-- hosts: resourcemanager[1]
-  tags: install
-  max_fail_percentage: 0
-  tasks:
-    - name: set RM id correctly to work around a bug
-      hadoop_properties: name="yarn.resourcemanager.ha.id" state=present value="rm2" file=/opt/mapr/hadoop/hadoop-2.4.1/etc/hadoop/yarn-site.xml
-
 
 - hosts: zookeepers
   tasks:
@@ -122,7 +109,8 @@
       register: zk_qstatus
 
 - hosts: cldb
-  tags: cldb
+  tags:
+    - cldb
   tasks:
     - name: start warden on CLDBs first per doc.mapr.com
       service: name=mapr-warden state=started enabled=yes

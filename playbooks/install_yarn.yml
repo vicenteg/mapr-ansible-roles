@@ -1,0 +1,26 @@
+- hosts: zookeepers
+
+- hosts: resourcemanager
+  tags:
+    - install
+    -  yarn
+  max_fail_percentage: 0
+  roles:
+    - mapr-resourcemanager
+
+- hosts: historyserver
+  tags:
+    - install
+    - yarn
+  max_fail_percentage: 0
+  tasks:
+    - name: install historyserver
+      yum: name=mapr-historyserver state=present
+
+- hosts: nodemanager
+  tags:
+    - install
+    - yarn
+  roles:
+    - mapr-nodemanager
+
