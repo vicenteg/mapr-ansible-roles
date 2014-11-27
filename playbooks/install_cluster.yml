@@ -30,6 +30,7 @@
 - hosts: jobtracker
   tags:
     - install
+    - classic
   max_fail_percentage: 0
   roles:
     - mapr-jobtracker
@@ -37,6 +38,7 @@
 - hosts: tasktracker
   tags:
     - install
+    - classic
   roles:
     - mapr-tasktracker
 
