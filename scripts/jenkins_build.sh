@@ -39,9 +39,3 @@ ansible-playbook \
 # 	-i playbooks/cluster.hosts -u root \
 # 	--private-key="$PEM_FILE" playbooks/install_impala.yml
 
-ansible-playbook \
-	-i playbooks/cluster.hosts -u root \
-	--extra-vars "ec2_keypair=$EC2_KEYPAIR" \
-	--private-key="$PEM_FILE" playbooks/test_cluster.yml
-
-
