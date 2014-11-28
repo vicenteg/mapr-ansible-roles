@@ -88,7 +88,7 @@ Edit them in the file, or you can override these using the `--extra-vars` argume
 --extra-vars "mapr_version=v4.0.1"
 ```
 
-You could also copy `playbooks/roles/mapr-aws-bootstrap/defaults/main.yml` to `playbooks/roles/mapr-aws-bootstrap/vars/main.yml`. Variables set in `vars/main.yml` override variable set in `defaults/main.yml`. But I think using the top level role variables or overriding them on the ansible-playbook command line is easier.
+You could edit role variables to override the "default" choices there, or you could use `--extra-vars`. Using `--extra-vars` is probably easier to maintain if you're doing multiple installs from the same tree.
 
 For mapr-metrics, review [its README file](https://github.com/vicenteg/mapr-ansible-roles/blob/master/playbooks/roles/mapr-metrics/README.md).
 
@@ -97,7 +97,7 @@ Pre-Install - AWS & Vagrant
 ===========================
 
 1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in either extra-vars or in the role variables in the top-level playbook. 
-2. Make sure that the list of disks you want to use aligns with the disks present on the systems. If you didn't change the bootstrap playbook, you should not have to do anything.
+2. Make sure that the list of disks you want to use aligns with the disks present on the systems. If you didn't change the bootstrap playbook, you should not have to do anything. If you have a configuration that uses more than two disks, or uses different disks, you will want to inspect the `configure-cluster.yml` playbook, and make changes to the `mapr_disks` role variables there.
 3. Check all the ec2 related variables. Chances are excellent you need to change something there.
 
 Installation - Vagrant
