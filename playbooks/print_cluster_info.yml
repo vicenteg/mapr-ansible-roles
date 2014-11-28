@@ -46,7 +46,7 @@
 
 - hosts: all
   roles:
-    - mapr-infosheet
+#    - mapr-infosheet
     - hostfile
 
 # if this is a virtualbox node, print out the IP for eth1, which is a host interface.
