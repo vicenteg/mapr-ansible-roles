@@ -117,6 +117,27 @@ ansible-playbook -i playbooks/cluster.hosts --private-key <path/to/your/private_
 	playbooks/install_cluster.yml
 ```
 
+AWS: Variations
+===============
+
+Obviously, you have many choices when starting AWS instances. In this area, you'll find some ansible-playbook invocations that override variables in order to achieve different results, such as using different instance types, AMIs or regions.
+
+## Use i2.2xlarge instances
+
+```
+ansible-playbook -i hosts \
+        -e cluster_node_type=i2.2xlarge \
+        -e edge_node_type=c3.large \
+        -e mapr_cluster_name=vgonzalez-spark  \
+        -e cluster_node_price= \
+        -e edge_node_price= \
+        -e ec2_image=ami-b66ed3de  \
+        -e root_device_path=/dev/xvda \
+        -e ssh_user=ec2-user \
+        playbooks/aws_bootstrap.yml
+```
+
+
 
 Post-Install - Vagrant - license key
 =======================
