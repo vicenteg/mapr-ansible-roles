@@ -3,11 +3,11 @@
 
 # Assumes the MapR repos are already configured.
 
-- name: install mapr-spark for RedHat/CenOS
+- name: install mapr-spark for RedHat/CentOS
   yum: name='{{item}}' state=present
   with_items:
     - mapr-spark
-  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+  when: ansible_distribution in ("CentOS", "RedHat", "Amazon")
 
 - name: install mapr-spark for Debian/Ubuntu
   apt: name='{{item}}' state=present
