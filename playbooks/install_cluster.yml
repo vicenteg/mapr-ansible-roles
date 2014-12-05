@@ -5,8 +5,10 @@
   max_fail_percentage: 0
   tasks:
     - name: ensure some critical vars are set, fail early if not.
-      fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars." 
-      when: mapr_version is not defined or mapr_cluster_name is not defined
+      assert:
+        that:
+          - mapr_cluster_name is defined
+          - mapr_version is defined
 
 - include: prerequisites.yml tags=install
 
