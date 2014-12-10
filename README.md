@@ -137,6 +137,17 @@ ansible-playbook -i hosts \
         playbooks/aws_bootstrap.yml
 ```
 
+## Use m3.xlarge spot instances
+
+The spot instances will be bid ad $0.09:
+
+```
+ansible-playbook -i hosts \
+	-e "cluster_node_price=0.09 cluster_node_type=m3.xlarge" \
+	-e "edge_node_type=m3.xlarge edge_node_price=0.09" \
+	playbooks/aws_bootstrap.yml
+```
+
 
 
 Post-Install - Vagrant - license key
