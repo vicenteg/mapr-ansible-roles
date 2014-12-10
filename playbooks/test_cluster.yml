@@ -74,23 +74,22 @@
       shell: maprcli node list -columns svc -filter hn==`hostname` -noheader | grep jobtracker
       register: grep_jobtracker
       changed_when: False
-      failed_when: grep_jobtracker.rc not in (0,1) and jobtracker.stat.exists 
+      failed_when: jobtracker.stat.exists and grep_jobtracker.rc not in (0,1)
 
     - name: check that jobtracker is listening on 9001
       wait_for: port=9001 timeout=5 state=started
-      when: grep_jobtracker.rc == 0 and jobtracker.stat.exists
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0
 
     - name: try to submit a small job (teragen - MRv1)
       environment:
         MAPR_MAPREDUCE_MODE: classic
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100 /user/teragen
-      run_once: true
       register: teragen
       when: grep_jobtracker.rc == 0 and jobtracker.stat.exists
 
     - name: clean up the teragen
       command: hadoop fs -rmr /user/teragen
-      when: grep_jobtracker.rc == 0 and jobtracker.stat.exists and teragen.rc == 0
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
     - name: run TestDFSIO to write,read 100GB of data (MRv1)
       environment:
@@ -99,21 +98,20 @@
       with_items:
         - write
         - read
-      when: grep_jobtracker.rc == 0 and jobtracker.stat.exists and teragen.rc == 0
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
     - name: get the results files
       fetch: src=/tmp/mrv1-result-{{item}} dest=test_results fail_on_missing=true
       with_items:
         - read
         - write
-      when: grep_jobtracker.rc == 0 and jobtracker.stat.exists and teragen.rc == 0
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
     - name: clean up TestDFSIO data
       environment:
         MAPR_MAPREDUCE_MODE: classic
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -clean
-      when: grep_jobtracker.rc == 0 and jobtracker.stat.exists and teragen.rc == 0
-
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
 - hosts: resourcemanager[0]
   max_fail_percentage: 0
