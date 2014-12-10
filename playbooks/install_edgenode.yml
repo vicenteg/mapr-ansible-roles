@@ -11,8 +11,11 @@
     - { role: nfs-mount, cluster_name: '{{mapr_cluster_name}}' }
 
   tasks:
-    - name: install hive
-      yum: name=mapr-hive state=present
+    - name: install hive and pig
+      yum: name={{item}} state=present
+      with_items:
+        - mapr-hive
+        - mapr-pig
 
     - name: store the path to hive
       shell: rpm -ql mapr-hive  | head -2 | tail -1
