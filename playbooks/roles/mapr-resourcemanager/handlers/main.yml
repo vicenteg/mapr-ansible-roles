@@ -1,2 +1,5 @@
 ---
 # handlers file for mapr-resourcemanager
+
+- name: restart resourcemanager
+  command: maprcli node services -name resourcemanager -action restart -filter csvc==resourcemanager

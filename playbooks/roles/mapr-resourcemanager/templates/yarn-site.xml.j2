@@ -1,6 +1,6 @@
 {% if inventory_hostname == groups['resourcemanager'][0] %}
 {% set ha_id = "rm1" %}
-{% elif inventory_hostname == groups['resourcemanager'][1] %}
+{% elif groups['resourcemanager']|length > 1 and inventory_hostname == groups['resourcemanager'][1] %}
 {% set ha_id = "rm2" %}
 {% endif %}
 {% set rm1 = groups['resourcemanager'][0] %}
