@@ -47,6 +47,13 @@ Be sure to check the latest spot prices for the instances you're looking to crea
 
 If you prefer on-demand instances (so that you're not at risk of automatic termination), edit `playbooks/aws_bootstrap.yml` and comment out the lines with `spot_price`.
 
+Prerequisites
+=============
+
+You need to have installed boto, which is a python module ansible requires to use the EC2 API.
+
+`pip install boto` should be all you need (use sudo or become root if needed).
+
 Prerequisites - Vagrant
 =======================
 
