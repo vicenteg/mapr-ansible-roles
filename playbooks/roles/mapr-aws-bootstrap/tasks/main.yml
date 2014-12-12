@@ -1,8 +1,5 @@
 ---
 # tasks file for mapr-aws-bootstrap
-  - name: install boto for ec2 module
-    sudo: yes
-    pip: name=boto state=present
 
   - name: create nodes for non-cluster roles
     action:
