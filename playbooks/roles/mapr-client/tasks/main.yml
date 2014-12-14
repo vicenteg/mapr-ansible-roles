@@ -9,6 +9,14 @@
 - name: install mapr-client
   yum: name=mapr-client state=present
 
+- name: copy ssl_truststore (secure cluster only)
+  copy: src=/tmp/ssl_truststore dest=/opt/mapr/conf mode=0600 
+  when: secure_cluster is defined
+
+- name: copy maprserverticket (secure cluster only)
+  copy: src=/tmp/maprserverticket dest=/opt/mapr/conf mode=0600 
+  when: secure_cluster is defined
+
 - name: see if this node is already configured
   stat: path=/opt/mapr/conf/mapr-clusters.conf
   register: mapr_clusters

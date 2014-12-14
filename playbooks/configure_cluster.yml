@@ -64,14 +64,16 @@
 - hosts: edge
   sudo: yes
   tasks:
+    - name: copy ssl_truststore to edge nodes
+      copy: src='/tmp/{{item}}' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      with_items:
+        - ssl_keystore
+        - ssl_truststore
+      when: secure_cluster is defined
+
     - name: configure cluster
       command: /tmp/do_configure.sh
       args:
         chdir: /tmp
         creates: /opt/mapr/conf/mapr-cluster.conf
-
-    - name: copy ssl_truststore to edge nodes
-      copy: src='/tmp/ssl_truststore' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
-      ignore_errors: yes
-      when: secure_cluster is defined
 

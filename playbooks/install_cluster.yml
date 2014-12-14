@@ -127,14 +127,18 @@
     - name: let CLDBs have their election and settle
       pause: seconds=90 
 
+    # can't obtain the CLDB master without a ticket
     - name: get the cldbmaster
       command: maprcli node cldbmaster
       register: cldbmaster
+      when: secure_cluster is not defined
 
+    # can't obtain the CLDB master without a ticket
     - name: check that we found a cldbmaster, or fail
       assert:
         that:
           - cldbmaster.rc == 0
+      when: secure_cluster is not defined
 
 - hosts: cluster
   tasks:
