@@ -16,6 +16,7 @@
       with_items:
         - mapr-hive
         - mapr-pig
+      environment: proxy_env
 
     - name: store the path to hive
       shell: rpm -ql mapr-hive  | head -2 | tail -1

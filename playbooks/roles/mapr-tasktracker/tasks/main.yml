@@ -5,3 +5,4 @@
   with_items:
     - mapr-tasktracker
     - mapr-nodemanager
+  environment: proxy_env

@@ -6,6 +6,7 @@
   with_items:
     - mapr-impala
     - mapr-impala-server
+  environment: proxy_env
 
 - name: update hive configuration to point at metastore
   hadoop_properties:

@@ -4,3 +4,4 @@
 - name: install regionserver
   yum: name=mapr-hbase-regionserver state=present
   notify: reconfigure roles
+  environment: proxy_env

@@ -4,6 +4,7 @@
 
 - name: install mysqldb which is required for ansible
   yum: name=MySQL-python state=present
+  environment: proxy_env
 
 - name: install hive $hive_version and related packages
   yum: name={{item}} state=present
@@ -13,6 +14,7 @@
     - 'mapr-hiveserver2-{{hive_version}}*'
     - 'mapr-hivemetastore-{{hive_version}}*'
   notify: reconfigure roles
+  environment: proxy_env
 
 - name: store the path to hive
   shell: rpm -ql mapr-hive  | head -2 | tail -1

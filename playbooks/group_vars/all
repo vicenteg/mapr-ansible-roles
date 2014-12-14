@@ -3,3 +3,7 @@ mapr_version: v4.0.1
 mapr_cluster_name: my.cluster.com
 #mapr_subnets: 10.61.14.0/23
 #secure_cluster: true
+
+proxy_env:
+  dummy: "set so that we can comment out http_proxy"
+  http_proxy: http://172.16.1.58:3128
