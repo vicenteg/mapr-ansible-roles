@@ -8,6 +8,7 @@
 
 - name: install mapr-client
   yum: name=mapr-client state=present
+  environment: proxy_env
 
 - name: copy ssl_truststore (secure cluster only)
   copy: src=/tmp/ssl_truststore dest=/opt/mapr/conf mode=0600 

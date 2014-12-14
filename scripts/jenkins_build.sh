@@ -7,9 +7,10 @@ export PEM_FILE="jenkins-vgonzalez.pem"
 export EC2_HOME=/opt/ec2-api-tools-1.7.0.2
 export ANSIBLE_FORCE_COLOR=true
 
-test -z INSTANCE_TYPE && INSTANCE_TYPE=m3.xlarge
-test -z INSTANCE_PRICE && INSTANCE_PRICE=""
-test -z MAPR_EDITION && MAPR_EDITION="enterprise"
+test -z $INSTANCE_TYPE && INSTANCE_TYPE=m3.xlarge
+test -z $INSTANCE_PRICE && INSTANCE_PRICE=""
+test -z $MAPR_EDITION && MAPR_EDITION="enterprise"
+test -z $SECURE_CLUSTER && SECURE_CLUSTER=
 
 test -d $EC2_HOME || exit -1
 
@@ -30,6 +31,7 @@ ansible all -i playbooks/cluster.hosts --private-key="$PEM_FILE" -u root -m ping
 ansible-playbook \
 	-i playbooks/cluster.hosts -u root \
 	--extra-vars "ec2_keypair=$EC2_KEYPAIR ec2_name_tag=$CLUSTER_NAME" \
+	--extra-vars "secure_cluster=$SECURE_CLUSTER" \
 	--private-key="$PEM_FILE" playbooks/install_cluster.yml
 
 # ansible-playbook \

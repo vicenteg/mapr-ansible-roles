@@ -4,6 +4,8 @@
 - name: install EPEL repo
   yum: state=present name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
   when: ansible_distribution in ("CentOS", "RedHat", "Amazon")
+  environment: proxy_env
 
 - name: install mapr-metrics
   yum: state=present name=mapr-metrics
+  environment: proxy_env
