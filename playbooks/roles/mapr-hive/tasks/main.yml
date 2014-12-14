@@ -98,7 +98,8 @@
   register: warehouse_exists
   failed_when: warehouse_exists.rc not in (0,1)
 
+# Cannot do this when in secure mode without logging in
 - name: create hive warehouse directory
   command: sudo -u mapr hadoop fs -mkdir -p /user/hive/warehouse
-  when: warehouse_exists.rc == 1
+  when: warehouse_exists.rc == 1 and secure_cluster is not defined
   
