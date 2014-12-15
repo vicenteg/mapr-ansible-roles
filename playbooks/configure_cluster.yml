@@ -17,7 +17,7 @@
       command: creates=/opt/mapr/conf/cldb.key /tmp/do_configure_genkeys.sh
       when: secure_cluster is defined
 
-    - name: copy the generated files
+    - name: fetch the generated files
       fetch: src='{{item}}' dest=/tmp/ flat=yes
       with_items:
         - /opt/mapr/conf/cldb.key
@@ -33,6 +33,9 @@
       copy: src=/tmp/cldb.key dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
       when: secure_cluster is defined
 
+    - name: remove fetched cldb.key
+      file: path=/tmp/cldb.key state=absent
+
 - hosts: cluster
   sudo: yes
   tasks:
@@ -43,6 +46,13 @@
         - ssl_keystore
         - ssl_truststore
       when: secure_cluster is defined
+
+    - name: remove fetched maprserverticket, ssl_keystore, and ssl_truststore
+      file: path=/tmp/{{item}} state=absent
+      with_items:
+        - maprserverticket
+        - ssl_keystore
+        - ssl_truststore
 
 - hosts: cluster
   sudo: yes
