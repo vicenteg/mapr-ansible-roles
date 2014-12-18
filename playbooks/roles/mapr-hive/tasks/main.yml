@@ -98,10 +98,10 @@
 - name: does hive warehouse directory exist?
   command: sudo -u mapr hadoop fs -test -d /user/hive/warehouse
   register: warehouse_exists
-  failed_when: warehouse_exists.rc not in (0,1)
+  failed_when: warehouse_exists.rc not in (0,1,255)
 
 # Cannot do this when in secure mode without logging in
 - name: create hive warehouse directory
   command: sudo -u mapr hadoop fs -mkdir -p /user/hive/warehouse
-  when: warehouse_exists.rc == 1 and secure_cluster is not defined
+  when: warehouse_exists.rc in (1,255) and (secure_cluster is not defined or secure_cluster != True)
   

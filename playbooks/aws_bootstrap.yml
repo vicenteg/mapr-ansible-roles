@@ -20,7 +20,7 @@
         edge_node_type: 'm1.medium',
         edge_node_price: 0.15,
         cluster_node_count: 6, # 3, 6 or more.
-        cluster_node_type: 'm3.2xlarge',
+        cluster_node_type: 'm1.xlarge',
         cluster_node_price: 0.30,
         ec2_wait_timeout: 1200,
         root_device_path: '/dev/sda',

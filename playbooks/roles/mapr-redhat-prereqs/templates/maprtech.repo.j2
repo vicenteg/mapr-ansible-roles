@@ -1,13 +1,23 @@
 [maprtech]
 name=MapR
-baseurl=http://{{mirror_host}}/releases/v4.0.1/redhat/
+baseurl=http://{{mirror_host}}/releases/{{mapr_version}}/redhat/
 enabled=1
+{% if mapr_version.startswith('v3') %}
+gpgcheck=0
+{% else %}
 gpgcheck=1
+{% endif %}
 protect=1
 
 [maprecosystem]
 name=MapR Ecosystem
+{% if mapr_version.startswith('v4') %}
 baseurl=http://{{mirror_host}}/releases/ecosystem-4.x/redhat/
+{% elif mapr_version.startswith('v3') %}
+baseurl=http://{{mirror_host}}/releases/ecosystem/redhat/
+{% else %}
+baseurl="Your configuration is broken. Make sure mapr_version starts with either v3 or v4.
+{% endif %}
 enabled=1
 gpgcheck=0
 protect=1

@@ -10,54 +10,15 @@
         metrics_password: mapr,
         metrics_host: "{{ groups['hiveserver'] | first }}" }
 
-- hosts: cldb[0]
-  sudo: yes
-  tasks:
-    - name: generate keys
-      command: creates=/opt/mapr/conf/cldb.key /tmp/do_configure_genkeys.sh
-      when: secure_cluster is defined
-
-    - name: fetch the generated files
-      fetch: src='{{item}}' dest=/tmp/ flat=yes
-      with_items:
-        - /opt/mapr/conf/cldb.key
-        - /opt/mapr/conf/maprserverticket
-        - /opt/mapr/conf/ssl_keystore
-        - /opt/mapr/conf/ssl_truststore
-      when: secure_cluster is defined
-
-- hosts: cldb;zookeepers
-  sudo: yes
-  tasks: 
-    - name: copy cldb.key
-      copy: src=/tmp/cldb.key dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
-      when: secure_cluster is defined
-
-    - name: remove fetched cldb.key
-      file: path=/tmp/cldb.key state=absent
+- include: secure_cluster.yml
+  tags: 
+    - configure
+    - secure
 
 - hosts: cluster
   sudo: yes
   tasks:
-    - name: copy maprserverticket, ssl_keystore, and ssl_truststore
-      copy: src='/tmp/{{item}}' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
-      with_items:
-        - maprserverticket
-        - ssl_keystore
-        - ssl_truststore
-      when: secure_cluster is defined
-
-    - name: remove fetched maprserverticket, ssl_keystore, and ssl_truststore
-      file: path=/tmp/{{item}} state=absent
-      with_items:
-        - maprserverticket
-        - ssl_keystore
-        - ssl_truststore
-
-- hosts: cluster
-  sudo: yes
-  tasks:
-    - name: configure cluster
+    - name: configure cluster nodes
       command: /tmp/do_configure.sh
       args:
         chdir: /tmp
@@ -74,14 +35,7 @@
 - hosts: edge
   sudo: yes
   tasks:
-    - name: copy ssl_truststore to edge nodes
-      copy: src='/tmp/{{item}}' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
-      with_items:
-        - ssl_keystore
-        - ssl_truststore
-      when: secure_cluster is defined
-
-    - name: configure cluster
+    - name: configure edge node
       command: /tmp/do_configure.sh
       args:
         chdir: /tmp

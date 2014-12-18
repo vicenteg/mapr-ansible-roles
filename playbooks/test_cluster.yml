@@ -27,7 +27,6 @@
     - name: check that MCS is listening on port 8443
       wait_for: port=8443 timeout=5 state=started
 
-
 - hosts: cldb
   tasks:
      - name: check that CLDB role exists
@@ -94,7 +93,7 @@
     - name: run TestDFSIO to write,read 100GB of data (MRv1)
       environment:
         MAPR_MAPREDUCE_MODE: classic
-      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -size 1GB -nrFiles 100 -resFile /tmp/mrv1-result-{{item}}
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -size 1024 -nrFiles 100 -resFile /tmp/mrv1-result-{{item}}
       with_items:
         - write
         - read
