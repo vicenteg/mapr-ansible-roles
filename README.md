@@ -225,3 +225,10 @@ failed: [172.16.2.80 -> 127.0.0.1] => {"failed": true}
 ```
 
 You missed the step about sourcing your Amazon credentials.
+
+## Empty inventory groups
+
+If you have issues and on inspection of the inventory file notice that some groups are empty, it might be that you specified the cluster node count on the command line. If that's the case, pass a JSON object to `--extra-vars` instead: `--extra-vars '{"cluster_node_count": 3}'`. This will allow ansible to treat cluster_node_count's value as an integer rather than a string. The interpretation of the value as a string will break the logic that selects the correct inventory template.
+
+
+

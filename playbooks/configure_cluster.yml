@@ -33,6 +33,8 @@
       when: "disklist is defined and disklist.stdout.find('MapR-FS') == -1"
 
 - hosts: edge
+  tags:
+    - edge
   sudo: yes
   tasks:
     - name: configure edge node

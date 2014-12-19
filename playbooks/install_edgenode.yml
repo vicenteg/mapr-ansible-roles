@@ -3,6 +3,8 @@
 - hosts: zookeepers;cldb;mysql;nfs;hiveserver
 
 - hosts: edge
+  tags:
+    - edge
   vars:
     - hive_metastore_host: "{{groups['hiveserver'] | first}}"
   roles:

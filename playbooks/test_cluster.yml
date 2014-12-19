@@ -87,7 +87,7 @@
       when: grep_jobtracker.rc == 0 and jobtracker.stat.exists
 
     - name: clean up the teragen
-      command: hadoop fs -rmr /user/teragen
+      command: hadoop fs -rm -r /user/teragen
       when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
     - name: run TestDFSIO to write,read 100GB of data (MRv1)
@@ -168,6 +168,8 @@
       when: impalaserver_role.stat.exists
 
 - hosts: edge
+  tags:
+    - edge
   sudo: yes
   sudo_user: mapr
   tasks:

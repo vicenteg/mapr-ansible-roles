@@ -65,11 +65,11 @@
 
   - name: write an inventory file containing the just-created cluster (development)
     template: src=cluster.hosts.dev.j2 dest='./cluster.hosts' mode=0644 backup=yes
-    when: cluster_node_count == '3' and mapr_edition != 'community'
+    when: cluster_node_count == 3 and mapr_edition != 'community'
 
   - name: write an inventory file containing the just-created cluster (small-production)
     template: src=cluster.hosts.smallprod.j2 dest='./cluster.hosts' mode=0644 backup=yes
-    when: cluster_node_count >= '6' and mapr_edition != 'community'
+    when: cluster_node_count >= 6 and mapr_edition != 'community'
 
   - name: write an inventory file for 6 node community edition
     template: src=cluster.hosts.community.j2 dest='./cluster.hosts' mode=0644 backup=yes
