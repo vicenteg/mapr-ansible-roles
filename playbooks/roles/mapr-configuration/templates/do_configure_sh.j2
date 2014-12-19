@@ -7,6 +7,6 @@
 {% if not mapr_version.startswith('v3') %}
 	-RM {% for node in groups['resourcemanager'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
 	-HS {% for node in groups['historyserver'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
-	-on-prompt-cont y
+	-on-prompt-cont y \
 {% endif %}
 	-du {{metrics_user}} -dp {{metrics_password}} -d {{hostvars[metrics_host].ansible_fqdn}} 
