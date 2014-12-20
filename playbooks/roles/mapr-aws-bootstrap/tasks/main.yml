@@ -63,17 +63,9 @@
         user: '{{ec2_keypair}}'
     register: ec2_cluster
 
-  - name: write an inventory file containing the just-created cluster (development)
-    template: src=cluster.hosts.dev.j2 dest='./cluster.hosts' mode=0644 backup=yes
-    when: cluster_node_count == 3 and mapr_edition != 'community'
-
   - name: write an inventory file containing the just-created cluster (small-production)
-    template: src=cluster.hosts.smallprod.j2 dest='./cluster.hosts' mode=0644 backup=yes
-    when: cluster_node_count >= 6 and mapr_edition != 'community'
-
-  - name: write an inventory file for 6 node community edition
-    template: src=cluster.hosts.community.j2 dest='./cluster.hosts' mode=0644 backup=yes
-    when: mapr_edition == 'community'
+    template: src=cluster.hosts.frances.j2 dest='./cluster.hosts' mode=0644 backup=yes
+    when: cluster_node_count == 6 
 
   - name: wait for the hosts to be available via ssh before moving on
     local_action: wait_for host='{{item.private_ip}}' port=22 delay=30 timeout=300 state=started
