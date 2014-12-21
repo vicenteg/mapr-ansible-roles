@@ -5,21 +5,22 @@
   yum: name={{item}} state=present
   with_items:
     - mapr-nfs
+  environment: proxy_env
 
 - name: is warden running?
   command: service mapr-warden status
   register: warden_status
-  ignore_errors: true
+  failed_when: warden_status.rc not in (0,1)
 
-- name: is NFS started?
-  command: maprcli node list -filter svc==nfs -columns hn
-  register: maprcli_nfs
-  ignore_errors: true
+#- name: is NFS started?
+#  command: maprcli node list -filter svc==nfs -columns hn
+#  register: maprcli_nfs
+#  ignore_errors: true
 
 - name: check whether NFS is running
   command: showmount -e localhost
   register: nfs_running
-  ignore_errors: true
+  failed_when: nfs_running.rc not in (0,1)
 
 - name: create mountpoint for loopback NFS mountpoint
   file: path=/mapr state=directory

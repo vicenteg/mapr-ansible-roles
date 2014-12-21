@@ -1,9 +1,12 @@
 #!/bin/sh
 
-/opt/mapr/server/configure.sh -M7 {% if secure_cluster is defined %}-secure{% endif %} \
+/opt/mapr/server/configure.sh -M7 {% if secure_cluster is defined and secure_cluster == True %}-secure{% endif %} \
 	-C {% for node in groups['cldb'] -%}{{ hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
 	-Z {% for node in groups['zookeepers'] -%}{{ hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
 	-N {{cluster_name}} {% if ansible_virtualization_role == "guest" %}--isvm{% endif %} \
+{% if not mapr_version.startswith('v3') %}
 	-RM {% for node in groups['resourcemanager'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
 	-HS {% for node in groups['historyserver'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
-	-du {{metrics_user}} -dp {{metrics_password}} -d {{hostvars[metrics_host].ansible_fqdn}} -on-prompt-cont y
+	-on-prompt-cont y \
+{% endif %}
+	-du {{metrics_user}} -dp {{metrics_password}} -d {{hostvars[metrics_host].ansible_fqdn}} 

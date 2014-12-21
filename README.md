@@ -47,6 +47,13 @@ Be sure to check the latest spot prices for the instances you're looking to crea
 
 If you prefer on-demand instances (so that you're not at risk of automatic termination), edit `playbooks/aws_bootstrap.yml` and comment out the lines with `spot_price`.
 
+Prerequisites
+=============
+
+You need to have installed boto, which is a python module ansible requires to use the EC2 API.
+
+`pip install boto` should be all you need (use sudo or become root if needed).
+
 Prerequisites - Vagrant
 =======================
 
@@ -137,6 +144,17 @@ ansible-playbook -i hosts \
         playbooks/aws_bootstrap.yml
 ```
 
+## Use m3.xlarge spot instances
+
+The spot instances will be bid ad $0.09:
+
+```
+ansible-playbook -i hosts \
+	-e "cluster_node_price=0.09 cluster_node_type=m3.xlarge" \
+	-e "edge_node_type=m3.xlarge edge_node_price=0.09" \
+	playbooks/aws_bootstrap.yml
+```
+
 
 
 Post-Install - Vagrant - license key
@@ -207,3 +225,10 @@ failed: [172.16.2.80 -> 127.0.0.1] => {"failed": true}
 ```
 
 You missed the step about sourcing your Amazon credentials.
+
+## Empty inventory groups
+
+If you have issues and on inspection of the inventory file notice that some groups are empty, it might be that you specified the cluster node count on the command line. If that's the case, pass a JSON object to `--extra-vars` instead: `--extra-vars '{"cluster_node_count": 3}'`. This will allow ansible to treat cluster_node_count's value as an integer rather than a string. The interpretation of the value as a string will break the logic that selects the correct inventory template.
+
+
+

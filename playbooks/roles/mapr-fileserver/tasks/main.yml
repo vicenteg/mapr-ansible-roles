@@ -6,3 +6,4 @@
   with_items:
     - mapr-fileserver
   when: ansible_distribution in ('CentOS', 'RedHat', 'Amazon')
+  environment: proxy_env

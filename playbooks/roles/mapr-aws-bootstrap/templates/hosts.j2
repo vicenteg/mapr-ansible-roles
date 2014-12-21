@@ -1,0 +1,3 @@
+{% for host in groups['instances'] -%}
+{{hostvars[host].public_ip}}  {{hostvars[host].private_dns_name}}   {{hostvars[host].public_dns_name}}
+{% endfor -%}

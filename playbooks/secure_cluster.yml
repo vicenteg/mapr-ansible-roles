@@ -1,0 +1,45 @@
+- hosts: cldb[0]
+  sudo: yes
+  tasks:
+    - name: generate keys
+      command: creates=/opt/mapr/conf/cldb.key /tmp/do_configure_genkeys.sh
+      when: secure_cluster is defined and secure_cluster == True
+
+    - name: fetch the generated files
+      fetch: src='{{item}}' dest=/tmp/ flat=yes
+      with_items:
+        - /opt/mapr/conf/cldb.key
+        - /opt/mapr/conf/maprserverticket
+        - /opt/mapr/conf/ssl_keystore
+        - /opt/mapr/conf/ssl_truststore
+      when: secure_cluster is defined and secure_cluster == True
+
+- hosts: cldb;zookeepers
+  sudo: yes
+  tasks: 
+    - name: copy cldb.key
+      copy: src=/tmp/cldb.key dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      when: secure_cluster is defined and secure_cluster == True
+
+- hosts: cluster
+  sudo: yes
+  tasks:
+    - name: copy maprserverticket, ssl_keystore, and ssl_truststore
+      copy: src='/tmp/{{item}}' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      with_items:
+        - maprserverticket
+        - ssl_keystore
+        - ssl_truststore
+      when: secure_cluster is defined and secure_cluster == True
+
+- hosts: edge
+  sudo: yes
+  tasks:
+    - name: copy ssl_truststore to edge nodes
+      copy: src='/tmp/{{item}}' dest=/opt/mapr/conf mode=0600 owner=mapr group=mapr
+      with_items:
+        - ssl_keystore
+        - ssl_truststore
+        - maprserverticket
+      when: secure_cluster is defined and secure_cluster == True
+
