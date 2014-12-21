@@ -1,9 +1,9 @@
-[![Build Status](http://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-enterprise (dev branch))](https://test-1085049401.us-east-1.elb.amazonaws.com/job/mapr-enterprise%20(dev%20branch)/)
+[![Build Status](http://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-enterprise-develop)](https://test-1085049401.us-east-1.elb.amazonaws.com/job/mapr-enterprise-develop/)
 
 IMPORTANT!
 ==
 
-The AWS playbooks now assume the use of internal ec2 hostnames, in a VPC. This means the playbooks below should be run from an EC2 host in your VPC, or over a VPN connection. 
+The AWS playbooks now assume the use of internal ec2 hostnames, in a VPC. This means the playbooks below should be run from an EC2 host in your VPC, or over a VPN connection.
 
 
 mapr-ansible-roles
@@ -22,7 +22,7 @@ This repo contains Ansible playbooks that do the following:
   * Hive
   * Impala
   * HBase
-* Print some information about the resulting cluster 
+* Print some information about the resulting cluster
   * webserver URLs
 
 This project also includes a Vagrantfile that creates a single local VM instance, or a local VM cluster, suitable to run MapR. The playbooks here can be used either for vagrant instances or EC2 instances.
@@ -96,7 +96,7 @@ For mapr-metrics, review [its README file](https://github.com/vicenteg/mapr-ansi
 Pre-Install - AWS & Vagrant
 ===========================
 
-1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in either extra-vars or in the role variables in the top-level playbook. 
+1. Create a password for the mapr user. You'll use the mapr user to log into MCS. Use `openssl passwd -1` and put the hashed password in either extra-vars or in the role variables in the top-level playbook.
 2. Make sure that the list of disks you want to use aligns with the disks present on the systems. If you didn't change the bootstrap playbook, you should not have to do anything. If you have a configuration that uses more than two disks, or uses different disks, you will want to inspect the `configure-cluster.yml` playbook, and make changes to the `mapr_disks` role variables there.
 3. Check all the ec2 related variables. Chances are excellent you need to change something there.
 
@@ -148,7 +148,7 @@ After issuing `vagrant up`, the VM should be provisioned. Place your license key
 
 And you should be dropped into a shell in your VM.
 
-If your license key is called demolicense.txt, the steps following will add the key, start the NFS gateway and (additional) CLDB service. 
+If your license key is called demolicense.txt, the steps following will add the key, start the NFS gateway and (additional) CLDB service.
 
 ```
 sudo maprcli license add -license /vagrant/demolicense.txt -is_file true
