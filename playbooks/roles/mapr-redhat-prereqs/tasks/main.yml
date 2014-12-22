@@ -6,6 +6,8 @@
     creates: /root/packages_before_prereqs
 
 - name: test external url
+  tags:
+    - external
   get_url: url=http://example.com dest=/dev/null 
   environment: proxy_env
 
@@ -37,12 +39,17 @@
 - name: install repo for RedHat-based Linux
   template: src=maprtech.repo.j2 dest=/etc/yum.repos.d/maprtech.repo mode=0644 owner=root group=root
 
+- name: check for a java binary in JAVA_HOME
+  stat: path={{java_home}}/bin/java
+  register: java_stat
+
 - name: install Java 1.7
   yum: name={{item}} state=present
   environment: proxy_env
   with_items:
     - java-1.7.0-openjdk
     - java-1.7.0-openjdk-devel
+  when: java_stat.stat.exists != true
 
 - name: install NTP
   yum: name=ntp state=present
@@ -77,15 +84,23 @@
   user: name=mapr uid="{{mapr_uid}}" group="mapr" password="{{mapr_user_pw}}" home="{{mapr_home}}" generate_ssh_key=yes state=present createhome=yes
 
 - name: install EPEL 6 x86_64
+  tags:
+    - metrics
+    - external
   yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm state=installed
   environment: proxy_env
   when: ansible_distribution not in ('Amazon', 'Ubuntu')
 
 - name: enable EPEL 6
+  tags:
+    - metrics
+    - external
   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo owner=root group=root mode=0644
   when: ansible_distribution in ('Amazon')
 
 - name: install the MapR GPG key
+  tags:
+    - external
   command: rpm --import http://package.mapr.com/releases/pub/maprgpg.key
   environment: proxy_env
 

@@ -3,6 +3,8 @@
 # just collecting facts so that we can locate the CLDB and mysql
 
 - hosts: hiveserver
+  tags:
+    - hive
   sudo: yes
   roles:
     - { role: mapr-hive,

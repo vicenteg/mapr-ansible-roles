@@ -17,7 +17,7 @@
         mapr_uid: 2147483632,
         mapr_gid: 2147483632,
         mapr_home: '/home/mapr' }
-    - python-lxml
+    #- python-lxml
 
 - hosts: Ubuntu;Debian
   max_fail_percentage: 0

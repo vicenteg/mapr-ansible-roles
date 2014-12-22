@@ -64,7 +64,10 @@
     - mapr-fileserver
 
 # uncomment the following line to install mysql (hive metastore and metrics)
-- include: install_mysql.yml tags=install
+- include: install_mysql.yml
+  tags:
+    - install
+    - mysql
 
 # Install mapr-metrics
 - hosts: hiveserver
@@ -88,7 +91,7 @@
         metrics_host: "{{ groups['hiveserver'] | first }}" }
 
 # uncomment the followng line to install an edge node
-- include: install_edgenode.yml tags=edgenode
+- include: install_edgenode.yml tags=edge
 
 
 - include: configure_cluster.yml tags=configure
@@ -176,7 +179,7 @@
 #- include: install_hbase.yml
 
 # uncomment the following line to install hive
-- include: install_hive.yml tags=hive
+- include: install_hive.yml
 
 # uncomment the following line to install impala
 #- include: install_impala.yml
