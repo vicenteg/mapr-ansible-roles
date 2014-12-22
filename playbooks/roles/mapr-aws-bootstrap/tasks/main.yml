@@ -1,31 +1,6 @@
 ---
 # tasks file for mapr-aws-bootstrap
 
-  - name: create nodes for non-cluster roles
-    action:
-      module: ec2
-      region: '{{ec2_region}}'
-      zone: '{{ec2_zone}}'
-      spot_price: '{{edge_node_price}}'
-      key_name: '{{ec2_keypair}}'
-      group: '{{ec2_security_group}}'
-      image: '{{ec2_image}}'
-      vpc_subnet_id: '{{vpc_subnet}}'
-      assign_public_ip: true
-      instance_type: '{{edge_node_type}}'
-      count: '{{edge_node_count}}'
-      wait: yes
-      wait_timeout: '{{ec2_wait_timeout}}'
-      volumes:
-      - device_name: '{{root_device_path}}'
-        volume_size: 24
-        delete_on_termination: true
-      monitoring: yes
-      instance_tags:
-        Name: '{{ec2_name_tag}}'
-        user: '{{ec2_keypair}}'
-    register: external
-
   - name: create cluster nodes
     action:
       module: ec2
@@ -52,11 +27,27 @@
       - device_name: /dev/xvdf
         volume_size: 128
         delete_on_termination: true
-        ephemeral: ephemeral0
+        #ephemeral: ephemeral0
       - device_name: /dev/xvdg
         volume_size: 128
         delete_on_termination: true
-        ephemeral: ephemeral1
+        #ephemeral: ephemeral1
+      - device_name: /dev/xvdh
+        volume_size: 128
+        delete_on_termination: true
+        #ephemeral: ephemeral0
+      - device_name: /dev/xvdi
+        volume_size: 128
+        delete_on_termination: true
+        #ephemeral: ephemeral0
+      - device_name: /dev/xvdj
+        volume_size: 128
+        delete_on_termination: true
+        #ephemeral: ephemeral0
+      - device_name: /dev/xvdk
+        volume_size: 128
+        delete_on_termination: true
+        #ephemeral: ephemeral0
       monitoring: yes
       instance_tags:
         Name: '{{ec2_name_tag}}'

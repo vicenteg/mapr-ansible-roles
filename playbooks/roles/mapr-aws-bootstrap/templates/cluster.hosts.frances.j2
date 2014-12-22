@@ -1,113 +1,64 @@
+wlpra94a0011 ansible_ssh_host={{ec2_cluster.instances[0].private_ip}} instance_id={{ec2_cluster.instances[0].id}}
+wlpra95a0011 ansible_ssh_host={{ec2_cluster.instances[1].private_ip}} instance_id={{ec2_cluster.instances[1].id}}
+wlpra96a0011 ansible_ssh_host={{ec2_cluster.instances[2].private_ip}} instance_id={{ec2_cluster.instances[2].id}}
+wlpra97a0011 ansible_ssh_host={{ec2_cluster.instances[3].private_ip}} instance_id={{ec2_cluster.instances[3].id}}
+wlpra98a0011 ansible_ssh_host={{ec2_cluster.instances[4].private_ip}} instance_id={{ec2_cluster.instances[4].id}}
+wlpra99a0011 ansible_ssh_host={{ec2_cluster.instances[5].private_ip}} instance_id={{ec2_cluster.instances[5].id}}
+
 [cluster]
-{% for instance in ec2_cluster.instances %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:99]a0011
 
 [hiveserver]
-{% for instance in ec2_cluster.instances[1:2] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra94a0011
 
 [hbasemaster]
-{% for instance in ec2_cluster.instances[2:3] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra94a0011
 
 [regionserver]
-{% for instance in ec2_cluster.instances %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:99]a0011
 
 [hue]
-{% for instance in ec2_cluster.instances[2:3] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra94a0011
 
 [impalastatestore]
-{% for instance in ec2_cluster.instances[3:4] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [impalacatalog]
-{% for instance in ec2_cluster.instances[3:4] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [impalaserver]
-{% for instance in ec2_cluster.instances[3:6] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [jobtracker]
-{% for instance in ec2_cluster.instances[0:3] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:96]a0011
 
 [resourcemanager]
-{% for instance in ec2_cluster.instances[3:5] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [historyserver]
-{% for instance in ec2_cluster.instances[3:4] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [webserver]
-{% for instance in ec2_cluster.instances[1:3] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:96]a0011
 
 [tasktracker]
-{% for instance in ec2_cluster.instances %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:99]a0011
 
 [nodemanager]
-{% for instance in ec2_cluster.instances %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [metrics]
-{% for instance in ec2_cluster.instances[1:3] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
-{% for instance in ec2_cluster.instances[3:6] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:99]a0011
 
 [zookeepers]
-{% for instance in ec2_cluster.instances[0:3] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:96]a0011
 
 [cldb]
-{% for instance in ec2_cluster.instances[0:3] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:96]a0011
 
 [nfs]
-{% for instance in ec2_cluster.instances %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:99]a0011
 
 [fileserver]
-{% for instance in ec2_cluster.instances %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
+wlpra[94:99]a0011
 
 [edge]
-{% for instance in external.instances[0:1] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [spark_master]
-{% for instance in ec2_cluster.instances[0:1] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
 [spark_slave]
-{% for instance in ec2_cluster.instances[1:5] %}
-{{instance.private_ip}} instance_id={{instance.id}}
-{% endfor %}
 
