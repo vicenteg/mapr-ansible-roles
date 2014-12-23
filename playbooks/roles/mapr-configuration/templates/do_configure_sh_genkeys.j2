@@ -1,11 +1,11 @@
 #!/bin/sh
 
 /opt/mapr/server/configure.sh -M7 \
-  -C {% for node in groups['cldb'] -%}{{ hostvars[node].ansible_eth0.ipv4.address }}{% if not loop.last %},{% endif %}{% endfor %} \
-  -Z {% for node in groups['zookeepers'] -%}{{ hostvars[node].ansible_eth0.ipv4.address }}{% if not loop.last %},{% endif %}{% endfor %} \
+  -C {% for node in groups['cldb'] -%}{{ hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
+  -Z {% for node in groups['zookeepers'] -%}{{ hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
 {% if not mapr_version.startswith('v3') %}
-  -RM {% for node in groups['resourcemanager'] -%}{{hostvars[node].ansible_eth0.ipv4.address }}{% if not loop.last %},{% endif %}{% endfor %} \
-  -HS {% for node in groups['historyserver'] -%}{{hostvars[node].ansible_eth0.ipv4.address }}{% if not loop.last %},{% endif %}{% endfor %} \
+  -RM {% for node in groups['resourcemanager'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
+  -HS {% for node in groups['historyserver'] -%}{{hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
   -on-prompt-cont y
 {% endif %}
   -N {{cluster_name}} {% if ansible_virtualization_role == "guest" %} --isvm{% endif %} \
