@@ -114,7 +114,7 @@
       when: zk_started.changed
 
     - name: get zookeeper status
-      command: service mapr-zookeeper qstatus
+      command: /sbin/service mapr-zookeeper qstatus
       register: zk_qstatus
 
 - hosts: cldb
@@ -195,8 +195,8 @@
         - cldb.key
 
 - hosts: cldb[0]
-  sudo: yes
-  sudo_user: mapr
+#  sudo: yes
+#  sudo_user: mapr
   tasks:
     - name: set default desired replication to 1
       command: maprcli config save -values "{cldb.volumes.default.replication:1}"

@@ -4,7 +4,7 @@
   roles:
     - { role: mapr-configuration,
         mapr_disks: [ '/dev/xvdf', '/dev/xvdg' ],
-        java_home: '/etc/alternatives/java_sdk',
+        java_home: '/apps/java/jdk1.8.0_25-64',
         cluster_name: '{{mapr_cluster_name}}',
         metrics_user: maprmetrics,
         metrics_password: mapr,

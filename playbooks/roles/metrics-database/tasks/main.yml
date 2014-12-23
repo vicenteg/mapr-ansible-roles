@@ -28,5 +28,5 @@
     - '{{groups["cluster"]}}'
 
 - name: run ldconfig to avoid issues with mapr-metrics finding mysql client library
-  command: ldconfig
+  command: /sbin/ldconfig
 

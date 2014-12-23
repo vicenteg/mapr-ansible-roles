@@ -22,19 +22,19 @@
   environment: proxy_env
   when: ansible_distribution == 'Amazon'
 
-- name: set selinux config to permissive
-  selinux: state=permissive policy=targeted
-  when: ansible_distribution not in ('Amazon')
+#- name: set selinux config to permissive
+#  selinux: state=permissive policy=targeted
+#  when: ansible_distribution not in ('Amazon')
 
-- name: selinux to permissive now
-  command: setenforce permissive
-  when: ansible_distribution not in ('Amazon')
+#- name: selinux to permissive now
+#  command: setenforce permissive
+#  when: ansible_distribution not in ('Amazon')
 
 - name: disable iptables
   service: name=iptables state=stopped enabled=no
 
-- name: write /etc/hosts with cluster node names
-  template: src=hosts.j2 dest=/etc/hosts mode=0644 
+#- name: write /etc/hosts with cluster node names
+#  template: src=hosts.j2 dest=/etc/hosts mode=0644 
 
 - name: install repo for RedHat-based Linux
   template: src=maprtech.repo.j2 dest=/etc/yum.repos.d/maprtech.repo mode=0644 owner=root group=root
@@ -77,11 +77,11 @@
   lineinfile: dest=/etc/sysctl.conf regexp="^vm.overcommit_memory" line="vm.overcommit_memory=0"
   notify: reload sysctl
 
-- name: create a mapr group
-  group: name=mapr gid="{{mapr_gid}}"
+#- name: create a mapr group
+#  group: name=mapr gid="{{mapr_gid}}"
 
-- name: set a password for the mapr user and ensure ssh keys exist
-  user: name=mapr uid="{{mapr_uid}}" group="mapr" password="{{mapr_user_pw}}" home="{{mapr_home}}" generate_ssh_key=yes state=present createhome=yes
+#- name: set a password for the mapr user and ensure ssh keys exist
+#  user: name=mapr uid="{{mapr_uid}}" group="mapr" password="{{mapr_user_pw}}" home="{{mapr_home}}" generate_ssh_key=yes state=present createhome=yes
 
 - name: install EPEL 6 x86_64
   tags:

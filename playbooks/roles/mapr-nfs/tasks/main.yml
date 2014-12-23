@@ -8,7 +8,7 @@
   environment: proxy_env
 
 - name: is warden running?
-  command: service mapr-warden status
+  command: /sbin/service mapr-warden status
   register: warden_status
   failed_when: warden_status.rc not in (0,1)
 
@@ -18,7 +18,7 @@
 #  ignore_errors: true
 
 - name: check whether NFS is running
-  command: showmount -e localhost
+  command: /usr/sbin/showmount -e localhost
   register: nfs_running
   failed_when: nfs_running.rc not in (0,1)
 
