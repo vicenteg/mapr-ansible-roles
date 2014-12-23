@@ -77,15 +77,23 @@
   user: name=mapr uid="{{mapr_uid}}" group="mapr" password="{{mapr_user_pw}}" home="{{mapr_home}}" generate_ssh_key=yes state=present createhome=yes
 
 - name: install EPEL 6 x86_64
+  tags:
+    - metrics
+    - external
   yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm state=installed
   environment: proxy_env
   when: ansible_distribution not in ('Amazon', 'Ubuntu')
 
 - name: enable EPEL 6
+  tags:
+    - metrics
+    - external
   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo owner=root group=root mode=0644
   when: ansible_distribution in ('Amazon')
 
 - name: install the MapR GPG key
+  tags:
+    - external
   command: rpm --import http://package.mapr.com/releases/pub/maprgpg.key
   environment: proxy_env
 
