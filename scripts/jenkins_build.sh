@@ -29,6 +29,7 @@ ansible-playbook \
 ansible all -i playbooks/cluster.hosts --private-key="$PEM_FILE" -u root -m ping
 
 ansible-playbook \
+	-f 6 \
 	-i playbooks/cluster.hosts -u root \
 	--extra-vars "ec2_keypair=$EC2_KEYPAIR ec2_name_tag=$CLUSTER_NAME" \
 	--extra-vars "secure_cluster=$SECURE_CLUSTER" \
