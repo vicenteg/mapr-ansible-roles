@@ -1,5 +1,12 @@
 
 --- 
+- hosts: localhost
+  tasks:
+    - assert:
+        that:
+          - ansible_env.AWS_ACCESS_KEY is defined
+          - ansible_env.AWS_SECRET_KEY is defined
+
 - hosts: all
   gather_facts: no
   vars:
