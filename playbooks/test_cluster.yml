@@ -93,7 +93,7 @@
     - name: run TestDFSIO to write,read 100GB of data (MRv1)
       environment:
         MAPR_MAPREDUCE_MODE: classic
-      command: command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -fileSize 1024 -nrFiles 100 -resFile /tmp/mrv1-result-{{item}}
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -fileSize 1024 -nrFiles 100 -resFile /tmp/mrv1-result-{{item}}
       with_items:
         - write
         - read
