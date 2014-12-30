@@ -5,9 +5,34 @@ IMPORTANT!
 
 The AWS playbooks now assume the use of internal ec2 hostnames, in a VPC. This means the playbooks below should be run from an EC2 host in your VPC, or over a VPN connection.
 
+Quick Start
+============
+
+Before you start, you should know where to get your AWS credentials, your VPC subnet, and
+your preferred image ID (this varies by region).  You should have your ec2 keypair
+already set up on the machine from which you'll run these playbooks.
+
+Be aware that if you change the instance type, that can cascade into a series of
+other changes, so if you're not comfortable with that, take the defaults.
+
+Here's the step-by-step:
+
+1. Ensure you have your AWS credentials.
+2. Copy `aws/credentials.sh.sample` to `aws/credentials.sh` and edit it.
+3. Check `playbooks/group_vars/all` to see if there's anything there you need to change.
+4. Review `playbooks/aws_bootstrap.yml` and see if any variables need to change.
+5. Source your credentials file, then bootstrap your nodes as follows.
+
+  source aws/credentials.sh
+  ansible-playbook -i hosts playbooks/aws_bootstrap.yml
+
+6. Install the cluster.
+
+  ansible-playbook -i playbooks/cluster.hosts playbooks/install_cluster.yml
+
 
 mapr-ansible-roles
-=======================
+==================
 
 Intro
 ======
@@ -229,6 +254,3 @@ You missed the step about sourcing your Amazon credentials.
 ## Empty inventory groups
 
 If you have issues and on inspection of the inventory file notice that some groups are empty, it might be that you specified the cluster node count on the command line. If that's the case, pass a JSON object to `--extra-vars` instead: `--extra-vars '{"cluster_node_count": 3}'`. This will allow ansible to treat cluster_node_count's value as an integer rather than a string. The interpretation of the value as a string will break the logic that selects the correct inventory template.
-
-
-
