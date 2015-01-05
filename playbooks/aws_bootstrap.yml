@@ -37,6 +37,8 @@
 - hosts: instances
   user: '{{ssh_user}}'
   sudo: yes
+  vars:
+    root_fs: '/dev/sda1'
   tasks:
     - name: extend root FS to fill volume in case it's larger than the base AMI
-      command: resize2fs /dev/sda
+      command: resize2fs {{root_fs}}
