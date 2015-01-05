@@ -1,4 +1,5 @@
 - hosts: zookeepers
+  max_fail_percentage: 0
 
 - hosts: resourcemanager
   tags:
