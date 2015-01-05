@@ -245,8 +245,7 @@ Potential Gotchas
 If you see messages like the following:
 
 ```
-msg: No handler was ready to authenticate. 1 handlers were checked. ['QuerySignatureV2AuthHandler'] Check your credentials
-failed: [172.16.2.80 -> 127.0.0.1] => {"failed": true}
+failed: [localhost] => {"assertion": "ansible_env.AWS_ACCESS_KEY is defined", "evaluated_to": false, "failed": true}
 ```
 
 You missed the step about sourcing your Amazon credentials.
