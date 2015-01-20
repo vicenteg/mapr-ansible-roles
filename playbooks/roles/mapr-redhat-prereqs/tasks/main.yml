@@ -16,7 +16,7 @@
     - libselinux-python
 
 - name: install sdparm
-  yum: name=http://mirror.thelinuxfix.com/CentOS/6.5/os/x86_64/Packages/sdparm-1.04-1.1.el6.x86_64.rpm state=present
+  yum: name=http://centos.aol.com/6.6/os/x86_64/Packages/sdparm-1.04-1.1.el6.x86_64.rpm state=present
   environment: proxy_env
   when: ansible_distribution == 'Amazon'
 
