@@ -1,6 +1,6 @@
 ---
 # tasks file for python-lxml
-- name: install python-lxml for the xml module
+- name: install libxml and dependencies for the xml module
   yum: name="{{item}}" state=present
   with_items:
     - gcc
@@ -12,9 +12,18 @@
     - python-devel
     - python-setuptools
   when: ansible_distribution in ('CentOS','RedHat','Amazon')
+  environment: proxy_env
+
+- name: install pip (Amazon Linux)
+  yum: name=python-pip state=present
+  environment: proxy_env
+  when: ansible_distribution in ('Amazon')
 
 - name: install pip
   command: easy_install pip
+  environment: proxy_env
+  when: ansible_distribution in ('CentOS', 'RedHat')
 
 - name: install lxml
   pip: name=lxml state=present
+  environment: proxy_env
