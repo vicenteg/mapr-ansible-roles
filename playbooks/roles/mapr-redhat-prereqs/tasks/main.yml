@@ -47,8 +47,11 @@
 - name: install nfs-utils to get rpcbind
   yum: name=nfs-utils state=installed
 
-- name: ensure NFS server is disabled
-  service: name=nfs state=stopped enabled=no
+- name: ensure linux NFS services are disabled
+  service: name={{item}} state=stopped enabled=no
+  with_items:
+    - nfs
+    - nfslock
 
 - name: ensure rpcbind starts
   service: name=rpcbind state=started enabled=yes
