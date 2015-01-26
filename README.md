@@ -1,4 +1,4 @@
-[![Build Status](http://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-enterprise-develop)](https://test-1085049401.us-east-1.elb.amazonaws.com/job/mapr-enterprise-develop/)
+[![Build Status](http://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-enterprise)](https://test-1085049401.us-east-1.elb.amazonaws.com/job/mapr-enterprise/)
 
 IMPORTANT!
 ==
@@ -141,12 +141,11 @@ Issue `vagrant up`, and watch as vagrant sets up your VM and provisions it.
 Installation - AWS
 ===================
 
-After modifying configuration files as needed, run the playbook as follows, being sure to substitute the path to your private key.
+After modifying configuration files as needed, run the playbook as follows, being sure to substitute the path to your private key. Note the `-s` and `--ask-sudo-pass` options; these are necessary since the playbook will attempt to install a python module called boto, which communicates with the EC2 API. These options can be eliminated if: a) boto is already installed (perhaps via `sudo pip install boto`) or b) you are running the playbook as root. If you have NOPASSWD set in sudoers for your username, you can eliminate the `--ask-sudo-pass` option.
 
 ```
-ansible-playbook -i playbooks/cluster.hosts --private-key <path/to/your/private_key> -u root \
-	--extra-vars "mapr_cluster_name=my.cluster.com mapr_version=v4.0.1" \
-	playbooks/install_cluster.yml
+ansible-playbook --ask-sudo-pass -s -i playbooks/cluster.hosts --private-key <path/to/your/private_key> -u root \
+	--extra-vars "mapr_cluster_name=my.cluster.com playbooks/install_cluster.yml
 ```
 
 AWS: Variations
