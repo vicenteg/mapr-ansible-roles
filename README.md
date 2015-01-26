@@ -24,11 +24,11 @@ Here's the step-by-step:
 5. Source your credentials file, then bootstrap your nodes as follows.
 
   source aws/credentials.sh
-  ansible-playbook -i hosts playbooks/aws_bootstrap.yml
+  ansible-playbook -u root --private-key /path/to/private_key -i hosts playbooks/aws_bootstrap.yml
 
 6. Install the cluster.
 
-  ansible-playbook -i playbooks/cluster.hosts playbooks/install_cluster.yml
+  ansible-playbook -u root --private-key /path/to/private_key -i playbooks/cluster.hosts playbooks/install_cluster.yml
 
 
 mapr-ansible-roles
@@ -156,7 +156,7 @@ Obviously, you have many choices when starting AWS instances. In this area, you'
 ## Use i2.2xlarge instances
 
 ```
-ansible-playbook -i hosts \
+ansible-playbook -u root --private-key /path/to/private-key -i hosts \
         -e cluster_node_type=i2.2xlarge \
         -e edge_node_type=c3.large \
         -e mapr_cluster_name=vgonzalez-spark  \
@@ -173,7 +173,7 @@ ansible-playbook -i hosts \
 The spot instances will be bid ad $0.09:
 
 ```
-ansible-playbook -i hosts \
+ansible-playbook -u root --private-key /path/to/private-key -i hosts \
 	-e "cluster_node_price=0.09 cluster_node_type=m3.xlarge" \
 	-e "edge_node_type=m3.xlarge edge_node_price=0.09" \
 	playbooks/aws_bootstrap.yml
