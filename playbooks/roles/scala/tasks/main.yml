@@ -9,7 +9,7 @@
 
 - name: install scala 2.10.4 for RedHat/CentOS
   yum: name=http://downloads.typesafe.com/scala/2.10.4/scala-2.10.4.rpm state=present
-  when: scala is defined and scala.rc != 1 and ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+  when: scala is defined and scala.rc != 1 and ansible_distribution in ("CentOS", "RedHat", "Amazon")
 
 - name: install scala 2.10.4 for Ubuntu/Debian
   apt: name=http://downloads.typesafe.com/scala/2.10.4/scala-2.10.4.deb state=present

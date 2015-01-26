@@ -1,6 +1,0 @@
-#!/bin/sh
-
-/opt/mapr/server/configure.sh -M7 {% if secure_cluster is defined %} -secure {% endif %}\
-	-C {% for node in groups['cldb'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %} \
-	-Z {% for node in groups['zookeepers'] -%}{{ hostvars[node].ansible_default_ipv4.address }},{% endfor %} \
-	-N {{cluster_name}} {% if ansible_virtualization_role == "guest" %}--isvm{% endif %} 

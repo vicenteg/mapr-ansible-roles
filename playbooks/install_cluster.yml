@@ -5,10 +5,12 @@
   max_fail_percentage: 0
   tasks:
     - name: ensure some critical vars are set, fail early if not.
-      fail: msg="Please ensure you're setting mapr_version and mapr_cluster_name with --extra-vars." 
-      when: mapr_version is not defined or mapr_cluster_name is not defined
+      assert:
+        that:
+          - mapr_cluster_name is defined
+          - mapr_version is defined
 
-- include: prerequisites.yml tags=install
+- include: prerequisites.yml 
 
 - hosts: zookeepers
   tags: 
@@ -62,7 +64,10 @@
     - mapr-fileserver
 
 # uncomment the following line to install mysql (hive metastore and metrics)
-- include: install_mysql.yml tags=install
+- include: install_mysql.yml
+  tags:
+    - install
+    - mysql
 
 # Install mapr-metrics
 - hosts: hiveserver
@@ -86,9 +91,13 @@
         metrics_host: "{{ groups['hiveserver'] | first }}" }
 
 # uncomment the followng line to install an edge node
-- include: install_edgenode.yml tags=edgenode
+- include: install_edgenode.yml
+  tags:
+    - edge
+
 
 - include: configure_cluster.yml tags=configure
+
 
 - hosts: zookeepers
   tasks:
@@ -121,18 +130,24 @@
     - name: pause for a bit and wait for CLDBs to come up
       wait_for: port=7222 delay=10 timeout=90
       ignore_errors: yes
+      when: cldb_started.changed == True
 
     - name: let CLDBs have their election and settle
       pause: seconds=90 
+      when: cldb_started.changed == True
 
+    # can't obtain the CLDB master without a ticket
     - name: get the cldbmaster
       command: maprcli node cldbmaster
       register: cldbmaster
+      when: secure_cluster is not defined
 
+    # can't obtain the CLDB master without a ticket
     - name: check that we found a cldbmaster, or fail
       assert:
         that:
           - cldbmaster.rc == 0
+      when: secure_cluster is not defined
 
 - hosts: cluster
   tasks:
@@ -170,6 +185,16 @@
 
 # uncomment the following line to install impala
 #- include: install_impala.yml
+
+- hosts: localhost
+  tasks:
+    - name: remove fetched maprserverticket, ssl_keystore, and ssl_truststore
+      file: path=/tmp/{{item}} state=absent
+      with_items:
+        - maprserverticket
+        - ssl_keystore
+        - ssl_truststore
+        - cldb.key
 
 - hosts: cldb[0]
   sudo: yes

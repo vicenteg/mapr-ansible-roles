@@ -1,11 +1,3 @@
-{% if ec2_cluster_spot.skipped is defined %}
-	{% set ec2_cluster = ec2_cluster_ondemand %}
-	{% set external = external_ondemand %}
-{% else %}
-	{% set ec2_cluster = ec2_cluster_spot %}
-	{% set external = external_spot %}
-{% endif %}
-
 [cluster]
 {% for instance in ec2_cluster.instances %}
 {{instance.private_ip}} instance_id={{instance.id}}
@@ -47,12 +39,12 @@
 {% endfor %}
 
 [jobtracker]
-{% for instance in ec2_cluster.instances[3:4] %}
+{% for instance in ec2_cluster.instances[3:5] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 
 [resourcemanager]
-{% for instance in ec2_cluster.instances[3:4] %}
+{% for instance in ec2_cluster.instances[3:5] %}
 {{instance.private_ip}} instance_id={{instance.id}}
 {% endfor %}
 

@@ -2,12 +2,9 @@
 - hosts: cldb:zookeepers
 # just collecting facts so that we can locate the CLDB and mysql
 
-- hosts: cluster
-  roles:
-    - python-lxml
-
 - hosts: hiveserver
-  sudo: yes
+  tags:
+    - hive
   roles:
     - { role: mapr-hive,
         hive_db: "metastore_{{hive_version|replace('.','_')}}",

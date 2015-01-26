@@ -5,6 +5,18 @@
   yum: name={{item}} state=present
   with_items:
     - mapr-resourcemanager
+  environment: proxy_env
+
+- name: check whether warden is running
+  command: service mapr-warden status
+  register: warden_status
+  failed_when: warden_status.rc not in (0,1)
 
 - name: install a correct yarn-site.xml from template
   template: src=yarn-site.xml.j2 dest=/opt/mapr/hadoop/hadoop-2.4.1/etc/hadoop/yarn-site.xml backup=yes
+  register: install_yarn_site_xml
+  when: mapr_version in ('v4.0.1')
+
+#- name: restart resourcemanager if warden is running
+#  command: maprcli node services -action restart -name resourcemanager -filter csvc==resourcemanager
+#  when: warden_status.rc == 0 and install_yarn_site_xml.changed

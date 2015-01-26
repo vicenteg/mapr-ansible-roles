@@ -27,7 +27,6 @@
     - name: check that MCS is listening on port 8443
       wait_for: port=8443 timeout=5 state=started
 
-
 - hosts: cldb
   tasks:
      - name: check that CLDB role exists
@@ -62,94 +61,98 @@
      wait_for: port=5660 timeout=5 state=started
 
 - hosts: jobtracker
+  sudo: yes
+  sudo_user: mapr
   max_fail_percentage: 0
   tasks:
     - name: check that jobtracker role exists
       stat: path=/opt/mapr/roles/jobtracker
       register: jobtracker
 
-    - fail: msg="jobtracker role not installed on node in jobtracker group."
-      when: jobtracker.stat.exists != true
-
     - name: check if jobtracker is running on this node
       shell: maprcli node list -columns svc -filter hn==`hostname` -noheader | grep jobtracker
       register: grep_jobtracker
       changed_when: False
-      failed_when: grep_jobtracker.rc not in (0,1)
+      failed_when: jobtracker.stat.exists and grep_jobtracker.rc not in (0,1)
 
     - name: check that jobtracker is listening on 9001
       wait_for: port=9001 timeout=5 state=started
-      when: grep_jobtracker.rc == 0
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0
 
-- hosts: jobtracker[0]
-  sudo: yes
-  sudo_user: mapr
-  max_fail_percentage: 0
-  tasks:
     - name: try to submit a small job (teragen - MRv1)
       environment:
         MAPR_MAPREDUCE_MODE: classic
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100 /user/teragen
       register: teragen
+      when: grep_jobtracker.rc == 0 and jobtracker.stat.exists
 
     - name: clean up the teragen
-      command: hadoop fs -rmr /user/teragen
-      when: teragen.rc == 0
+      command: hadoop fs -rm -r /user/teragen
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
     - name: run TestDFSIO to write,read 100GB of data (MRv1)
       environment:
         MAPR_MAPREDUCE_MODE: classic
-      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -size 1GB -nrFiles 100 -resFile /tmp/mrv1-result-{{item}}
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -fileSize 1024 -nrFiles 100 -resFile /tmp/mrv1-result-{{item}}
       with_items:
         - write
         - read
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
     - name: get the results files
       fetch: src=/tmp/mrv1-result-{{item}} dest=test_results fail_on_missing=true
       with_items:
         - read
         - write
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
     - name: clean up TestDFSIO data
       environment:
         MAPR_MAPREDUCE_MODE: classic
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -clean
-
+      when: jobtracker.stat.exists and grep_jobtracker.rc == 0 and teragen.rc == 0
 
 - hosts: resourcemanager[0]
   max_fail_percentage: 0
   sudo: yes
   sudo_user: mapr
   tasks:
+    - name: check that jobtracker role exists
+      stat: path=/opt/mapr/roles/resourcemanager
+      register: resourcemanager
+
     - name: try to submit a small job (teragen - MRv2)
       environment:
         MAPR_MAPREDUCE_MODE: yarn
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100 /user/teragen
       register: teragen
-
+      when: resourcemanager.stat.exists
+ 
     - name: clean up the teragen
       command: hadoop fs -rm -r /user/teragen
-      when: teragen.rc == 0
+      when: resourcemanager.stat.exists and teragen.rc == 0
 
     - name: run TestDFSIO to write,read 100GB of data (MRv2)
       environment:
         MAPR_MAPREDUCE_MODE: yarn
-      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -size 1GB -nrFiles 100 -resFile /tmp/mrv2-result-{{item}}
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -{{item}} -fileSize 1024 -nrFiles 100 -resFile /tmp/mrv2-result-{{item}}
       with_items:
         - write
         - read
+      when: resourcemanager.stat.exists
 
     - name: get the results files
       fetch: src=/tmp/mrv2-result-{{item}} dest=test_results fail_on_missing=true
       with_items:
         - read
         - write
+      when: resourcemanager.stat.exists
 
     - name: clean up TestDFSIO data
       environment:
         MAPR_MAPREDUCE_MODE: yarn
       command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-test.jar TestDFSIO -clean
-
+      when: resourcemanager.stat.exists
 
 - hosts: impalaserver
   tasks:
@@ -165,9 +168,19 @@
       when: impalaserver_role.stat.exists
 
 - hosts: edge
+  tags:
+    - edge
   sudo: yes
   sudo_user: mapr
   tasks:
+    - name: try to submit a small job (default MR framework)
+      command: hadoop jar /opt/mapr/hadoop/hadoop-0.20.2/hadoop-0.20.2-dev-examples.jar teragen 100 /user/teragen
+      register: teragen
+
+    - name: clean up the teragen
+      command: hadoop fs -rm -r /user/teragen
+      when: teragen.rc == 0
+
     - name: run a minimal hive command
       command: hive -e 'show tables'
       changed_when: False

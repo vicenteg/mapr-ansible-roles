@@ -5,13 +5,19 @@
   args:
     creates: /root/packages_before_prereqs
 
+- name: test external url
+  get_url: url=http://example.com dest=/dev/null 
+  environment: proxy_env
+
 - name: install libselinux-python tools
   yum: name="{{item}}" state=present
+  environment: proxy_env
   with_items:
     - libselinux-python
 
 - name: install sdparm
-  yum: name=http://mirror.thelinuxfix.com/CentOS/6.5/os/x86_64/Packages/sdparm-1.04-1.1.el6.x86_64.rpm state=present
+  yum: name=http://centos.aol.com/6.6/os/x86_64/Packages/sdparm-1.04-1.1.el6.x86_64.rpm state=present
+  environment: proxy_env
   when: ansible_distribution == 'Amazon'
 
 - name: set selinux config to permissive
@@ -33,18 +39,21 @@
 
 - name: install Java 1.7
   yum: name={{item}} state=present
+  environment: proxy_env
   with_items:
     - java-1.7.0-openjdk
     - java-1.7.0-openjdk-devel
 
 - name: install NTP
   yum: name=ntp state=present
+  environment: proxy_env
   notify: restart ntp
 
 - name: ensure NTP is enabled
   service: name=ntpd enabled=yes state=started
 
 - name: install nfs-utils to get rpcbind
+  environment: proxy_env
   yum: name=nfs-utils state=installed
 
 - name: ensure NFS server is disabled
@@ -68,15 +77,25 @@
   user: name=mapr uid="{{mapr_uid}}" group="mapr" password="{{mapr_user_pw}}" home="{{mapr_home}}" generate_ssh_key=yes state=present createhome=yes
 
 - name: install EPEL 6 x86_64
+  tags:
+    - metrics
+    - external
   yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm state=installed
+  environment: proxy_env
   when: ansible_distribution not in ('Amazon', 'Ubuntu')
 
 - name: enable EPEL 6
+  tags:
+    - metrics
+    - external
   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo owner=root group=root mode=0644
   when: ansible_distribution in ('Amazon')
 
 - name: install the MapR GPG key
+  tags:
+    - external
   command: rpm --import http://package.mapr.com/releases/pub/maprgpg.key
+  environment: proxy_env
 
 - name: save the current list of installed packages after prereqs
   shell: rpm -qa --queryformat '%{NAME}\t%{VERSION}\n' > /root/packages_after_prereqs
