@@ -1,5 +1,5 @@
 mirror_host: package.mapr.com
-mapr_version: v4.0.1
+mapr_version: v4.0.2
 mapr_cluster_name: my.cluster.com
 #mapr_subnets: 10.61.14.0/23
 #secure_cluster: true
