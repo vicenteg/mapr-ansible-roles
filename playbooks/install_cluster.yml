@@ -105,6 +105,9 @@
     - name: start zookeeper on ZK nodes
       service: name=mapr-zookeeper state=started enabled=yes
       register: zk_started
+      environment:
+         JAVA_HOME: "{{java_home}}"
+
 
     - name: wait for zookeeper to be listening
       wait_for: port=5181 delay=10 timeout=90
@@ -116,6 +119,9 @@
     - name: get zookeeper status
       command: /sbin/service mapr-zookeeper qstatus
       register: zk_qstatus
+      environment:
+         JAVA_HOME: "{{java_home}}"
+
 
 - hosts: cldb
   tags:
@@ -124,6 +130,9 @@
     - name: start warden on CLDBs first per doc.mapr.com
       service: name=mapr-warden state=started enabled=yes
       register: cldb_started
+      environment:
+         JAVA_HOME: "{{java_home}}"
+
 
     - name: pause for a bit and wait for CLDBs to come up
       wait_for: port=7222 delay=10 timeout=90
@@ -154,6 +163,9 @@
       with_items:
         - mapr-warden
       register: warden_started
+      environment:
+         JAVA_HOME: "{{java_home}}"
+
 
     - name: wait a bit before proceeding
       pause: seconds=30

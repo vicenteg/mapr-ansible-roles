@@ -1,4 +1,6 @@
 #!/bin/sh
+export JAVA_HOME={{java_home}}
+export PATH=$PATH:/sbin
 
 /opt/mapr/server/configure.sh -M7 {% if secure_cluster is defined and secure_cluster == True %}-secure{% endif %} \
 	-C {% for node in groups['cldb'] -%}{{ hostvars[node].ansible_fqdn }}{% if not loop.last %},{% endif %}{% endfor %} \
