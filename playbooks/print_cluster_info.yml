@@ -44,7 +44,7 @@
       debug: msg="webserver = https://{{ansible_default_ipv4.address}}:8443"
       when: ec2_facts is not defined
 
-- hosts: cluster
+- hosts: cluster;edge
   roles:
 #    - mapr-infosheet
     - hostfile
