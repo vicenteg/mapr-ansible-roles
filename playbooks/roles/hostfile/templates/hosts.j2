@@ -1,6 +1,8 @@
 {% for host in groups['cluster'] -%}
 {{hostvars[host].ansible_ec2_public_ipv4}}  {{hostvars[host].ansible_hostname}}   {{hostvars[host].ansible_ec2_public_hostname}}
 {% endfor -%}
-{% for host in groups['edge'] -%}
-{{hostvars[host].ansible_ec2_public_ipv4}}  {{hostvars[host].ansible_hostname}}   {{hostvars[host].ansible_ec2_public_hostname}}
-{% endfor -%}
+{% if groups['edge'] is defined %}
+    {% for host in groups['edge'] -%}
+        {{hostvars[host].ansible_ec2_public_ipv4}}  {{hostvars[host].ansible_hostname}}   {{hostvars[host].ansible_ec2_public_hostname}}
+    {% endfor -%}
+{% endif %}
