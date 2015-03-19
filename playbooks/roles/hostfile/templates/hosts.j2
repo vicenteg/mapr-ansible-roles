@@ -1,0 +1,16 @@
+{% for host in groups['cluster'] -%}
+    {% if hostvars[host].ec2_facts is defined %}
+        {{hostvars[host].ansible_ec2_public_ipv4}}  {{hostvars[host].ansible_hostname}}   {{hostvars[host].ansible_ec2_public_hostname}}
+    {% else %}
+        {{hostvars[host].ansible_default_ipv4.address}}    {{hostvars[host].ansible_hostname}}
+    {% endif %}
+{% endfor -%}
+{% if groups['edge'] is defined %}
+    {% for host in groups['edge'] -%}
+        {% if hostvars[host].ec2_facts is defined %}
+            {{hostvars[host].ansible_ec2_public_ipv4}}  {{hostvars[host].ansible_hostname}}   {{hostvars[host].ansible_ec2_public_hostname}}
+        {% else %}
+            {{hostvars[host].ansible_default_ipv4.address}}    {{hostvars[host].ansible_hostname}}
+        {% endif %}
+    {% endfor -%}
+{% endif %}
