@@ -1,4 +1,15 @@
-[![Build Status](http://test-1085049401.us-east-1.elb.amazonaws.com/buildStatus/icon?job=mapr-enterprise)](https://test-1085049401.us-east-1.elb.amazonaws.com/job/mapr-enterprise/)
+THIS STUFF IS OLD
+===
+
+Hi, I'm no longer maintaining this repo. If you're interested in automating MapR installations, please check out the following:
+
+[The MapR Installer](http://doc.mapr.com/display/MapR/Get+Started%3A+Install+MapR) is the best way for most people to perform a MapR install.
+
+If you're looking to automate the install with ansible and want a starting point, you can check out this gist, which contains some links that may interest you. The playbooks backing those gists are much more up to date and are actively worked on.
+
+[MapR repo manifests](https://gist.github.com/vicenteg/e9b1a3ecfd72ab8a4ef1)
+
+Of course if you prefer these older playbooks in this repository for whatever reason, please feel free to use them.
 
 IMPORTANT!
 ==
