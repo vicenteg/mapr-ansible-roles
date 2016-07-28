@@ -1,13 +1,11 @@
-THIS STUFF IS OLD
+WARNING: THIS IS TOTALLY UNMAINTAINED!
 ===
 
 Hi, I'm no longer maintaining this repo. If you're interested in automating MapR installations, please check out the following:
 
 [The MapR Installer](http://doc.mapr.com/display/MapR/Get+Started%3A+Install+MapR) is the best way for most people to perform a MapR install.
 
-If you're looking to automate the install with ansible and want a starting point, you can check out this gist, which contains some links that may interest you. The playbooks backing those gists are much more up to date and are actively worked on.
-
-[MapR repo manifests](https://gist.github.com/vicenteg/e9b1a3ecfd72ab8a4ef1)
+Here are the installation playbooks/roles that I'm currently working on: https://github.com/vicenteg/ansible-mapr_install_playbooks
 
 Of course if you prefer these older playbooks in this repository for whatever reason, please feel free to use them.
 
